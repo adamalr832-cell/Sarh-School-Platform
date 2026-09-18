@@ -7,6 +7,7 @@ import { StudentMode } from './components/StudentMode';
 import { RoleAuthModal } from './components/RoleAuthModal';
 import { SarhAiChatDrawer } from './components/SarhAiChatDrawer';
 import { AuditLogModal } from './components/AuditLogModal';
+import { DatabaseExportModal } from './components/DatabaseExportModal';
 import {
   INITIAL_TEACHERS,
   INITIAL_ABSENCES,
@@ -41,6 +42,7 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isAiChatOpen, setIsAiChatOpen] = useState(false);
   const [isAuditLogModalOpen, setIsAuditLogModalOpen] = useState(false);
+  const [isDatabaseExportModalOpen, setIsDatabaseExportModalOpen] = useState(false);
 
   // Core Data States
   const [teachers, setTeachers] = useState<TeacherLoad[]>(INITIAL_TEACHERS);
@@ -206,12 +208,18 @@ export default function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          message: text,
           messages: updatedMessages.map((m) => ({
             role: m.role,
             content: m.content,
             authToken: m.authToken,
           })),
+          history: messages.slice(-6).map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
           role: currentRole,
+          authenticatedRole: authenticatedRole,
           authToken: activeToken,
         }),
       });
@@ -685,6 +693,7 @@ export default function App() {
         onLogout={handleLogout}
         onOpenAiChat={() => setIsAiChatOpen(true)}
         onOpenAuditLog={() => setIsAuditLogModalOpen(true)}
+        onOpenDatabaseExport={() => setIsDatabaseExportModalOpen(true)}
       />
 
       {/* Main Container */}
@@ -783,6 +792,21 @@ export default function App() {
         isOpen={isAuditLogModalOpen}
         onClose={() => setIsAuditLogModalOpen(false)}
         auditLogs={auditLogs}
+      />
+
+      {/* Database Export Modal */}
+      <DatabaseExportModal
+        isOpen={isDatabaseExportModalOpen}
+        onClose={() => setIsDatabaseExportModalOpen(false)}
+        teachers={teachers}
+        absences={absences}
+        students={students}
+        awardLogs={awardLogs}
+        redemptionRequests={redemptionRequests}
+        teacherHonors={teacherHonors}
+        infractions={infractions}
+        auditLogs={auditLogs}
+        eduCoins={eduCoins}
       />
 
       {/* Sarh AI Core Assistant Drawer */}

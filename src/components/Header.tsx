@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Clock,
   History,
+  Database,
 } from 'lucide-react';
 import { UserRole } from '../types';
 import { ROLE_CONFIGS } from '../config/authConfig';
@@ -25,6 +26,7 @@ interface HeaderProps {
   onLogout: () => void;
   onOpenAiChat: () => void;
   onOpenAuditLog: () => void;
+  onOpenDatabaseExport?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -35,6 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
   onLogout,
   onOpenAiChat,
   onOpenAuditLog,
+  onOpenDatabaseExport,
 }) => {
   const currentConfig = ROLE_CONFIGS[currentRole];
   const isCurrentRoleAuthed = authenticatedRole === currentRole;
@@ -77,6 +80,18 @@ export const Header: React.FC<HeaderProps> = ({
             <History className="w-3 h-3 text-emerald-400" />
             <span>سجل الأمان (Audit)</span>
           </button>
+
+          {onOpenDatabaseExport && (
+            <button
+              id="header-open-database-btn"
+              onClick={onOpenDatabaseExport}
+              className="flex items-center gap-1 text-[11px] font-semibold bg-indigo-950/80 hover:bg-indigo-900 text-indigo-200 border border-indigo-700/60 px-2.5 py-0.5 rounded-lg transition-colors"
+              title="تصدير وتحميل قاعدة البيانات (ملف JSON / SQL)"
+            >
+              <Database className="w-3 h-3 text-indigo-400" />
+              <span>ملف قاعدة البيانات</span>
+            </button>
+          )}
 
           {/* Active Auth Token Badge */}
           <div className="flex items-center gap-1.5 text-[11px] font-medium bg-slate-800/90 px-2.5 py-0.5 rounded-lg border border-slate-700">

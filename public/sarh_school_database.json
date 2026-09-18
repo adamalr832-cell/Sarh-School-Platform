@@ -1,0 +1,548 @@
+{
+  "_metadata": {
+    "systemName": "منصة صَرْح المدرسية الذكية",
+    "schoolName": "مدرسة موسى بن نصير للتعليم ما بعد الأساسي (10-12)",
+    "governorate": "محافظة مسقط - سلطنة عُمان",
+    "authority": "وزارة التربية والتعليم - سلطنة عُمان",
+    "academicYear": "2025/2026",
+    "databaseVersion": "2.4.0",
+    "timestampStandard": "Precision Timestamping Standard [التاريخ: YYYY-MM-DD | الوقت: HH:MM:SS]",
+    "exportedAt": "[التاريخ: 2026-09-18 | الوقت: 07:18:30]",
+    "totalTables": 12,
+    "totalRecords": 45
+  },
+  "school_info": {
+    "id": "SCH-OM-MN-1012",
+    "name": "مدرسة موسى بن نصير للتعليم ما بعد الأساسي",
+    "code": "MN-40291",
+    "curriculum": "المنهج الوطني العماني وسلاسل كامبريدج للعلوم والرياضيات",
+    "principal": "أ. سالم بن راشد الهنائي",
+    "contact": "+968-24000000",
+    "address": "سلطنة عُمان"
+  },
+  "teachers": [
+    {
+      "id": "t-1",
+      "name": "أ. سالم بن سعيد السعدي",
+      "subject": "فيزياء (كامبريدج)",
+      "currentWeeklyLoad": 18,
+      "maxWeeklyLoad": 22,
+      "availablePeriods": [1, 2, 4],
+      "status": "absent",
+      "absenceRecordedAt": "[التاريخ: 2026-09-17 | الوقت: 07:15:00]",
+      "notes": "إجازة عارضة موثقة بالبوابة التعليمية"
+    },
+    {
+      "id": "t-2",
+      "name": "أ. أحمد بن علي البلوشي",
+      "subject": "علوم عامة وفيزياء",
+      "currentWeeklyLoad": 14,
+      "maxWeeklyLoad": 22,
+      "availablePeriods": [1, 3, 5, 6],
+      "status": "available",
+      "lastStatusChangeTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:10:00]"
+    },
+    {
+      "id": "t-3",
+      "name": "أ. ماجد بن ناصر الحوسني",
+      "subject": "لغة عربية",
+      "currentWeeklyLoad": 20,
+      "maxWeeklyLoad": 22,
+      "availablePeriods": [3, 4],
+      "status": "absent",
+      "absenceRecordedAt": "[التاريخ: 2026-09-17 | الوقت: 07:22:30]",
+      "notes": "مهمة إشراف تربوي خارجي"
+    },
+    {
+      "id": "t-4",
+      "name": "أ. خالد بن سلطان المعمري",
+      "subject": "لغة عربية",
+      "currentWeeklyLoad": 15,
+      "maxWeeklyLoad": 22,
+      "availablePeriods": [2, 4, 6],
+      "status": "available",
+      "lastStatusChangeTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:12:00]"
+    },
+    {
+      "id": "t-5",
+      "name": "أ. حمود بن زاهر الريامي",
+      "subject": "رياضيات متقدمة (كامبريدج)",
+      "currentWeeklyLoad": 16,
+      "maxWeeklyLoad": 22,
+      "availablePeriods": [1, 2, 5],
+      "status": "available",
+      "lastStatusChangeTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:05:00]"
+    },
+    {
+      "id": "t-6",
+      "name": "أ. يوسف بن راشد الغافري",
+      "subject": "دراسات اجتماعية وتاريخ",
+      "currentWeeklyLoad": 13,
+      "maxWeeklyLoad": 22,
+      "availablePeriods": [2, 3, 4, 6],
+      "status": "available",
+      "lastStatusChangeTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:08:00]"
+    },
+    {
+      "id": "t-7",
+      "name": "أ. عبد الله بن حمد الوهيبي",
+      "subject": "تربية إسلامية",
+      "currentWeeklyLoad": 17,
+      "maxWeeklyLoad": 22,
+      "availablePeriods": [1, 4, 5],
+      "status": "available",
+      "lastStatusChangeTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:07:00]"
+    }
+  ],
+  "absence_requests": [
+    {
+      "id": "abs-1",
+      "absentTeacher": "أ. سالم بن سعيد السعدي",
+      "subject": "فيزياء (كامبريدج)",
+      "gradeClass": "10 / 2",
+      "period": 1,
+      "substituteTeacher": "أ. أحمد بن علي البلوشي",
+      "status": "assigned",
+      "createdAt": "[التاريخ: 2026-09-17 | الوقت: 07:15:00]",
+      "assignmentTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:25:12]",
+      "assignedBy": "إدارة المدرسة (ADMIN-1010)",
+      "notes": "إجازة عارضة موثقة بالبوابة التعليمية"
+    },
+    {
+      "id": "abs-2",
+      "absentTeacher": "أ. ماجد بن ناصر الحوسني",
+      "subject": "لغة عربية",
+      "gradeClass": "11 / 1",
+      "period": 2,
+      "substituteTeacher": "أ. خالد بن سلطان المعمري",
+      "status": "assigned",
+      "createdAt": "[التاريخ: 2026-09-17 | الوقت: 07:22:30]",
+      "assignmentTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:30:45]",
+      "assignedBy": "إدارة المدرسة (ADMIN-1010)",
+      "notes": "مهمة إشراف تربوي خارجي"
+    },
+    {
+      "id": "abs-3",
+      "absentTeacher": "أ. محمد بن حارب الشحي",
+      "subject": "رياضيات تطبيقية",
+      "gradeClass": "12 / 3",
+      "period": 4,
+      "substituteTeacher": "",
+      "status": "pending",
+      "createdAt": "[التاريخ: 2026-09-17 | الوقت: 07:40:18]",
+      "notes": "غياب مرضي مفاجئ - بانتظار التكليف"
+    }
+  ],
+  "students": [
+    {
+      "id": "std-1",
+      "name": "محمد بن حمد البوسعيدي",
+      "gradeClass": "الصف العاشر / 1",
+      "points": 245,
+      "attendanceStatus": "present",
+      "attendanceTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:45:10]",
+      "attendancePeriod": 1,
+      "seatNumber": 1
+    },
+    {
+      "id": "std-2",
+      "name": "سعيد بن هلال المقبالي",
+      "gradeClass": "الصف العاشر / 1",
+      "points": 190,
+      "attendanceStatus": "present",
+      "attendanceTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:46:22]",
+      "attendancePeriod": 1,
+      "seatNumber": 2
+    },
+    {
+      "id": "std-3",
+      "name": "فيصل بن نبهان الراسبي",
+      "gradeClass": "الصف العاشر / 1",
+      "points": 130,
+      "attendanceStatus": "absent",
+      "attendanceTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:55:04]",
+      "attendancePeriod": 1,
+      "seatNumber": 3
+    },
+    {
+      "id": "std-4",
+      "name": "هزاع بن خالد العامري",
+      "gradeClass": "الصف العاشر / 1",
+      "points": 280,
+      "attendanceStatus": "present",
+      "attendanceTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:47:18]",
+      "attendancePeriod": 1,
+      "seatNumber": 4
+    },
+    {
+      "id": "std-5",
+      "name": "عمر بن راشد الشكيلي",
+      "gradeClass": "الصف العاشر / 1",
+      "points": 165,
+      "attendanceStatus": "late",
+      "attendanceTimestamp": "[التاريخ: 2026-09-17 | الوقت: 08:05:33]",
+      "attendancePeriod": 1,
+      "seatNumber": 5
+    },
+    {
+      "id": "std-6",
+      "name": "ناصر بن سالم الحارثي",
+      "gradeClass": "الصف العاشر / 2",
+      "points": 210,
+      "attendanceStatus": "present",
+      "attendanceTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:48:50]",
+      "attendancePeriod": 1,
+      "seatNumber": 1
+    },
+    {
+      "id": "std-7",
+      "name": "حمد بن سيف الغافري",
+      "gradeClass": "الصف العاشر / 2",
+      "points": 175,
+      "attendanceStatus": "present",
+      "attendanceTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:49:15]",
+      "attendancePeriod": 1,
+      "seatNumber": 2
+    },
+    {
+      "id": "std-8",
+      "name": "أحمد بن يوسف الزدجالي",
+      "gradeClass": "الصف العاشر / 2",
+      "points": 310,
+      "attendanceStatus": "present",
+      "attendanceTimestamp": "[التاريخ: 2026-09-17 | الوقت: 07:50:02]",
+      "attendancePeriod": 1,
+      "seatNumber": 3
+    }
+  ],
+  "teacher_honors": [
+    {
+      "id": "thonor-1",
+      "teacherId": "t-2",
+      "teacherName": "أ. أحمد بن علي البلوشي",
+      "honorType": "وسام الإجادة التربوية",
+      "occasion": "مبادرة تعليمية متميزة في تبسيط سلاسل كامبريدج وتفعيل المختبر الافتراضي",
+      "recordedBy": "إدارة المدرسة (ADMIN-1010)",
+      "timestamp": "[التاريخ: 2026-09-17 | الوقت: 08:30:00]",
+      "timestampMs": 1789716600000
+    },
+    {
+      "id": "thonor-2",
+      "teacherId": "t-5",
+      "teacherName": "أ. حمود بن زاهر الريامي",
+      "honorType": "شهادة تميّز",
+      "occasion": "جهود استثنائية في تدريب الفريق المدرسي على الأولمبياد الوطني للرياضيات",
+      "recordedBy": "إدارة المدرسة (ADMIN-1010)",
+      "timestamp": "[التاريخ: 2026-09-16 | الوقت: 12:15:35]",
+      "timestampMs": 1789643735000
+    }
+  ],
+  "student_infractions": [
+    {
+      "id": "infr-1",
+      "studentId": "std-5",
+      "studentName": "عمر بن راشد الشكيلي",
+      "gradeClass": "الصف العاشر / 1",
+      "description": "تأخر عن دخول الحصة الأولى لمدة 20 دقيقة بعد انتهاء طابور الصباح",
+      "category": "تأخر متكرر",
+      "severity": "خفيفة",
+      "recordedBy": "أ. حمود الريامي (معلم الحصة)",
+      "timestamp": "[التاريخ: 2026-09-17 | الوقت: 08:05:33]",
+      "timestampMs": 1789715133000
+    },
+    {
+      "id": "infr-2",
+      "studentId": "std-3",
+      "studentName": "فيصل بن نبهان الراسبي",
+      "gradeClass": "الصف العاشر / 1",
+      "description": "عدم إحضار كراسة الأنشطة الاستقصائية للمرة الثانية على التوالي",
+      "category": "عدم إحضار أدوات التعلم",
+      "severity": "خفيفة",
+      "recordedBy": "أ. أحمد البلوشي (معلم المادة)",
+      "timestamp": "[التاريخ: 2026-09-16 | الوقت: 09:12:10]",
+      "timestampMs": 1789632730000
+    }
+  ],
+  "award_logs": [
+    {
+      "id": "awd-1",
+      "studentId": "std-1",
+      "studentName": "محمد بن حمد البوسعيدي",
+      "points": 25,
+      "awardType": "نقطة تميّز",
+      "reason": "مشاركة صفية متميزة وتفاعل مبدع في سلاسل كامبريدج",
+      "timestamp": "[التاريخ: 2026-09-17 | الوقت: 09:15:30]",
+      "timestampMs": 1789719330000,
+      "teacherName": "أ. أحمد البلوشي"
+    },
+    {
+      "id": "awd-2",
+      "studentId": "std-4",
+      "studentName": "هزاع بن خالد العامري",
+      "points": 20,
+      "awardType": "وسام الإجادة",
+      "reason": "التزام نموذجي وحل النشاط الاستقصائي للفيزياء",
+      "timestamp": "[التاريخ: 2026-09-17 | الوقت: 10:30:12]",
+      "timestampMs": 1789723812000,
+      "teacherName": "أ. حمود الريامي"
+    },
+    {
+      "id": "awd-3",
+      "studentId": "std-8",
+      "studentName": "أحمد بن يوسف الزدجالي",
+      "points": 30,
+      "awardType": "شهادة شكر",
+      "reason": "مبادرة تطوعية ومساعدة زملائه في المختبر المدرسي",
+      "timestamp": "[التاريخ: 2026-09-16 | الوقت: 11:45:50]",
+      "timestampMs": 1789641950000,
+      "teacherName": "أ. خالد المعمري"
+    }
+  ],
+  "redemption_requests": [
+    {
+      "id": "req-1",
+      "studentId": "std-1",
+      "studentName": "محمد بن حمد البوسعيدي",
+      "gradeClass": "الصف العاشر / 1",
+      "type": "grades",
+      "pointsCost": 50,
+      "status": "pending",
+      "createdAt": "[التاريخ: 2026-09-17 | الوقت: 09:40:15]"
+    },
+    {
+      "id": "req-2",
+      "studentId": "std-2",
+      "studentName": "سعيد بن هلال المقبالي",
+      "gradeClass": "الصف العاشر / 1",
+      "type": "honor",
+      "pointsCost": 100,
+      "status": "pending",
+      "createdAt": "[التاريخ: 2026-09-17 | الوقت: 10:15:42]"
+    },
+    {
+      "id": "req-3",
+      "studentId": "std-4",
+      "studentName": "هزاع بن خالد العامري",
+      "gradeClass": "الصف العاشر / 1",
+      "type": "grades",
+      "pointsCost": 50,
+      "status": "approved",
+      "awardedGrades": 2,
+      "createdAt": "[التاريخ: 2026-09-16 | الوقت: 11:20:05]",
+      "teacherActionAt": "[التاريخ: 2026-09-16 | الوقت: 11:45:22]",
+      "teacherName": "أ. أحمد البلوشي"
+    }
+  ],
+  "audit_logs": [
+    {
+      "id": "audit-1",
+      "timestamp": "[التاريخ: 2026-09-17 | الوقت: 07:15:00]",
+      "timestampMs": 1789712100000,
+      "operatorId": "ADMIN-1010",
+      "operatorRole": "admin",
+      "operatorName": "مدير المدرسة / إدارة شؤون المعلمين",
+      "category": "teacher_attendance",
+      "actionType": "رصد",
+      "targetPerson": "أ. سالم بن سعيد السعدي",
+      "details": "رصد غياب المعلم رسمياً بداعي إجازة عارضة موثقة بالبوابة التعليمية",
+      "previousState": "حاضر (available)",
+      "newState": "غائب (absent)"
+    },
+    {
+      "id": "audit-2",
+      "timestamp": "[التاريخ: 2026-09-17 | الوقت: 07:25:12]",
+      "timestampMs": 1789712712000,
+      "operatorId": "ADMIN-1010",
+      "operatorRole": "admin",
+      "operatorName": "إدارة المدرسة (قسم الجدول المدرسي)",
+      "category": "substitution",
+      "actionType": "إسناد",
+      "targetPerson": "أ. أحمد بن علي البلوشي (بديل) / أ. سالم السعدي (غائب)",
+      "details": "إسناد حصة الاحتياط الأولى للصف 10 / 2 فيزياء للمعلم أ. أحمد البلوشي بناءً على النصاب الأسبوعي",
+      "previousState": "بانتظار التكليف (pending)",
+      "newState": "مُسنَد ومُعتمد (assigned)"
+    },
+    {
+      "id": "audit-3",
+      "timestamp": "[التاريخ: 2026-09-17 | الوقت: 07:45:10]",
+      "timestampMs": 1789713910000,
+      "operatorId": "TEACHER-2020",
+      "operatorRole": "teacher",
+      "operatorName": "أ. أحمد البلوشي (معلم الحصة)",
+      "category": "student_attendance",
+      "actionType": "رصد",
+      "targetPerson": "محمد بن حمد البوسعيدي",
+      "details": "تسجيل الحضور الصفي بالحصة الأولى (الصف العاشر / 1)",
+      "previousState": "غير مسجل",
+      "newState": "حاضر (present)"
+    },
+    {
+      "id": "audit-4",
+      "timestamp": "[التاريخ: 2026-09-17 | الوقت: 08:05:33]",
+      "timestampMs": 1789715133000,
+      "operatorId": "TEACHER-2020",
+      "operatorRole": "teacher",
+      "operatorName": "أ. حمود الريامي",
+      "category": "student_infraction",
+      "actionType": "رصد",
+      "targetPerson": "عمر بن راشد الشكيلي",
+      "details": "رصد تأخر عن الحصة الأولى لمدة 20 دقيقة وتوجيه إشعار للأخصائي الاجتماعي",
+      "previousState": "انضباط عادي",
+      "newState": "مخالفة تأخر متكرر (خفيفة)"
+    },
+    {
+      "id": "audit-5",
+      "timestamp": "[التاريخ: 2026-09-17 | الوقت: 08:30:00]",
+      "timestampMs": 1789716600000,
+      "operatorId": "ADMIN-1010",
+      "operatorRole": "admin",
+      "operatorName": "مدير المدرسة",
+      "category": "teacher_honor",
+      "actionType": "اعتماد",
+      "targetPerson": "أ. أحمد بن علي البلوشي",
+      "details": "منح وسام الإجادة التربوية تقديراً للمبادرة التعليمية بالمختبر الافتراضي",
+      "previousState": "سجل اعتيادي",
+      "newState": "ممنوح وسام الإجادة التربوية"
+    },
+    {
+      "id": "audit-6",
+      "timestamp": "[التاريخ: 2026-09-17 | الوقت: 09:15:30]",
+      "timestampMs": 1789719330000,
+      "operatorId": "TEACHER-2020",
+      "operatorRole": "teacher",
+      "operatorName": "أ. أحمد البلوشي",
+      "category": "student_honor",
+      "actionType": "إضافة",
+      "targetPerson": "محمد بن حمد البوسعيدي",
+      "details": "منح +25 نقطة تميّز للمشاركة الصفية والتفاعل المبدع في سلاسل كامبريدج",
+      "previousState": "220 نقطة",
+      "newState": "245 نقطة (+25)"
+    }
+  ],
+  "rewards": [
+    {
+      "id": "rew-1",
+      "title": "وسام التميز المدرسي الرقمي",
+      "rewardType": "badge",
+      "cost": 120,
+      "iconName": "Award",
+      "description": "يظهر في ملف إنجاز الطالب في البوابة التعليمية ومنصة صَرْح.",
+      "unlocked": true
+    },
+    {
+      "id": "rew-2",
+      "title": "تكريم وثناء في الإذاعة المدرسية",
+      "rewardType": "announcement",
+      "cost": 180,
+      "iconName": "Mic",
+      "description": "ذكر اسم الطالب في طابور الصباح تقديراً لانضباطه وسلوكه المتميز.",
+      "unlocked": false
+    },
+    {
+      "id": "rew-3",
+      "title": "شهادة شكر معتمدة من مدير المدرسة",
+      "rewardType": "certificate",
+      "cost": 250,
+      "iconName": "FileBadge",
+      "description": "شهادة تقدير رسمية مختومة موجهة لولي الأمر تشيد بالتميز الأكاديمي.",
+      "unlocked": false
+    },
+    {
+      "id": "rew-4",
+      "title": "شرف قيادة طابور الصباح ليوم كامل",
+      "rewardType": "privilege",
+      "cost": 320,
+      "iconName": "Crown",
+      "description": "المشاركة كقائد مراسم رفع العلم العماني وترديد النشيد السلطاني.",
+      "unlocked": false
+    }
+  ],
+  "daily_achievements": [
+    {
+      "id": "ach-1",
+      "task": "تسليم واجب رياضيات كامبريدج في الموعد المحدد",
+      "points": 20,
+      "completed": true,
+      "category": "academic"
+    },
+    {
+      "id": "ach-2",
+      "task": "الانضباط والهدوء في طابور الصباح",
+      "points": 15,
+      "completed": true,
+      "category": "discipline"
+    },
+    {
+      "id": "ach-3",
+      "task": "المشاركة الفاعلة في النشاط الاستقصائي للعلوم",
+      "points": 25,
+      "completed": false,
+      "category": "academic"
+    },
+    {
+      "id": "ach-4",
+      "task": "المحافظة على نظافة الفصل وممتلكات المدرسة",
+      "points": 15,
+      "completed": false,
+      "category": "discipline"
+    },
+    {
+      "id": "ach-5",
+      "task": "إنجاز جلسة تنظيم المذاكرة لليوم عبر صَرْح",
+      "points": 20,
+      "completed": false,
+      "category": "activities"
+    }
+  ],
+  "study_tasks": [
+    {
+      "id": "std-1",
+      "subject": "فيزياء كامبريدج (الصف العاشر)",
+      "taskDescription": "حل تمارين الاستقصاء العلمي في كتاب النشاط صفحة 34-36",
+      "estimatedMinutes": 40,
+      "timeSlot": "4:30 م - 5:10 م",
+      "done": true,
+      "priority": "high"
+    },
+    {
+      "id": "std-2",
+      "subject": "اللغة العربية",
+      "taskDescription": "حفظ الشواهد البلاغية وتحليل قصيدة في رحاب الوطن",
+      "estimatedMinutes": 35,
+      "timeSlot": "5:20 م - 5:55 م",
+      "done": false,
+      "priority": "medium"
+    },
+    {
+      "id": "std-3",
+      "subject": "الدراسات الاجتماعية",
+      "taskDescription": "رسم خريطة التضاريس لسلطنة عمان وتحديد محافظات السلطنة",
+      "estimatedMinutes": 30,
+      "timeSlot": "6:15 م - 6:45 م",
+      "done": false,
+      "priority": "medium"
+    }
+  ],
+  "behavior_reports": [
+    {
+      "id": "beh-1",
+      "studentName": "محمد بن حمد البوسعيدي",
+      "gradeClass": "الصف العاشر / 1",
+      "type": "positive",
+      "observation": "مساعدة زميله في فهم المسائل الحسابية لسلسلة كامبريدج بروح تعاونية عالية.",
+      "actionTaken": "منح 25 Edu-Coins وتوثيق في البوابة التعليمية.",
+      "recordedBy": "أ. حمود الريامي",
+      "date": "اليوم - الحصة الثانية"
+    },
+    {
+      "id": "beh-2",
+      "studentName": "فيصل بن نبهان الراسبي",
+      "gradeClass": "الصف العاشر / 2",
+      "type": "remedial",
+      "observation": "تكرار نسيان كتاب النشاط والشرود الذهني أثناء الشرح الصفي.",
+      "actionTaken": "إشعار المعلم الأول والتنسيق مع الأخصائي الاجتماعي لمتابعة الحالة.",
+      "recordedBy": "أ. أحمد البلوشي",
+      "date": "اليوم - الحصة الرابعة"
+    }
+  ]
+}

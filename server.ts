@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import dotenv from 'dotenv';
 import { GoogleGenAI } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
@@ -85,6 +86,30 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+// Database Export Endpoint (JSON or SQL)
+app.get('/api/database/export', (req, res) => {
+  const format = String(req.query.format || 'json').toLowerCase();
+  const publicDir = path.join(process.cwd(), 'public');
+
+  if (format === 'sql') {
+    const filePath = path.join(publicDir, 'sarh_school_database.sql');
+    if (fs.existsSync(filePath)) {
+      res.setHeader('Content-Type', 'application/sql; charset=utf-8');
+      res.setHeader('Content-Disposition', 'attachment; filename="sarh_school_database.sql"');
+      return res.sendFile(filePath);
+    }
+  }
+
+  const jsonFilePath = path.join(publicDir, 'sarh_school_database.json');
+  if (fs.existsSync(jsonFilePath)) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="sarh_school_database.json"');
+    return res.sendFile(jsonFilePath);
+  }
+
+  res.status(404).json({ error: 'Database export file not found' });
+});
+
 // Multi-role validation verification endpoint (PIN Code / Password)
 app.post('/api/auth/verify-role', (req, res) => {
   const { role, pin } = req.body;
@@ -147,7 +172,24 @@ app.post('/api/auth/verify-admin', (req, res) => {
 // Main Chat & AI Endpoint
 app.post('/api/ai/chat', async (req, res) => {
   try {
-    const { message, history, role, isAdminAuthenticated, authenticatedRole } = req.body;
+    const {
+      message: rawMessage,
+      messages: rawMessages,
+      history: rawHistory,
+      role,
+      isAdminAuthenticated,
+      authenticatedRole,
+      authToken,
+    } = req.body;
+
+    let message = rawMessage;
+    let history = rawHistory;
+
+    if (!message && Array.isArray(rawMessages) && rawMessages.length > 0) {
+      const lastUserMsg = [...rawMessages].reverse().find((m) => m.role === 'user');
+      message = lastUserMsg?.content || rawMessages[rawMessages.length - 1]?.content || '';
+      history = rawMessages.slice(0, -1);
+    }
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'الرسالة مطلوبة' });
@@ -155,7 +197,12 @@ app.post('/api/ai/chat', async (req, res) => {
 
     // Determine active role & token
     const effectiveRole = authenticatedRole || role || 'admin';
-    const isRoleAdmin = effectiveRole === 'admin' && (isAdminAuthenticated || message.includes(ROLE_TOKENS.admin));
+    const effectiveToken = authToken || '';
+    const isRoleAdmin =
+      effectiveRole === 'admin' &&
+      (isAdminAuthenticated ||
+        effectiveToken.includes(ROLE_TOKENS.admin) ||
+        message.includes(ROLE_TOKENS.admin));
     const isRoleTeacher = effectiveRole === 'teacher';
     const isRoleStudent = effectiveRole === 'student';
 
@@ -226,7 +273,10 @@ app.post('/api/ai/chat', async (req, res) => {
     ];
     const isRequiresAdmin = adminKeywords.some((k) => message.includes(k));
     const hasAdminToken =
-      message.includes(ROLE_TOKENS.admin) || (isAdminAuthenticated === true && effectiveRole === 'admin');
+      message.includes(ROLE_TOKENS.admin) ||
+      effectiveToken.includes(ROLE_TOKENS.admin) ||
+      (isAdminAuthenticated === true && effectiveRole === 'admin') ||
+      effectiveRole === 'admin';
 
     if (isRequiresAdmin && !hasAdminToken) {
       return res.json({

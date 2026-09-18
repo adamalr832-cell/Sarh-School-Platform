@@ -2,5 +2,7 @@
   "name": "منصة صَرْح المدرسية الذكية",
   "description": "المساعد الذكي لإدارة المدارس في سلطنة عُمان - للإدارة المدرسية، الهيئة التدريسية، والطلاب وفق معايير وزارة التعليم",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
