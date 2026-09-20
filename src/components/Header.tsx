@@ -13,10 +13,16 @@ import {
   Clock,
   History,
   Database,
+  FileJson,
+  FileText,
+  Cloud,
+  Check,
+  Palette,
 } from 'lucide-react';
 import { UserRole } from '../types';
 import { ROLE_CONFIGS } from '../config/authConfig';
 import { getPrecisionTimestamp } from '../utils/timestamp';
+import { FirebaseUser } from '../lib/firebase';
 
 interface HeaderProps {
   currentRole: UserRole;
@@ -27,6 +33,12 @@ interface HeaderProps {
   onOpenAiChat: () => void;
   onOpenAuditLog: () => void;
   onOpenDatabaseExport?: () => void;
+  onOpenDatabaseDashboard?: () => void;
+  isDatabaseDashboardOpen?: boolean;
+  currentUser?: FirebaseUser | null;
+  isCloudSyncing?: boolean;
+  onTriggerCloudSync?: () => void;
+  onOpenBrandIdentity?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -38,6 +50,12 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAiChat,
   onOpenAuditLog,
   onOpenDatabaseExport,
+  onOpenDatabaseDashboard,
+  isDatabaseDashboardOpen = false,
+  currentUser,
+  isCloudSyncing = false,
+  onTriggerCloudSync,
+  onOpenBrandIdentity,
 }) => {
   const currentConfig = ROLE_CONFIGS[currentRole];
   const isCurrentRoleAuthed = authenticatedRole === currentRole;
@@ -81,15 +99,55 @@ export const Header: React.FC<HeaderProps> = ({
             <span>سجل الأمان (Audit)</span>
           </button>
 
+          {onOpenDatabaseDashboard && (
+            <button
+              id="header-open-database-dashboard-btn"
+              onClick={onOpenDatabaseDashboard}
+              className={`flex items-center gap-1 text-[11px] font-semibold border px-2.5 py-0.5 rounded-lg transition-colors ${
+                isDatabaseDashboardOpen
+                  ? 'bg-indigo-600 text-white border-indigo-400 shadow-sm'
+                  : 'bg-indigo-950/80 hover:bg-indigo-900 text-indigo-200 border-indigo-700/60'
+              }`}
+              title="استعراض وإدارة قاعدة البيانات الشاملة للمدرسة"
+            >
+              <Database className="w-3 h-3 text-indigo-400" />
+              <span>لوحة قاعدة البيانات</span>
+            </button>
+          )}
+
           {onOpenDatabaseExport && (
             <button
               id="header-open-database-btn"
               onClick={onOpenDatabaseExport}
-              className="flex items-center gap-1 text-[11px] font-semibold bg-indigo-950/80 hover:bg-indigo-900 text-indigo-200 border border-indigo-700/60 px-2.5 py-0.5 rounded-lg transition-colors"
-              title="تصدير وتحميل قاعدة البيانات (ملف JSON / SQL)"
+              className="flex items-center gap-1.5 text-[11px] font-semibold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-700/70 px-2.5 py-0.5 rounded-lg transition-colors shadow-sm"
+              title="تصدير كشوفات وتقارير PDF وقاعدة البيانات الرسمية"
             >
-              <Database className="w-3 h-3 text-indigo-400" />
-              <span>ملف قاعدة البيانات</span>
+              <FileText className="w-3 h-3 text-emerald-400" />
+              <span>تقارير PDF / قاعدة البيانات</span>
+            </button>
+          )}
+
+          {/* Cloud Account & Storage Badge */}
+          {currentUser ? (
+            <div
+              onClick={onTriggerCloudSync}
+              className="flex items-center gap-1.5 text-[11px] font-medium bg-emerald-900/60 hover:bg-emerald-800/80 cursor-pointer text-emerald-200 px-2.5 py-0.5 rounded-lg border border-emerald-500/50 transition-colors"
+              title="سحابة Google متصلة ومزامنة تلقائياً. اضغط للمزامنة الفورية."
+            >
+              <Cloud className={`w-3.5 h-3.5 text-emerald-300 ${isCloudSyncing ? 'animate-bounce' : ''}`} />
+              <span className="hidden sm:inline font-mono">{currentUser.email?.split('@')[0]}</span>
+              <span className="text-[10px] bg-emerald-700/80 px-1.5 py-0.2 rounded font-bold">
+                {isCloudSyncing ? 'مزامنة...' : 'سحابي'}
+              </span>
+            </div>
+          ) : (
+            <button
+              onClick={() => onOpenAuthModal(currentRole)}
+              className="flex items-center gap-1 text-[11px] font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-0.5 rounded-lg border border-slate-700 transition-colors"
+              title="تسجيل الدخول بحساب Google لربط السحابة"
+            >
+              <Cloud className="w-3.5 h-3.5 text-slate-400" />
+              <span className="hidden sm:inline">سحابة Google</span>
             </button>
           )}
 
@@ -118,9 +176,17 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Logo & School Identity */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-800 flex items-center justify-center shadow-inner border border-emerald-400/30 text-white font-bold text-xl tracking-tight">
-                صَ
-              </div>
+              <button
+                id="header-brand-logo-btn"
+                onClick={onOpenBrandIdentity}
+                title="عرض دليل الهوية البصرية الفاخرة المعتمدة لمنصة صَرْح"
+                className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-800 hover:from-emerald-500 hover:to-teal-700 transition-all flex items-center justify-center shadow-inner border border-emerald-400/30 text-white font-bold text-xl tracking-tight cursor-pointer group relative"
+              >
+                <span>صَ</span>
+                <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-400 border border-slate-900 flex items-center justify-center text-[8px] text-slate-950 font-bold">
+                  ★
+                </span>
+              </button>
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
@@ -129,6 +195,17 @@ export const Header: React.FC<HeaderProps> = ({
                       عُمان الذكية
                     </span>
                   </h1>
+                  {onOpenBrandIdentity && (
+                    <button
+                      id="header-brand-identity-badge-btn"
+                      onClick={onOpenBrandIdentity}
+                      className="hidden sm:flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-200 border border-amber-500/30 hover:bg-amber-500/30 transition-colors"
+                      title="عرض بطاقة الهوية البصرية الفاخرة ولوحة الألوان المعتمدة"
+                    >
+                      <Palette className="w-3 h-3 text-amber-300" />
+                      <span>الهوية البصرية المعتمدة</span>
+                    </button>
+                  )}
                 </div>
                 <p className="text-xs text-slate-400">
                   المساعد المدمج للإدارة المدرسية والهيئة التدريسية والطلاب

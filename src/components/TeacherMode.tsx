@@ -21,12 +21,14 @@ import {
   FileCheck,
   AlertTriangle,
   Plus,
+  FileText,
 } from 'lucide-react';
 import { StudentRecord, TeacherAwardLog, RedemptionRequest, StudentInfraction } from '../types';
 
 interface TeacherModeProps {
   isTeacherAuthenticated?: boolean;
   onOpenAuthModal?: () => void;
+  onOpenExportModal?: () => void;
   students: StudentRecord[];
   awardLogs: TeacherAwardLog[];
   infractions: StudentInfraction[];
@@ -44,6 +46,7 @@ interface TeacherModeProps {
 export const TeacherMode: React.FC<TeacherModeProps> = ({
   isTeacherAuthenticated = false,
   onOpenAuthModal,
+  onOpenExportModal,
   students,
   awardLogs,
   infractions,
@@ -340,6 +343,18 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
+                {onOpenExportModal && (
+                  <button
+                    id="teacher-download-attendance-pdf-btn"
+                    onClick={onOpenExportModal}
+                    className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-emerald-700/50 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+                    title="تحميل كشف حضور وغياب الطلاب بصيغة PDF الرسمية"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>تحميل كشف الحضور PDF</span>
+                  </button>
+                )}
+
                 <button
                   id="mark-all-present-btn"
                   onClick={() => onMarkAllPresent(selectedClass, selectedPeriod)}
@@ -634,13 +649,27 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
               </p>
             </div>
 
-            <button
-              onClick={() => setIsInfractionModalOpen(true)}
-              className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-all shadow flex items-center gap-1.5 self-start sm:self-auto"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>رصد مخالفة / ملاحظة جديدة</span>
-            </button>
+            <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+              {onOpenExportModal && (
+                <button
+                  id="teacher-download-infractions-pdf-btn"
+                  onClick={onOpenExportModal}
+                  className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-700/50 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+                  title="تحميل كشف المخالفات السلوكية الطلابي PDF"
+                >
+                  <FileText className="w-3.5 h-3.5 text-amber-400" />
+                  <span>تحميل كشف المخالفات PDF</span>
+                </button>
+              )}
+
+              <button
+                onClick={() => setIsInfractionModalOpen(true)}
+                className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-all shadow flex items-center gap-1.5"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>رصد مخالفة / ملاحظة جديدة</span>
+              </button>
+            </div>
           </div>
 
           <div className="divide-y divide-slate-100 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">

@@ -21,16 +21,41 @@ import {
   History,
   FileBadge,
   Search,
+  Database,
+  FileText,
+  Download,
+  Scale,
 } from 'lucide-react';
-import { TeacherLoad, AbsenceRequest, TeacherHonor, AuditLogEntry } from '../types';
+import {
+  TeacherLoad,
+  AbsenceRequest,
+  TeacherHonor,
+  AuditLogEntry,
+  StudentInfraction,
+  StudentRecord,
+  AdministrativeSanction,
+} from '../types';
+import { StudentAffairsReview } from './StudentAffairsReview';
 
 interface AdminModeProps {
   isAdminAuthenticated?: boolean;
   onOpenAuthModal?: () => void;
+  onOpenDatabase?: () => void;
+  onOpenExportModal?: () => void;
   teachers: TeacherLoad[];
   absences: AbsenceRequest[];
   teacherHonors: TeacherHonor[];
   auditLogs: AuditLogEntry[];
+  infractions?: StudentInfraction[];
+  students?: StudentRecord[];
+  onEnforceAdministrativeAction?: (
+    infractionId: string,
+    action: AdministrativeSanction,
+    actionNotes: string,
+    reviewerName: string,
+    deductPoints?: number
+  ) => void;
+  onDismissInfractionReferral?: (infractionId: string, reason: string, reviewerName: string) => void;
   onUpdateTeacherStatus: (teacherId: string, status: 'available' | 'absent' | 'delegated') => void;
   onAddAbsence: (absence: Omit<AbsenceRequest, 'id' | 'status'>) => void;
   onAssignSubstitute: (absenceId: string, substituteName: string) => void;
@@ -43,10 +68,16 @@ interface AdminModeProps {
 export const AdminMode: React.FC<AdminModeProps> = ({
   isAdminAuthenticated = false,
   onOpenAuthModal,
+  onOpenDatabase,
+  onOpenExportModal,
   teachers,
   absences,
   teacherHonors,
   auditLogs,
+  infractions = [],
+  students = [],
+  onEnforceAdministrativeAction,
+  onDismissInfractionReferral,
   onUpdateTeacherStatus,
   onAddAbsence,
   onAssignSubstitute,
@@ -55,7 +86,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
   onGenerateAiReport,
   isLoadingAi,
 }) => {
-  const [activeTab, setActiveTab] = useState<'attendance' | 'substitutes' | 'honors' | 'audit'>('attendance');
+  const [activeTab, setActiveTab] = useState<'attendance' | 'substitutes' | 'honors' | 'student_affairs' | 'audit'>('attendance');
 
   // Absence / Delegation Form Modal state
   const [isAddAbsenceModalOpen, setIsAddAbsenceModalOpen] = useState(false);
@@ -205,6 +236,24 @@ export const AdminMode: React.FC<AdminModeProps> = ({
           </button>
 
           <button
+            id="admin-tab-student-affairs"
+            onClick={() => setActiveTab('student_affairs')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              activeTab === 'student_affairs'
+                ? 'bg-amber-600 text-white shadow-sm'
+                : 'text-amber-200 hover:text-white hover:bg-amber-950/40'
+            }`}
+          >
+            <Scale className="w-3.5 h-3.5 text-amber-300" />
+            <span>لجنة شؤون الطلاب (قرار 234)</span>
+            {infractions.filter((i) => !i.status || i.status === 'pending_review').length > 0 && (
+              <span className="w-5 h-5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black flex items-center justify-center">
+                {infractions.filter((i) => !i.status || i.status === 'pending_review').length}
+              </span>
+            )}
+          </button>
+
+          <button
             id="admin-tab-audit"
             onClick={() => setActiveTab('audit')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
@@ -216,6 +265,18 @@ export const AdminMode: React.FC<AdminModeProps> = ({
             <History className="w-3.5 h-3.5" />
             <span>سجل الأمان (Audit Log)</span>
           </button>
+
+          {onOpenDatabase && (
+            <button
+              id="admin-tab-database"
+              onClick={onOpenDatabase}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-indigo-300 hover:text-white hover:bg-indigo-900/40 border border-indigo-500/30"
+              title="فتح لوحة قاعدة البيانات الشاملة"
+            >
+              <Database className="w-3.5 h-3.5 text-indigo-400" />
+              <span>قاعدة البيانات المدرسية</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -262,14 +323,28 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                 </p>
               </div>
 
-              <button
-                id="open-record-absence-btn"
-                onClick={() => setIsAddAbsenceModalOpen(true)}
-                className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow flex items-center gap-1.5 self-start sm:self-auto"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>تسجيل غياب أو تأخر جديد بالثانية</span>
-              </button>
+              <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+                {onOpenExportModal && (
+                  <button
+                    id="admin-download-teachers-pdf-btn"
+                    onClick={onOpenExportModal}
+                    className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-emerald-700/50 text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                    title="تحميل كشف غياب المعلمين والانتداب بصيغة PDF رسمية"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>تحميل كشف الغياب PDF</span>
+                  </button>
+                )}
+
+                <button
+                  id="open-record-absence-btn"
+                  onClick={() => setIsAddAbsenceModalOpen(true)}
+                  className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow flex items-center gap-1.5"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>تسجيل غياب أو تأخر جديد بالثانية</span>
+                </button>
+              </div>
             </div>
 
             <div className="divide-y divide-slate-100">
@@ -406,7 +481,18 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                {onOpenExportModal && (
+                  <button
+                    id="admin-download-substitutes-pdf-btn"
+                    onClick={onOpenExportModal}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-emerald-700/50 text-xs font-bold shadow-sm transition-all"
+                    title="تحميل جدول غياب وانتداب المعلمين PDF"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>تحميل جدول الانتداب PDF</span>
+                  </button>
+                )}
                 <button
                   id="auto-distribute-substitutes-btn"
                   onClick={onAutoDistributeSubstitutes}
@@ -614,7 +700,17 @@ export const AdminMode: React.FC<AdminModeProps> = ({
         </div>
       )}
 
-      {/* 4. سجل التتبع والأمان (Audit Log) */}
+      {/* 4. لجنة شؤون الطلاب والمخالفات السلوكية (القرار الوزاري 234/2017) */}
+      {activeTab === 'student_affairs' && (
+        <StudentAffairsReview
+          infractions={infractions}
+          students={students}
+          onEnforceAction={onEnforceAdministrativeAction || (() => {})}
+          onDismissReferral={onDismissInfractionReferral || (() => {})}
+        />
+      )}
+
+      {/* 5. سجل التتبع والأمان (Audit Log) */}
       {activeTab === 'audit' && (
         <div className="space-y-6">
           <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">

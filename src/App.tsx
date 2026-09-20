@@ -8,6 +8,8 @@ import { RoleAuthModal } from './components/RoleAuthModal';
 import { SarhAiChatDrawer } from './components/SarhAiChatDrawer';
 import { AuditLogModal } from './components/AuditLogModal';
 import { DatabaseExportModal } from './components/DatabaseExportModal';
+import { DatabaseDashboardView } from './components/DatabaseDashboardView';
+import { BrandIdentityModal } from './components/BrandIdentityModal';
 import {
   INITIAL_TEACHERS,
   INITIAL_ABSENCES,
@@ -30,9 +32,19 @@ import {
   AuditLogEntry,
   TeacherHonor,
   StudentInfraction,
+  AdministrativeSanction,
 } from './types';
 import { ROLE_PINS, ROLE_AUTH_TOKENS } from './config/authConfig';
 import { getPrecisionTimestamp } from './utils/timestamp';
+import {
+  auth,
+  onAuthStateChanged,
+  loginWithGoogle,
+  logoutFirebase,
+  getUserCloudData,
+  saveUserCloudData,
+  FirebaseUser,
+} from './lib/firebase';
 
 export default function App() {
   const [currentRole, setCurrentRole] = useState<UserRole>('admin');
@@ -43,6 +55,8 @@ export default function App() {
   const [isAiChatOpen, setIsAiChatOpen] = useState(false);
   const [isAuditLogModalOpen, setIsAuditLogModalOpen] = useState(false);
   const [isDatabaseExportModalOpen, setIsDatabaseExportModalOpen] = useState(false);
+  const [isDatabaseDashboardOpen, setIsDatabaseDashboardOpen] = useState(false);
+  const [isBrandModalOpen, setIsBrandModalOpen] = useState(false);
 
   // Core Data States
   const [teachers, setTeachers] = useState<TeacherLoad[]>(INITIAL_TEACHERS);
@@ -54,6 +68,99 @@ export default function App() {
   const [infractions, setInfractions] = useState<StudentInfraction[]>(INITIAL_STUDENT_INFRACTIONS);
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>(INITIAL_AUDIT_LOGS);
   const [eduCoins, setEduCoins] = useState<number>(245);
+
+  // Firebase Auth and Cloud Sync State
+  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
+  const [isCloudSyncing, setIsCloudSyncing] = useState<boolean>(false);
+  const [lastCloudSyncTime, setLastCloudSyncTime] = useState<string>('');
+
+  // Listen to Firebase Auth changes & load isolated cloud database
+  React.useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user: FirebaseUser | null) => {
+      setCurrentUser(user);
+      if (user && user.email) {
+        try {
+          setIsCloudSyncing(true);
+          const cloudData = await getUserCloudData(user.email);
+          if (cloudData) {
+            if (Array.isArray(cloudData.teachers)) setTeachers(cloudData.teachers as TeacherLoad[]);
+            if (Array.isArray(cloudData.absences)) setAbsences(cloudData.absences as AbsenceRequest[]);
+            if (Array.isArray(cloudData.students)) setStudents(cloudData.students as StudentRecord[]);
+            if (Array.isArray(cloudData.awardLogs)) setAwardLogs(cloudData.awardLogs as TeacherAwardLog[]);
+            if (Array.isArray(cloudData.redemptionRequests))
+              setRedemptionRequests(cloudData.redemptionRequests as RedemptionRequest[]);
+            if (Array.isArray(cloudData.teacherHonors))
+              setTeacherHonors(cloudData.teacherHonors as TeacherHonor[]);
+            if (Array.isArray(cloudData.infractions))
+              setInfractions(cloudData.infractions as StudentInfraction[]);
+            if (Array.isArray(cloudData.auditLogs))
+              setAuditLogs(cloudData.auditLogs as AuditLogEntry[]);
+            if (typeof cloudData.eduCoins === 'number') setEduCoins(cloudData.eduCoins);
+
+            const ts = getPrecisionTimestamp();
+            setLastCloudSyncTime(ts);
+            logAudit(
+              user.email,
+              'admin',
+              user.displayName || user.email,
+              'cloud_sync',
+              'استرجاع سحابي',
+              'مخزن المستخدم المعزول',
+              `تم استرجاع ومزامنة السجلات المدرسية بنجاح من سحابة Firestore`,
+              'بيانات محلية',
+              'بيانات سحابية متزامنة'
+            );
+          } else {
+            // First time user: save the initial schema to their cloud store
+            await saveUserCloudData(user.email, {
+              teachers: INITIAL_TEACHERS,
+              absences: INITIAL_ABSENCES,
+              students: INITIAL_STUDENTS,
+              awardLogs: INITIAL_AWARD_LOGS,
+              redemptionRequests: INITIAL_REDEMPTIONS,
+              teacherHonors: INITIAL_TEACHER_HONORS,
+              infractions: INITIAL_STUDENT_INFRACTIONS,
+              auditLogs: INITIAL_AUDIT_LOGS,
+              eduCoins: 245,
+            });
+            setLastCloudSyncTime(getPrecisionTimestamp());
+          }
+        } catch (err) {
+          console.warn('Error loading user cloud store:', err);
+        } finally {
+          setIsCloudSyncing(false);
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Trigger manual or state-change cloud sync
+  const syncToCloud = async (overrideEmail?: string) => {
+    const targetEmail = overrideEmail || currentUser?.email;
+    if (!targetEmail) return;
+    try {
+      setIsCloudSyncing(true);
+      await saveUserCloudData(targetEmail, {
+        teachers,
+        absences,
+        students,
+        awardLogs,
+        redemptionRequests,
+        teacherHonors,
+        infractions,
+        auditLogs,
+        eduCoins,
+      });
+      const ts = getPrecisionTimestamp();
+      setLastCloudSyncTime(ts);
+    } catch (err) {
+      console.warn('Cloud save error:', err);
+    } finally {
+      setIsCloudSyncing(false);
+    }
+  };
 
   // Helper to log audit entries immutably
   const logAudit = (
@@ -107,6 +214,7 @@ export default function App() {
   // Switch Role Handler: If the user selects a role that is not authenticated, prompt for PIN
   const handleRoleChange = (role: UserRole) => {
     setCurrentRole(role);
+    setIsDatabaseDashboardOpen(false);
     if (authenticatedRole !== role) {
       setTargetAuthRole(role);
       setIsAuthModalOpen(true);
@@ -619,6 +727,106 @@ export default function App() {
     );
   };
 
+  // Student Affairs: Enforce Committee / Administrative Action (Decision 234/2017)
+  const handleEnforceAdministrativeAction = (
+    infractionId: string,
+    action: AdministrativeSanction,
+    actionNotes: string,
+    reviewerName: string,
+    deductPoints = 0
+  ) => {
+    const ts = getPrecisionTimestamp();
+    const targetInfr = infractions.find((i) => i.id === infractionId);
+    if (!targetInfr) return;
+
+    // Update infraction referral record
+    setInfractions((prev) =>
+      prev.map((i) =>
+        i.id === infractionId
+          ? {
+              ...i,
+              referralStatus: 'action_enforced',
+              administrativeAction: action,
+              actionNotes,
+              reviewedBy: reviewerName,
+              reviewedAt: ts,
+              penaltyPointsDeducted: deductPoints,
+            }
+          : i
+      )
+    );
+
+    // If points deduction applies, update student points
+    if (deductPoints > 0 && targetInfr.studentId) {
+      setStudents((prev) =>
+        prev.map((s) =>
+          s.id === targetInfr.studentId
+            ? { ...s, points: Math.max(0, s.points - deductPoints) }
+            : s
+        )
+      );
+    }
+
+    logAudit(
+      'ADMIN-1010',
+      'admin',
+      reviewerName || 'لجنة شؤون الطلاب (ADMIN-1010)',
+      'student_infraction',
+      'اعتماد عقوبة إدارية',
+      targetInfr.studentName,
+      `اعتماد عقوبة (${action}) بموجب القرار الوزاري 234/2017 مع خصم ${deductPoints} نقطة: ${actionNotes}`,
+      'قيد المراجعة',
+      `نافذة (${action})`
+    );
+
+    // Auto sync to cloud if user connected
+    if (currentUser?.email) {
+      setTimeout(() => syncToCloud(), 200);
+    }
+  };
+
+  // Student Affairs: Dismiss Infraction Referral
+  const handleDismissInfractionReferral = (
+    infractionId: string,
+    reason: string,
+    reviewerName: string
+  ) => {
+    const ts = getPrecisionTimestamp();
+    const targetInfr = infractions.find((i) => i.id === infractionId);
+    if (!targetInfr) return;
+
+    setInfractions((prev) =>
+      prev.map((i) =>
+        i.id === infractionId
+          ? {
+              ...i,
+              referralStatus: 'dismissed',
+              actionNotes: `حفظ المخالفة: ${reason}`,
+              reviewedBy: reviewerName,
+              reviewedAt: ts,
+            }
+          : i
+      )
+    );
+
+    logAudit(
+      'ADMIN-1010',
+      'admin',
+      reviewerName || 'لجنة شؤون الطلاب (ADMIN-1010)',
+      'student_infraction',
+      'حفظ إحالة مخالفة',
+      targetInfr.studentName,
+      `حفظ وتبرئة الإحالة السلوكية بموجب مداولات اللجنة: ${reason}`,
+      'قيد المراجعة',
+      'محفوظة ومبرأة'
+    );
+
+    // Auto sync to cloud if user connected
+    if (currentUser?.email) {
+      setTimeout(() => syncToCloud(), 200);
+    }
+  };
+
   // Teacher: Approve Grades Request
   const handleApproveGradesRequest = (requestId: string, gradesAmount: number) => {
     const ts = getPrecisionTimestamp();
@@ -694,6 +902,12 @@ export default function App() {
         onOpenAiChat={() => setIsAiChatOpen(true)}
         onOpenAuditLog={() => setIsAuditLogModalOpen(true)}
         onOpenDatabaseExport={() => setIsDatabaseExportModalOpen(true)}
+        onOpenDatabaseDashboard={() => setIsDatabaseDashboardOpen(!isDatabaseDashboardOpen)}
+        isDatabaseDashboardOpen={isDatabaseDashboardOpen}
+        currentUser={currentUser}
+        isCloudSyncing={isCloudSyncing}
+        onTriggerCloudSync={() => syncToCloud()}
+        onOpenBrandIdentity={() => setIsBrandModalOpen(true)}
       />
 
       {/* Main Container */}
@@ -708,60 +922,86 @@ export default function App() {
           }}
         />
 
-        {/* Active Role View */}
-        {currentRole === 'admin' && (
-          <AdminMode
-            isAdminAuthenticated={authenticatedRole === 'admin'}
-            onOpenAuthModal={() => handleOpenAuthModal('admin')}
+        {/* Database Management & Exploration View */}
+        {isDatabaseDashboardOpen ? (
+          <DatabaseDashboardView
             teachers={teachers}
             absences={absences}
-            teacherHonors={teacherHonors}
-            auditLogs={auditLogs}
-            onUpdateTeacherStatus={handleUpdateTeacherStatus}
-            onAddAbsence={handleAddAbsence}
-            onAssignSubstitute={handleAssignSubstitute}
-            onAutoDistributeSubstitutes={handleAutoDistributeSubstitutes}
-            onAddTeacherHonor={handleAddTeacherHonor}
-            onGenerateAiReport={(prompt) => {
-              setIsAiChatOpen(true);
-              handleSendMessage(prompt);
-            }}
-            isLoadingAi={isLoadingAi}
-          />
-        )}
-
-        {currentRole === 'teacher' && (
-          <TeacherMode
-            isTeacherAuthenticated={authenticatedRole === 'teacher'}
-            onOpenAuthModal={() => handleOpenAuthModal('teacher')}
             students={students}
             awardLogs={awardLogs}
-            infractions={infractions}
             redemptionRequests={redemptionRequests}
-            onUpdateStudentAttendance={handleUpdateStudentAttendance}
-            onMarkAllPresent={handleMarkAllPresent}
-            onAwardPoints={handleAwardPoints}
-            onAddInfraction={handleAddInfraction}
-            onApproveGradesRequest={handleApproveGradesRequest}
-            onApproveHonorRequest={handleApproveHonorRequest}
-            onGenerateAiResponse={(prompt) => {
-              setIsAiChatOpen(true);
-              handleSendMessage(prompt);
-            }}
-            isLoadingAi={isLoadingAi}
-          />
-        )}
-
-        {currentRole === 'student' && (
-          <StudentMode
-            isStudentAuthenticated={authenticatedRole === 'student'}
-            onOpenAuthModal={() => handleOpenAuthModal('student')}
+            teacherHonors={teacherHonors}
+            infractions={infractions}
+            auditLogs={auditLogs}
             eduCoins={eduCoins}
-            studentRequests={redemptionRequests.filter((r) => r.studentId === 'std-1')}
-            onRequestRedemption={handleStudentRequestRedemption}
-            studentName="محمد بن حمد البوسعيدي"
-            studentClass="الصف العاشر / 1"
+            onOpenExportModal={() => setIsDatabaseExportModalOpen(true)}
+            onClose={() => setIsDatabaseDashboardOpen(false)}
           />
+        ) : (
+          <>
+            {/* Active Role View */}
+            {currentRole === 'admin' && (
+              <AdminMode
+                isAdminAuthenticated={authenticatedRole === 'admin'}
+                onOpenAuthModal={() => handleOpenAuthModal('admin')}
+                onOpenDatabase={() => setIsDatabaseDashboardOpen(true)}
+                onOpenExportModal={() => setIsDatabaseExportModalOpen(true)}
+                teachers={teachers}
+                absences={absences}
+                teacherHonors={teacherHonors}
+                auditLogs={auditLogs}
+                infractions={infractions}
+                students={students}
+                onEnforceAdministrativeAction={handleEnforceAdministrativeAction}
+                onDismissInfractionReferral={handleDismissInfractionReferral}
+                onUpdateTeacherStatus={handleUpdateTeacherStatus}
+                onAddAbsence={handleAddAbsence}
+                onAssignSubstitute={handleAssignSubstitute}
+                onAutoDistributeSubstitutes={handleAutoDistributeSubstitutes}
+                onAddTeacherHonor={handleAddTeacherHonor}
+                onGenerateAiReport={(prompt) => {
+                  setIsAiChatOpen(true);
+                  handleSendMessage(prompt);
+                }}
+                isLoadingAi={isLoadingAi}
+              />
+            )}
+
+            {currentRole === 'teacher' && (
+              <TeacherMode
+                isTeacherAuthenticated={authenticatedRole === 'teacher'}
+                onOpenAuthModal={() => handleOpenAuthModal('teacher')}
+                onOpenExportModal={() => setIsDatabaseExportModalOpen(true)}
+                students={students}
+                awardLogs={awardLogs}
+                infractions={infractions}
+                redemptionRequests={redemptionRequests}
+                onUpdateStudentAttendance={handleUpdateStudentAttendance}
+                onMarkAllPresent={handleMarkAllPresent}
+                onAwardPoints={handleAwardPoints}
+                onAddInfraction={handleAddInfraction}
+                onApproveGradesRequest={handleApproveGradesRequest}
+                onApproveHonorRequest={handleApproveHonorRequest}
+                onGenerateAiResponse={(prompt) => {
+                  setIsAiChatOpen(true);
+                  handleSendMessage(prompt);
+                }}
+                isLoadingAi={isLoadingAi}
+              />
+            )}
+
+            {currentRole === 'student' && (
+              <StudentMode
+                isStudentAuthenticated={authenticatedRole === 'student'}
+                onOpenAuthModal={() => handleOpenAuthModal('student')}
+                eduCoins={eduCoins}
+                studentRequests={redemptionRequests.filter((r) => r.studentId === 'std-1')}
+                onRequestRedemption={handleStudentRequestRedemption}
+                studentName="محمد بن حمد البوسعيدي"
+                studentClass="الصف العاشر / 1"
+              />
+            )}
+          </>
         )}
       </main>
 
@@ -785,6 +1025,10 @@ export default function App() {
         role={targetAuthRole}
         onClose={() => setIsAuthModalOpen(false)}
         onVerify={handleVerifyRolePin}
+        currentUser={currentUser}
+        onGoogleSignInSuccess={(user) => {
+          setCurrentUser(user);
+        }}
       />
 
       {/* Audit Log Modal */}
@@ -792,6 +1036,12 @@ export default function App() {
         isOpen={isAuditLogModalOpen}
         onClose={() => setIsAuditLogModalOpen(false)}
         auditLogs={auditLogs}
+      />
+
+      {/* Brand Identity Mockup & Design System Modal */}
+      <BrandIdentityModal
+        isOpen={isBrandModalOpen}
+        onClose={() => setIsBrandModalOpen(false)}
       />
 
       {/* Database Export Modal */}

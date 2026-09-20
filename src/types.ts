@@ -33,6 +33,9 @@ export interface StudentRecord {
   attendanceTimestamp?: string; // [التاريخ: YYYY-MM-DD | الوقت: HH:MM:SS]
   attendancePeriod?: number;
   seatNumber: number;
+  parentName?: string;
+  parentPhone?: string;
+  civilId?: string;
 }
 
 export interface TeacherAwardLog {
@@ -58,6 +61,17 @@ export interface TeacherHonor {
   timestampMs?: number;
 }
 
+export type InfractionDegree = 'الأولى (خفيفة)' | 'الثانية (متوسطة)' | 'الثالثة (جسيمة)' | 'الرابعة (شديدة الخطورة)';
+export type ReferralStatus = 'pending_review' | 'action_enforced' | 'counseled' | 'dismissed';
+export type AdministrativeSanction =
+  | 'تنبيه شفهي وتوثيق'
+  | 'إنذار كتابي رسمي'
+  | 'استدعاء ولي الأمر وتوقيع تعهد'
+  | 'إحالة إلى الأخصائي الاجتماعي'
+  | 'فصل مؤقت مع تكليف بأنشطة بديلة'
+  | 'خصم نقاط السلوك والانضباط'
+  | 'أخرى';
+
 export interface StudentInfraction {
   id: string;
   studentId: string;
@@ -66,9 +80,20 @@ export interface StudentInfraction {
   description: string;
   category: 'تأخر متكرر' | 'عدم إحضار أدوات التعلم' | 'مخالفة الانضباط الصفي' | 'سلوك سلبي' | string;
   severity: 'خفيفة' | 'متوسطة' | 'جسيمة';
+  degree?: InfractionDegree; // الدرجة حسب القرار الوزاري 234/2017
+  witnesses?: string; // أسماء الشهود إن وجد
   recordedBy: string; // اسم الشخص الذي قام بالرصد
+  teacherEmail?: string; // البريد الإلكتروني للمعلم الراصد
   timestamp: string; // [التاريخ: YYYY-MM-DD | الوقت: HH:MM:SS]
   timestampMs?: number;
+  // Student Affairs Administrative Review
+  status?: ReferralStatus; // حالة الإحالة للجنة شؤون الطلاب
+  administrativeAction?: AdministrativeSanction; // الإجراء الإداري المتخذ
+  actionNotes?: string; // مبررات وقرار لجنة شؤون الطلاب
+  reviewedBy?: string; // اسم المسؤول المعتمد
+  reviewerEmail?: string; // بريد المسؤول المعتمد
+  reviewedAt?: string; // وقت اعتماد الإجراء بالثانية
+  deductedPoints?: number; // عدد النقاط المحسومة
 }
 
 export interface AuditLogEntry {
@@ -84,9 +109,12 @@ export interface AuditLogEntry {
     | 'teacher_honor'
     | 'student_attendance'
     | 'student_infraction'
+    | 'student_referral'
+    | 'disciplinary_action'
     | 'student_honor'
     | 'redemption_request'
     | 'security_audit'
+    | 'cloud_sync'
     | string;
   actionType: string;
   targetPerson: string; // اسم الشخص المرتبط بالحدث
