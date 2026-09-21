@@ -33,6 +33,7 @@ import {
   AuditLogEntry,
 } from '../types';
 import { getPrecisionTimestamp } from '../utils/timestamp';
+import { SarhLogo } from './SarhLogo';
 
 interface DatabaseDashboardViewProps {
   teachers: TeacherLoad[];
@@ -269,28 +270,27 @@ export const DatabaseDashboardView: React.FC<DatabaseDashboardViewProps> = ({
   return (
     <div className="space-y-6" dir="rtl">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-900/60 rounded-2xl p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-[#1B2A4A] border border-[#135D43]/60 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-80 h-80 bg-[#135D43]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative z-10">
           <div className="flex items-start gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shadow-inner">
-              <Database className="w-8 h-8" />
-            </div>
+            <SarhLogo size="lg" variant="dark" showText={false} className="shrink-0" />
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                  نظام إدارة قاعدة بيانات صَرْح (Sarh School Database)
+                <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+                  <span>إدارة قاعدة بيانات وتقارير صَرْح</span>
+                  <span className="text-sm font-mono font-bold text-[#C48B69]">(Sarh DB Engine)</span>
                 </h1>
-                <span className="bg-indigo-500/20 text-indigo-300 text-xs px-2.5 py-1 rounded-full border border-indigo-500/40 font-mono">
+                <span className="bg-[#135D43]/40 text-[#C48B69] text-xs px-2.5 py-1 rounded-full border border-[#C48B69]/40 font-mono">
                   v2.4.0 • Active
                 </span>
-                <span className="bg-emerald-500/20 text-emerald-300 text-xs px-2.5 py-1 rounded-full border border-emerald-500/40 font-mono flex items-center gap-1">
+                <span className="bg-[#135D43]/30 text-emerald-300 text-xs px-2.5 py-1 rounded-full border border-[#135D43]/50 font-mono flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   محرك البيانات اللحظي
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-slate-300 mt-1.5 max-w-2xl leading-relaxed">
-                مدرسة موسى بن نصير للتعليم ما بعد الأساسي (10-12) • استعراض مباشر لكافة الجداول، العلاقات، وسجلات التوثيق بالثانية مع تصدير بصيغ JSON و SQL و CSV.
+                مدرسة موسى بن نصير للتعليم ما بعد الأساسي (10-12) • استعراض مباشر للجداول والتقارير المعتمدة بشعار صَرْح الرسمي مع التوثيق بالثانية وتصدير PDF و JSON و SQL و CSV.
               </p>
             </div>
           </div>
@@ -301,7 +301,7 @@ export const DatabaseDashboardView: React.FC<DatabaseDashboardViewProps> = ({
               <button
                 id="db-view-close-btn"
                 onClick={onClose}
-                className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-700 transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 bg-[#132038] hover:bg-[#1a2d4f] text-slate-200 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-700 transition-colors cursor-pointer"
                 title="الرجوع إلى البوابة الرئيسية"
               >
                 <ArrowRight className="w-4 h-4 text-slate-400" />
@@ -311,23 +311,23 @@ export const DatabaseDashboardView: React.FC<DatabaseDashboardViewProps> = ({
             <button
               id="db-view-open-export-btn"
               onClick={onOpenExportModal}
-              className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-950/40 transition-all cursor-pointer"
+              className="flex items-center gap-2 bg-[#135D43] hover:bg-[#0f4a35] text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg transition-all cursor-pointer border border-[#135D43]"
             >
-              <FileText className="w-4 h-4 text-emerald-200" />
+              <FileText className="w-4 h-4 text-[#C48B69]" />
               <span>تصدير تقارير PDF / قاعدة البيانات</span>
             </button>
             <a
               href="/sarh_school_database.sql"
               download="sarh_school_database.sql"
-              className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-700 transition-colors"
+              className="flex items-center gap-1.5 bg-[#132038] hover:bg-[#1a2d4f] text-slate-200 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-700 transition-colors"
             >
-              <FileCode className="w-4 h-4 text-indigo-400" />
+              <FileCode className="w-4 h-4 text-[#C48B69]" />
               <span>تحميل .SQL</span>
             </a>
             <a
               href="/sarh_school_database.json"
               download="sarh_school_database.json"
-              className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-700 transition-colors"
+              className="flex items-center gap-1.5 bg-[#132038] hover:bg-[#1a2d4f] text-slate-200 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-700 transition-colors"
             >
               <FileJson className="w-4 h-4 text-emerald-400" />
               <span>تحميل .JSON</span>
@@ -336,29 +336,29 @@ export const DatabaseDashboardView: React.FC<DatabaseDashboardViewProps> = ({
         </div>
 
         {/* Database Quick Metrics Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-slate-800/80 text-xs">
-          <div className="bg-slate-900/60 rounded-xl p-3 border border-slate-800/80">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-[#132038] text-xs">
+          <div className="bg-[#132038]/80 rounded-xl p-3 border border-slate-700/60">
             <div className="text-slate-400 font-medium">عدد الجداول (Tables)</div>
-            <div className="text-lg font-bold text-indigo-400 mt-0.5">8 جداول متكاملة</div>
-            <div className="text-[11px] text-slate-500 font-mono mt-0.5">معيار التوثيق بالثانية</div>
+            <div className="text-lg font-bold text-[#C48B69] mt-0.5">8 جداول متكاملة</div>
+            <div className="text-[11px] text-slate-400 font-mono mt-0.5">معيار التوثيق بالثانية</div>
           </div>
-          <div className="bg-slate-900/60 rounded-xl p-3 border border-slate-800/80">
+          <div className="bg-[#132038]/80 rounded-xl p-3 border border-slate-700/60">
             <div className="text-slate-400 font-medium">إجمالي السجلات الحالية</div>
             <div className="text-lg font-bold text-emerald-400 mt-0.5">{totalRecordsCount} سجل حي</div>
-            <div className="text-[11px] text-slate-500 font-mono mt-0.5">تحديث تلقائي وفوري</div>
+            <div className="text-[11px] text-slate-400 font-mono mt-0.5">تحديث تلقائي وفوري</div>
           </div>
-          <div className="bg-slate-900/60 rounded-xl p-3 border border-slate-800/80">
+          <div className="bg-[#132038]/80 rounded-xl p-3 border border-slate-700/60">
             <div className="text-slate-400 font-medium">سجلات الأمان غير القابلة للتعديل</div>
-            <div className="text-lg font-bold text-amber-400 mt-0.5">{auditLogs.length} عملية أمان</div>
-            <div className="text-[11px] text-slate-500 font-mono mt-0.5">Immutable Audit Trails</div>
+            <div className="text-lg font-bold text-amber-300 mt-0.5">{auditLogs.length} عملية أمان</div>
+            <div className="text-[11px] text-slate-400 font-mono mt-0.5">Immutable Audit Trails</div>
           </div>
-          <div className="bg-slate-900/60 rounded-xl p-3 border border-slate-800/80">
+          <div className="bg-[#132038]/80 rounded-xl p-3 border border-slate-700/60">
             <div className="text-slate-400 font-medium">حالة المزامنة والربط</div>
-            <div className="text-lg font-bold text-cyan-400 mt-0.5 flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-cyan-400" />
+            <div className="text-lg font-bold text-emerald-400 mt-0.5 flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span>متصل ومحمي</span>
             </div>
-            <div className="text-[11px] text-slate-500 font-mono mt-0.5">SHA-256 Verified</div>
+            <div className="text-[11px] text-slate-400 font-mono mt-0.5">SHA-256 Verified</div>
           </div>
         </div>
       </div>
@@ -369,10 +369,10 @@ export const DatabaseDashboardView: React.FC<DatabaseDashboardViewProps> = ({
         <div className="lg:col-span-1 space-y-2">
           <div className="text-xs font-bold text-slate-400 uppercase tracking-wider px-2 flex items-center justify-between">
             <span>جداول قاعدة البيانات (Tables)</span>
-            <span className="text-indigo-400 font-mono text-[11px]">8 جداول</span>
+            <span className="text-[#C48B69] font-mono text-[11px]">8 جداول</span>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-2 space-y-1 shadow-sm">
+          <div className="bg-[#1B2A4A] border border-[#132038] rounded-2xl p-2 space-y-1 shadow-sm">
             {[
               { id: 'teachers', name: 'الكادر التدريسي', en: 'teachers', count: teachers.length, color: 'text-emerald-400' },
               { id: 'students', name: 'الطلاب والحضور', en: 'students', count: students.length, color: 'text-blue-400' },
@@ -393,22 +393,22 @@ export const DatabaseDashboardView: React.FC<DatabaseDashboardViewProps> = ({
                   }}
                   className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-all text-right ${
                     isSelected
-                      ? 'bg-indigo-600/20 text-white border border-indigo-500/50 shadow-sm'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-transparent'
+                      ? 'bg-[#135D43] text-white border border-[#135D43] shadow-sm'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5 border border-transparent'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <Table className={`w-4 h-4 ${isSelected ? 'text-indigo-400' : 'text-slate-400'}`} />
+                    <Table className={`w-4 h-4 ${isSelected ? 'text-[#C48B69]' : 'text-slate-400'}`} />
                     <div>
                       <div>{t.name}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">{t.en}</div>
+                      <div className="text-[10px] text-slate-400 font-mono">{t.en}</div>
                     </div>
                   </div>
                   <span
                     className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-bold ${
                       isSelected
-                        ? 'bg-indigo-500 text-white'
-                        : 'bg-slate-800 text-slate-400'
+                        ? 'bg-[#C48B69] text-white'
+                        : 'bg-[#132038] text-slate-300'
                     }`}
                   >
                     {t.count}

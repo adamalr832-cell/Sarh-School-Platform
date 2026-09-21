@@ -96,19 +96,19 @@ export const StudentAffairsReview: React.FC<StudentAffairsReviewProps> = ({
   return (
     <div className="space-y-6" dir="rtl">
       {/* Header card with Decree 234/2017 highlight */}
-      <div className="bg-gradient-to-l from-slate-900 via-slate-800 to-amber-950 rounded-2xl p-6 text-white border border-amber-500/30 shadow-md">
+      <div className="bg-[#1B2A4A] rounded-2xl p-6 text-white border border-[#C48B69]/40 shadow-md">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
-              <Scale className="w-6 h-6" />
+            <div className="w-12 h-12 rounded-xl bg-[#135D43]/40 border border-[#C48B69]/40 flex items-center justify-center text-[#C48B69] shrink-0">
+              <Scale className="w-6 h-6 text-[#C48B69]" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-base sm:text-lg font-bold">لجنة شؤون الطلاب ورصد المخالفات السلوكية</h3>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40 font-mono">
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#135D43]/40 text-[#C48B69] border border-[#C48B69]/40 font-mono">
                   القرار الوزاري 234/2017
                 </span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/40 font-mono">
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-white/10 text-slate-200 border border-white/20 font-mono">
                   سلطنة عُمان
                 </span>
               </div>
@@ -121,9 +121,9 @@ export const StudentAffairsReview: React.FC<StudentAffairsReviewProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowDecreeInfo(!showDecreeInfo)}
-              className="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-xs font-bold transition-colors flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-lg bg-[#C48B69]/20 hover:bg-[#C48B69]/30 text-[#C48B69] border border-[#C48B69]/50 text-xs font-bold transition-colors flex items-center gap-1.5"
             >
-              <HelpCircle className="w-4 h-4" />
+              <HelpCircle className="w-4 h-4 text-[#C48B69]" />
               <span>دليل درجات المخالفات (234/2017)</span>
             </button>
           </div>

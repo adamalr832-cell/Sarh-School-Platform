@@ -74,27 +74,27 @@ export const SarhAiChatDrawer: React.FC<SarhAiChatDrawerProps> = ({
   return (
     <div
       id="sarh-ai-chat-drawer"
-      className="fixed inset-y-0 left-0 z-50 w-full sm:w-[500px] md:w-[600px] bg-slate-900 text-white shadow-2xl flex flex-col border-r border-slate-700 animate-in slide-in-from-left duration-300"
+      className="fixed inset-y-0 left-0 z-50 w-full sm:w-[500px] md:w-[600px] bg-[#1B2A4A] text-white shadow-2xl flex flex-col border-r border-[#135D43]/40 animate-in slide-in-from-left duration-300"
       dir="rtl"
     >
       {/* Drawer Header */}
-      <div className="p-4 border-b border-slate-800 bg-slate-950 flex items-center justify-between">
+      <div className="p-4 border-b border-[#132038] bg-[#132038] flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-800 flex items-center justify-center text-emerald-200 shadow-inner">
-            <Sparkles className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#135D43] to-[#1B2A4A] border border-[#C48B69]/40 flex items-center justify-center text-[#C48B69] shadow-inner">
+            <Sparkles className="w-5 h-5 text-[#C48B69]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-bold text-sm text-white">نواة صَرْح الذكية (Sarh AI Core)</h3>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800/80 font-mono">
+              <span className="text-[10px] px-2 py-0.5 rounded bg-[#135D43]/30 text-[#C48B69] border border-[#C48B69]/40 font-mono">
                 عُمان
               </span>
             </div>
             <div className="flex items-center gap-2 text-[11px] text-slate-400 mt-0.5">
               <span className="flex items-center gap-1">
-                {currentRole === 'admin' && <Building2 className="w-3 h-3 text-emerald-400" />}
-                {currentRole === 'teacher' && <GraduationCap className="w-3 h-3 text-teal-400" />}
-                {currentRole === 'student' && <Users className="w-3 h-3 text-blue-400" />}
+                {currentRole === 'admin' && <Building2 className="w-3 h-3 text-[#135D43]" />}
+                {currentRole === 'teacher' && <GraduationCap className="w-3 h-3 text-[#C48B69]" />}
+                {currentRole === 'student' && <Users className="w-3 h-3 text-blue-300" />}
                 <span>
                   {currentRole === 'admin'
                     ? 'بوابة الإدارة'
@@ -107,13 +107,13 @@ export const SarhAiChatDrawer: React.FC<SarhAiChatDrawerProps> = ({
               <span className="flex items-center gap-1">
                 {isRoleAuthed && activeToken ? (
                   <span className="text-emerald-400 flex items-center gap-1 font-mono text-[10px]">
-                    <ShieldCheck className="w-3 h-3" />
+                    <ShieldCheck className="w-3 h-3 text-[#135D43]" />
                     {activeToken} (مرفق تلقائياً)
                   </span>
                 ) : (
                   <button
                     onClick={() => onOpenAuthModal(currentRole)}
-                    className="text-amber-400 hover:text-amber-300 flex items-center gap-1 text-[10px] underline"
+                    className="text-[#C48B69] hover:text-[#d39c7c] flex items-center gap-1 text-[10px] underline"
                     title="انقر لإدخال الرمز السري وتفعيل التوثيق"
                   >
                     <Lock className="w-3 h-3" />
@@ -129,7 +129,7 @@ export const SarhAiChatDrawer: React.FC<SarhAiChatDrawerProps> = ({
           <button
             id="clear-chat-history-btn"
             onClick={onClearHistory}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
             title="مسح المحادثة"
           >
             <RefreshCw className="w-4 h-4" />
@@ -137,7 +137,7 @@ export const SarhAiChatDrawer: React.FC<SarhAiChatDrawerProps> = ({
           <button
             id="close-chat-drawer-btn"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -283,7 +283,7 @@ export const SarhAiChatDrawer: React.FC<SarhAiChatDrawerProps> = ({
       </div>
 
       {/* Input Area */}
-      <div className="p-3 border-t border-slate-800 bg-slate-950">
+      <div className="p-3 border-t border-[#132038] bg-[#132038]">
         <form onSubmit={handleSubmit} className="flex items-center gap-2">
           <input
             id="chat-user-input-field"
@@ -296,7 +296,7 @@ export const SarhAiChatDrawer: React.FC<SarhAiChatDrawerProps> = ({
                 : `اكتب استفسارك... (بوابة ${ROLE_CONFIGS[currentRole].title} تتطلب الرمز)`
             }
             disabled={isLoading}
-            className="flex-1 bg-slate-800/90 text-white placeholder:text-slate-500 text-xs px-3.5 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-right"
+            className="flex-1 bg-[#1B2A4A] text-white placeholder:text-slate-400 text-xs px-3.5 py-2.5 rounded-xl border border-[#135D43]/40 focus:outline-none focus:ring-2 focus:ring-[#C48B69] focus:border-transparent text-right"
           />
           <button
             id="chat-send-btn"
@@ -305,18 +305,18 @@ export const SarhAiChatDrawer: React.FC<SarhAiChatDrawerProps> = ({
             className={`p-2.5 rounded-xl font-bold transition-all shrink-0 ${
               isLoading || !inputText.trim()
                 ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md'
+                : 'bg-[#C48B69] hover:bg-[#b07857] text-white shadow-md'
             }`}
           >
             <Send className="w-4 h-4 rotate-180" />
           </button>
         </form>
 
-        <div className="flex items-center justify-between text-[10px] text-slate-500 mt-2 px-1">
+        <div className="flex items-center justify-between text-[10px] text-slate-400 mt-2 px-1">
           <span>
             {isRoleAuthed ? (
-              <span className="text-emerald-400 font-mono flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" />
+              <span className="text-[#C48B69] font-mono flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3 text-[#135D43]" />
                 العلامة {ROLE_CONFIGS[currentRole].token} مرفقة بالاستعلام
               </span>
             ) : (
@@ -326,7 +326,7 @@ export const SarhAiChatDrawer: React.FC<SarhAiChatDrawerProps> = ({
               </span>
             )}
           </span>
-          <span>منصة صَرْح - سلطنة عُمان</span>
+          <span className="text-slate-400">منصة صَرْح - سلطنة عُمان</span>
         </div>
       </div>
     </div>

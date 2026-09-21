@@ -17,12 +17,12 @@ import {
   FileText,
   Cloud,
   Check,
-  Palette,
 } from 'lucide-react';
 import { UserRole } from '../types';
 import { ROLE_CONFIGS } from '../config/authConfig';
 import { getPrecisionTimestamp } from '../utils/timestamp';
 import { FirebaseUser } from '../lib/firebase';
+import { SarhLogo } from './SarhLogo';
 
 interface HeaderProps {
   currentRole: UserRole;
@@ -38,7 +38,6 @@ interface HeaderProps {
   currentUser?: FirebaseUser | null;
   isCloudSyncing?: boolean;
   onTriggerCloudSync?: () => void;
-  onOpenBrandIdentity?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -55,7 +54,6 @@ export const Header: React.FC<HeaderProps> = ({
   currentUser,
   isCloudSyncing = false,
   onTriggerCloudSync,
-  onOpenBrandIdentity,
 }) => {
   const currentConfig = ROLE_CONFIGS[currentRole];
   const isCurrentRoleAuthed = authenticatedRole === currentRole;
@@ -71,31 +69,31 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   return (
-    <header className="bg-slate-900 text-white border-b border-slate-800 shadow-md sticky top-0 z-30" dir="rtl">
+    <header className="bg-[#1B2A4A] text-white border-b border-[#132038] shadow-md sticky top-0 z-30" dir="rtl">
       {/* Top Ministerial Ribbon */}
-      <div className="bg-gradient-to-r from-emerald-800 via-slate-900 to-emerald-900 px-4 py-1 text-xs text-emerald-100 flex items-center justify-between border-b border-emerald-700/40">
+      <div className="bg-[#132038] px-4 py-1 text-xs text-slate-200 flex items-center justify-between border-b border-[#135D43]/40">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>سلطنة عُمان - وزارة التعليم</span>
-          <span className="text-slate-400">|</span>
+          <span className="inline-block w-2 h-2 rounded-full bg-[#135D43] ring-2 ring-[#C48B69] animate-pulse"></span>
+          <span className="font-semibold text-slate-100">سلطنة عُمان - وزارة التعليم</span>
+          <span className="text-slate-500">|</span>
           <span className="hidden sm:inline text-slate-300">مدرسة موسى بن نصير للتعليم ما بعد الأساسي</span>
         </div>
 
         {/* Live Precision Timestamp & Audit Log Trigger */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Live Clock with Precision Format */}
-          <div className="hidden lg:flex items-center gap-1.5 font-mono text-[11px] bg-slate-950/80 px-2.5 py-0.5 rounded-lg border border-slate-700 text-emerald-300">
-            <Clock className="w-3 h-3 text-emerald-400" />
+          <div className="hidden lg:flex items-center gap-1.5 font-mono text-[11px] bg-[#0d1627] px-2.5 py-0.5 rounded-lg border border-[#135D43]/40 text-[#C48B69]">
+            <Clock className="w-3 h-3 text-[#C48B69]" />
             <span>{liveTimestamp}</span>
           </div>
 
           <button
             id="header-open-audit-log-btn"
             onClick={onOpenAuditLog}
-            className="flex items-center gap-1 text-[11px] font-semibold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-700/60 px-2.5 py-0.5 rounded-lg transition-colors"
+            className="flex items-center gap-1 text-[11px] font-semibold bg-[#135D43]/30 hover:bg-[#135D43]/60 text-slate-100 border border-[#135D43]/70 px-2.5 py-0.5 rounded-lg transition-colors"
             title="سجل التتبع والأمان الموثق بالثانية"
           >
-            <History className="w-3 h-3 text-emerald-400" />
+            <History className="w-3 h-3 text-[#C48B69]" />
             <span>سجل الأمان (Audit)</span>
           </button>
 
@@ -105,12 +103,12 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onOpenDatabaseDashboard}
               className={`flex items-center gap-1 text-[11px] font-semibold border px-2.5 py-0.5 rounded-lg transition-colors ${
                 isDatabaseDashboardOpen
-                  ? 'bg-indigo-600 text-white border-indigo-400 shadow-sm'
-                  : 'bg-indigo-950/80 hover:bg-indigo-900 text-indigo-200 border-indigo-700/60'
+                  ? 'bg-[#C48B69] text-white border-[#C48B69] shadow-sm'
+                  : 'bg-[#132038] hover:bg-[#1a2d4f] text-slate-200 border-[#135D43]/50'
               }`}
               title="استعراض وإدارة قاعدة البيانات الشاملة للمدرسة"
             >
-              <Database className="w-3 h-3 text-indigo-400" />
+              <Database className="w-3 h-3 text-[#C48B69]" />
               <span>لوحة قاعدة البيانات</span>
             </button>
           )}
@@ -119,10 +117,10 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="header-open-database-btn"
               onClick={onOpenDatabaseExport}
-              className="flex items-center gap-1.5 text-[11px] font-semibold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-700/70 px-2.5 py-0.5 rounded-lg transition-colors shadow-sm"
+              className="flex items-center gap-1.5 text-[11px] font-semibold bg-[#135D43]/40 hover:bg-[#135D43]/70 text-emerald-100 border border-[#135D43] px-2.5 py-0.5 rounded-lg transition-colors shadow-sm"
               title="تصدير كشوفات وتقارير PDF وقاعدة البيانات الرسمية"
             >
-              <FileText className="w-3 h-3 text-emerald-400" />
+              <FileText className="w-3 h-3 text-[#C48B69]" />
               <span>تقارير PDF / قاعدة البيانات</span>
             </button>
           )}
@@ -131,19 +129,19 @@ export const Header: React.FC<HeaderProps> = ({
           {currentUser ? (
             <div
               onClick={onTriggerCloudSync}
-              className="flex items-center gap-1.5 text-[11px] font-medium bg-emerald-900/60 hover:bg-emerald-800/80 cursor-pointer text-emerald-200 px-2.5 py-0.5 rounded-lg border border-emerald-500/50 transition-colors"
+              className="flex items-center gap-1.5 text-[11px] font-medium bg-[#135D43]/30 hover:bg-[#135D43]/50 cursor-pointer text-emerald-200 px-2.5 py-0.5 rounded-lg border border-[#135D43] transition-colors"
               title="سحابة Google متصلة ومزامنة تلقائياً. اضغط للمزامنة الفورية."
             >
-              <Cloud className={`w-3.5 h-3.5 text-emerald-300 ${isCloudSyncing ? 'animate-bounce' : ''}`} />
+              <Cloud className={`w-3.5 h-3.5 text-[#C48B69] ${isCloudSyncing ? 'animate-bounce' : ''}`} />
               <span className="hidden sm:inline font-mono">{currentUser.email?.split('@')[0]}</span>
-              <span className="text-[10px] bg-emerald-700/80 px-1.5 py-0.2 rounded font-bold">
+              <span className="text-[10px] bg-[#135D43] text-white px-1.5 py-0.2 rounded font-bold">
                 {isCloudSyncing ? 'مزامنة...' : 'سحابي'}
               </span>
             </div>
           ) : (
             <button
               onClick={() => onOpenAuthModal(currentRole)}
-              className="flex items-center gap-1 text-[11px] font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-0.5 rounded-lg border border-slate-700 transition-colors"
+              className="flex items-center gap-1 text-[11px] font-medium bg-[#132038] hover:bg-[#1b2c4c] text-slate-300 px-2.5 py-0.5 rounded-lg border border-slate-700 transition-colors"
               title="تسجيل الدخول بحساب Google لربط السحابة"
             >
               <Cloud className="w-3.5 h-3.5 text-slate-400" />
@@ -152,12 +150,12 @@ export const Header: React.FC<HeaderProps> = ({
           )}
 
           {/* Active Auth Token Badge */}
-          <div className="flex items-center gap-1.5 text-[11px] font-medium bg-slate-800/90 px-2.5 py-0.5 rounded-lg border border-slate-700">
+          <div className="flex items-center gap-1.5 text-[11px] font-medium bg-[#0f1b30] px-2.5 py-0.5 rounded-lg border border-[#135D43]/40">
             {authenticatedRole ? (
               <>
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-300">
-                  موثق: <strong className="font-mono">{ROLE_CONFIGS[authenticatedRole].token}</strong>
+                <ShieldCheck className="w-3.5 h-3.5 text-[#135D43]" />
+                <span className="text-slate-200">
+                  موثق: <strong className="font-mono text-[#C48B69]">{ROLE_CONFIGS[authenticatedRole].token}</strong>
                 </span>
               </>
             ) : (
@@ -175,52 +173,21 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Logo & School Identity */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button
-                id="header-brand-logo-btn"
-                onClick={onOpenBrandIdentity}
-                title="عرض دليل الهوية البصرية الفاخرة المعتمدة لمنصة صَرْح"
-                className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-800 hover:from-emerald-500 hover:to-teal-700 transition-all flex items-center justify-center shadow-inner border border-emerald-400/30 text-white font-bold text-xl tracking-tight cursor-pointer group relative"
-              >
-                <span>صَ</span>
-                <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-400 border border-slate-900 flex items-center justify-center text-[8px] text-slate-950 font-bold">
-                  ★
-                </span>
-              </button>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                    منصة صَرْح
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                      عُمان الذكية
-                    </span>
-                  </h1>
-                  {onOpenBrandIdentity && (
-                    <button
-                      id="header-brand-identity-badge-btn"
-                      onClick={onOpenBrandIdentity}
-                      className="hidden sm:flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-200 border border-amber-500/30 hover:bg-amber-500/30 transition-colors"
-                      title="عرض بطاقة الهوية البصرية الفاخرة ولوحة الألوان المعتمدة"
-                    >
-                      <Palette className="w-3 h-3 text-amber-300" />
-                      <span>الهوية البصرية المعتمدة</span>
-                    </button>
-                  )}
-                </div>
-                <p className="text-xs text-slate-400">
-                  المساعد المدمج للإدارة المدرسية والهيئة التدريسية والطلاب
-                </p>
-              </div>
-            </div>
+            <SarhLogo
+              size="md"
+              variant="dark"
+              showText={true}
+              subtext="المساعد المدمج للإدارة المدرسية والهيئة التدريسية والطلاب"
+            />
 
             {/* Mobile Chat button */}
             <div className="md:hidden">
               <button
                 id="mobile-sarh-ai-core-btn"
                 onClick={onOpenAiChat}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-500 transition-colors shadow"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#C48B69] text-white text-xs font-semibold hover:bg-[#b07857] transition-colors shadow"
               >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-200" />
+                <Sparkles className="w-3.5 h-3.5 text-white" />
                 <span>نواة صَرْح الذكية</span>
               </button>
             </div>
@@ -229,18 +196,18 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Role Navigation Switcher & Actions */}
           <div className="flex items-center flex-wrap gap-2">
             {/* 3 Role Portals Buttons */}
-            <div className="bg-slate-800 p-1 rounded-xl border border-slate-700/80 flex items-center shadow-inner">
+            <div className="bg-[#132038] p-1 rounded-xl border border-[#1B2A4A] flex items-center shadow-inner">
               {/* Admin Button */}
               <button
                 id="role-btn-admin"
                 onClick={() => onRoleChange('admin')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   currentRole === 'admin'
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
+                    ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <Building2 className="w-4 h-4" />
+                <Building2 className="w-4 h-4 text-[#C48B69]" />
                 <span>الإدارة المدرسية</span>
                 {authenticatedRole === 'admin' ? (
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-200" />
@@ -255,14 +222,14 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => onRoleChange('teacher')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   currentRole === 'teacher'
-                    ? 'bg-teal-600 text-white shadow-sm'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
+                    ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <GraduationCap className="w-4 h-4" />
+                <GraduationCap className="w-4 h-4 text-[#C48B69]" />
                 <span>الهيئة التدريسية</span>
                 {authenticatedRole === 'teacher' ? (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-teal-200" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-200" />
                 ) : (
                   <Lock className="w-3 h-3 text-slate-400" />
                 )}
@@ -274,14 +241,14 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => onRoleChange('student')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   currentRole === 'student'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
+                    ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <Users className="w-4 h-4" />
+                <Users className="w-4 h-4 text-[#C48B69]" />
                 <span>الطلاب</span>
                 {authenticatedRole === 'student' ? (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-blue-200" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-200" />
                 ) : (
                   <Lock className="w-3 h-3 text-slate-400" />
                 )}
@@ -293,10 +260,10 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 id="header-role-login-btn"
                 onClick={() => onOpenAuthModal(currentRole)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-semibold hover:bg-amber-500/30 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#C48B69]/20 text-[#C48B69] border border-[#C48B69]/50 text-xs font-semibold hover:bg-[#C48B69]/30 transition-colors"
                 title={`توثيق ${currentConfig.title} بالرمز السري`}
               >
-                <KeyRound className="w-3.5 h-3.5 text-amber-400" />
+                <KeyRound className="w-3.5 h-3.5 text-[#C48B69]" />
                 <span>توثيق {currentRole === 'admin' ? 'الإدارة' : currentRole === 'teacher' ? 'المعلم' : 'الطالب'}</span>
               </button>
             ) : (
@@ -312,13 +279,13 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             )}
 
-            {/* Desktop Sarh AI Core Button */}
+            {/* Desktop Sarh AI Core Button - Soft Omani Rose Gold Primary CTA */}
             <button
               id="desktop-sarh-ai-core-btn"
               onClick={onOpenAiChat}
-              className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-bold hover:from-emerald-500 hover:to-teal-500 transition-all shadow-md hover:shadow-emerald-900/40"
+              className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white text-xs font-bold transition-all shadow-md shadow-[#C48B69]/30"
             >
-              <Sparkles className="w-4 h-4 text-emerald-200 animate-pulse" />
+              <Sparkles className="w-4 h-4 text-white animate-pulse" />
               <span>نواة صَرْح الذكية</span>
             </button>
           </div>

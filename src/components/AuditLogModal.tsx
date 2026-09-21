@@ -51,17 +51,17 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
     >
       <div className="bg-white rounded-3xl w-full max-w-5xl max-h-[90vh] shadow-2xl border border-slate-200 flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-l from-slate-900 via-slate-800 to-emerald-950 p-5 text-white flex items-center justify-between border-b border-slate-700">
+        <div className="bg-[#1B2A4A] p-5 text-white flex items-center justify-between border-b border-[#132038]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-600/30 border border-emerald-400/40 flex items-center justify-center text-emerald-300">
-              <ShieldCheck className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-[#135D43]/40 border border-[#C48B69]/40 flex items-center justify-center text-[#C48B69]">
+              <ShieldCheck className="w-6 h-6 text-[#C48B69]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-bold">
                   سجل التتبع والأمان والتوثيق الزمني (Audit Log)
                 </h3>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1">
+                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#135D43]/40 text-[#C48B69] border border-[#C48B69]/30 flex items-center gap-1">
                   <Lock className="w-3 h-3" />
                   غير قابل للتعديل التاريخي
                 </span>
@@ -74,7 +74,7 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm font-bold transition-colors"
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center text-sm font-bold transition-colors"
           >
             ✕
           </button>
@@ -90,7 +90,7 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="ابحث بالاسم، الآيدي، أو التاريخ..."
-              className="w-full pl-3 pr-9 py-2 rounded-xl border border-slate-300 bg-white font-medium focus:ring-2 focus:ring-emerald-500 text-xs"
+              className="w-full pl-3 pr-9 py-2 rounded-xl border border-slate-300 bg-white font-medium focus:ring-2 focus:ring-[#135D43] text-xs"
             />
           </div>
 
@@ -110,7 +110,7 @@ export const AuditLogModal: React.FC<AuditLogModalProps> = ({
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                   selectedCategory === cat.id
-                    ? 'bg-emerald-700 text-white shadow-xs'
+                    ? 'bg-[#1B2A4A] text-[#C48B69] border border-[#C48B69]/40 shadow-xs font-bold'
                     : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
                 }`}
               >

@@ -9,7 +9,7 @@ import { SarhAiChatDrawer } from './components/SarhAiChatDrawer';
 import { AuditLogModal } from './components/AuditLogModal';
 import { DatabaseExportModal } from './components/DatabaseExportModal';
 import { DatabaseDashboardView } from './components/DatabaseDashboardView';
-import { BrandIdentityModal } from './components/BrandIdentityModal';
+import { SarhLogo } from './components/SarhLogo';
 import {
   INITIAL_TEACHERS,
   INITIAL_ABSENCES,
@@ -56,7 +56,6 @@ export default function App() {
   const [isAuditLogModalOpen, setIsAuditLogModalOpen] = useState(false);
   const [isDatabaseExportModalOpen, setIsDatabaseExportModalOpen] = useState(false);
   const [isDatabaseDashboardOpen, setIsDatabaseDashboardOpen] = useState(false);
-  const [isBrandModalOpen, setIsBrandModalOpen] = useState(false);
 
   // Core Data States
   const [teachers, setTeachers] = useState<TeacherLoad[]>(INITIAL_TEACHERS);
@@ -891,7 +890,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white" dir="rtl">
+    <div className="min-h-screen bg-[#F9F8F6] text-[#1B2A4A] flex flex-col selection:bg-[#135D43] selection:text-white" dir="rtl">
       {/* Official Header with Live Clock and Audit trigger */}
       <Header
         currentRole={currentRole}
@@ -907,7 +906,6 @@ export default function App() {
         currentUser={currentUser}
         isCloudSyncing={isCloudSyncing}
         onTriggerCloudSync={() => syncToCloud()}
-        onOpenBrandIdentity={() => setIsBrandModalOpen(true)}
       />
 
       {/* Main Container */}
@@ -916,10 +914,6 @@ export default function App() {
         <SecurityBanner
           authenticatedRole={authenticatedRole}
           onOpenAuthModal={handleOpenAuthModal}
-          onTestPrompt={(prompt) => {
-            setIsAiChatOpen(true);
-            handleSendMessage(prompt);
-          }}
         />
 
         {/* Database Management & Exploration View */}
@@ -1006,14 +1000,15 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 border-t border-slate-800 text-slate-400 py-6 text-xs text-center">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-white">منصة "صَرْح" المدرسية الذكية</span>
-            <span>-</span>
-            <span>سلطنة عُمان (وزارة التعليم)</span>
-          </div>
-          <div className="text-[11px] text-slate-500 font-mono">
+      <footer className="bg-[#1B2A4A] border-t border-[#132038] text-slate-300 py-6 text-xs text-center">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <SarhLogo
+            size="sm"
+            variant="dark"
+            showText={true}
+            subtext="سلطنة عُمان • وزارة التربية والتعليم"
+          />
+          <div className="text-[11px] text-slate-400 font-mono">
             نظام التوثيق الزمني الدقيق بالثانية [YYYY-MM-DD | HH:MM:SS] • مدرسة موسى بن نصير للتعليم ما بعد الأساسي
           </div>
         </div>
@@ -1036,12 +1031,6 @@ export default function App() {
         isOpen={isAuditLogModalOpen}
         onClose={() => setIsAuditLogModalOpen(false)}
         auditLogs={auditLogs}
-      />
-
-      {/* Brand Identity Mockup & Design System Modal */}
-      <BrandIdentityModal
-        isOpen={isBrandModalOpen}
-        onClose={() => setIsBrandModalOpen(false)}
       />
 
       {/* Database Export Modal */}

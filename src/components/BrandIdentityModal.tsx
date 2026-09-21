@@ -16,29 +16,29 @@ export const BrandIdentityModal: React.FC<BrandIdentityModalProps> = ({ isOpen, 
     >
       <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-slate-200 text-right">
         {/* Modal Header */}
-        <div className="sticky top-0 bg-slate-900 text-white px-6 py-4 rounded-t-3xl flex items-center justify-between border-b border-slate-800 z-10">
+        <div className="sticky top-0 bg-[#1B2A4A] text-white px-6 py-4 rounded-t-3xl flex items-center justify-between border-b border-[#1B2A4A]/80 z-10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-800 flex items-center justify-center text-white shadow-md border border-emerald-400/40">
-              <Palette className="w-5 h-5 text-emerald-200" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#135D43] to-[#1B2A4A] flex items-center justify-center text-white shadow-md border border-[#C48B69]/40">
+              <Palette className="w-5 h-5 text-[#C48B69]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-bold tracking-tight">
-                  دليل الهوية البصرية المعتمدة لمنصة صَرْح
+                  المرجع التصميمي المعتمد لواجهة صَرْح (SARH Design System)
                 </h3>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
-                  SARH Luxury-Tech Identity
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#C48B69]/20 text-[#C48B69] border border-[#C48B69]/40 font-mono font-bold">
+                  Single Source of Truth
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">
-                نظام الألوان الرسمي للمنظومة التعليمية الرقمية المعتمد لسلطنة عُمان
+              <p className="text-xs text-slate-300 mt-0.5">
+                نموذج واجهة التطبيق التفاعلي على الهاتف الذكي • لوحة ألوان التعليم العماني الحديثة
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+            className="p-1.5 rounded-xl hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
             title="إغلاق"
           >
             <X className="w-5 h-5" />
@@ -47,141 +47,165 @@ export const BrandIdentityModal: React.FC<BrandIdentityModalProps> = ({ isOpen, 
 
         {/* Modal Body */}
         <div className="p-6 space-y-6">
-          {/* Main Visual: The Generated Mockup */}
-          <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-slate-950 group">
+          {/* Main Visual: Full Detailed Smartphone UI Screen Mockup */}
+          <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-lg bg-slate-950 group">
             <img
-              src="/brand_mockup.jpg"
-              alt="بطاقة الهوية البصرية الفاخرة لمنصة صَرْح المدرسية"
-              className="w-full h-auto max-h-[440px] object-cover object-center transition-transform duration-500 group-hover:scale-[1.01]"
+              src="/sarh_mobile_ui_mockup.jpg"
+              alt="نموذج واجهة تطبيق صَرْح على هاتف ذكي حديث يعكس الهوية الرقمية الكاملة"
+              className="w-full h-auto max-h-[460px] object-cover object-center transition-transform duration-500 group-hover:scale-[1.01]"
               referrerPolicy="no-referrer"
             />
-            <div className="absolute bottom-3 left-3 right-3 bg-slate-950/80 backdrop-blur-md p-3 rounded-xl border border-white/10 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div className="absolute bottom-3 left-3 right-3 bg-slate-950/85 backdrop-blur-md p-3 rounded-xl border border-white/15 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                <Sparkles className="w-4 h-4 text-[#C48B69] shrink-0" />
                 <span className="font-semibold">
-                  مشهد تصويري ماكرو (Macro Mockup) لبطاقة الهوية الرقمية على خشب البلوط الطبيعي
+                  شاشة واجهة تطبيق منصة صَرْح كاملة على هاتف ذكي حديث فوق سطح خشب البلوط الطبيعي
                 </span>
               </div>
               <a
-                href="/brand_mockup.jpg"
-                download="sarh_luxury_brand_mockup.jpg"
+                href="/sarh_mobile_ui_mockup.jpg"
+                download="sarh_smartphone_ui_mockup.jpg"
                 target="_blank"
                 rel="noreferrer"
-                className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center justify-center gap-1.5 text-xs transition-colors shrink-0"
+                className="px-3.5 py-1.5 rounded-lg bg-[#C48B69] hover:bg-[#b07857] text-white font-bold flex items-center justify-center gap-1.5 text-xs transition-colors shrink-0 shadow-sm"
               >
                 <Download className="w-3.5 h-3.5" />
-                <span>تحميل الصورة بدقة كاملة</span>
+                <span>تحميل شاشة الواجهة عالية الدقة</span>
               </a>
             </div>
           </div>
 
-          {/* Color Transformation Specification Table */}
+          {/* Color Transformation Specification Table with Exact Hex Codes */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                <Shield className="w-4 h-4 text-emerald-700" />
-                <span>مواصفات لوحة الألوان المعتمدة (Omani Modern Education Palette)</span>
+                <Shield className="w-4 h-4 text-[#135D43]" />
+                <span>قواعد تعيين لوحة الألوان النظامية (Mandatory Design Tokens)</span>
               </h4>
-              <span className="text-xs text-slate-500 font-medium">المرجعية التصميمية الصارمة</span>
+              <span className="text-xs text-slate-500 font-medium">المرجعية الصارمة للنظام الكامل</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-              {/* Token 1: Deep Royal Navy Blue */}
-              <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-2 shadow-xs">
+              {/* Token 1: Deep Royal Navy Blue (#1B2A4A) */}
+              <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/80 space-y-2.5 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-slate-800">اللون الأساسي (Primary)</span>
-                  <div className="w-5 h-5 rounded-full bg-[#0d1b2a] border border-slate-400/40 shadow-xs"></div>
+                  <span className="font-bold text-[#1B2A4A]">الأساسي (Authority)</span>
+                  <div className="w-6 h-6 rounded-full bg-[#1B2A4A] border-2 border-white shadow-xs"></div>
                 </div>
-                <div className="font-bold text-slate-900 text-sm">أزرق كحلي ملكي عميق</div>
-                <div className="text-[11px] font-mono text-slate-500">Deep Royal Navy Blue</div>
+                <div className="font-bold text-slate-900 text-sm">Deep Royal Navy Blue</div>
+                <div className="text-xs font-mono font-bold text-[#1B2A4A] bg-blue-100/60 px-2 py-0.5 rounded w-fit">
+                  #1B2A4A
+                </div>
                 <p className="text-[11px] text-slate-600 leading-relaxed border-t border-slate-200 pt-2">
-                  <strong>الاستخدام:</strong> النصوص الرئيسية "صَرْح" و"SARH PLATFORM"، والشعارات الفرعية "منصة ذكية وآمنة للمدارس العُمانية" و"بوابتكم للتحول الرقمي"، بالإضافة للإطار المعماري الخارجي لأيقونة الصرح.
+                  <strong>التعيين الشامل:</strong> خلفية شريط التنقل العلوي (Top Bar)، عناوين لوحة التحكم الرئيسية، خط كلمة «صَرْح» الانسيابي، وكلمة «SARH PLATFORM».
                 </p>
-                <div className="text-[10px] text-emerald-700 font-bold flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" />
-                  <span>يرمز للهيبة والأمان السيبراني الرسمي</span>
+                <div className="text-[10px] text-[#1B2A4A] font-bold flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 text-[#135D43]" />
+                  <span>يرمز للهيبة المؤسسية والأمان السيبراني</span>
                 </div>
               </div>
 
-              {/* Token 2: Luxury Emerald Green */}
-              <div className="p-4 rounded-2xl border border-slate-200 bg-emerald-50/50 space-y-2 shadow-xs">
+              {/* Token 2: Luxury Emerald Green (#135D43) */}
+              <div className="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 space-y-2.5 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-emerald-900">اللون الثانوي (Secondary)</span>
-                  <div className="w-5 h-5 rounded-full bg-[#055a40] border border-emerald-400/40 shadow-xs"></div>
+                  <span className="font-bold text-[#135D43]">الثانوي (Growth)</span>
+                  <div className="w-6 h-6 rounded-full bg-[#135D43] border-2 border-white shadow-xs"></div>
                 </div>
-                <div className="font-bold text-emerald-950 text-sm">أخضر زمردي فاخر</div>
-                <div className="text-[11px] font-mono text-emerald-700">Luxury Emerald Green</div>
+                <div className="font-bold text-emerald-950 text-sm">Luxury Emerald Green</div>
+                <div className="text-xs font-mono font-bold text-[#135D43] bg-emerald-100/80 px-2 py-0.5 rounded w-fit">
+                  #135D43
+                </div>
                 <p className="text-[11px] text-slate-600 leading-relaxed border-t border-emerald-200/60 pt-2">
-                  <strong>الاستخدام:</strong> الوريقات الداخلية لنبتة النمو الصاعدة في قلب الشعار وفوق قاعدة الكتاب المفتوح.
+                  <strong>التعيين الشامل:</strong> أيقونة التبويب النشطة بشريط التنقل السفلي، حدود بطاقات لوحة التحكم النشطة، وأوراق الشعار المعماري.
                 </p>
-                <div className="text-[10px] text-emerald-800 font-bold flex items-center gap-1">
+                <div className="text-[10px] text-[#135D43] font-bold flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3" />
-                  <span>يرمز للعلم والنماء والتوازن المعرفي</span>
+                  <span>يرمز للعلم والنماء والانضباط التربوي</span>
                 </div>
               </div>
 
-              {/* Token 3: Soft Omani Rose Gold */}
-              <div className="p-4 rounded-2xl border border-slate-200 bg-rose-50/40 space-y-2 shadow-xs">
+              {/* Token 3: Soft Omani Rose Gold (#C48B69) */}
+              <div className="p-4 rounded-2xl border border-amber-200 bg-amber-50/40 space-y-2.5 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-rose-900">لون التمييز (Accent)</span>
-                  <div className="w-5 h-5 rounded-full bg-[#c58b73] border border-rose-300 shadow-xs"></div>
+                  <span className="font-bold text-[#C48B69]">التمييز (Heritage)</span>
+                  <div className="w-6 h-6 rounded-full bg-[#C48B69] border-2 border-white shadow-xs"></div>
                 </div>
-                <div className="font-bold text-rose-950 text-sm">ذهب وردي عُماني ناعم</div>
-                <div className="text-[11px] font-mono text-rose-700">Soft Omani Rose Gold</div>
-                <p className="text-[11px] text-slate-600 leading-relaxed border-t border-rose-200/60 pt-2">
-                  <strong>الاستخدام:</strong> الساق والبرعم المركزي لنبتة النمو الصاعدة (بديلاً للذهب الأصفر التقليدي).
-                </p>
-                <div className="text-[10px] text-rose-800 font-bold flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" />
-                  <span>يرمز للأصالة والتراث العماني المتجدد</span>
+                <div className="font-bold text-amber-950 text-sm">Soft Omani Rose Gold</div>
+                <div className="text-xs font-mono font-bold text-[#C48B69] bg-amber-100/80 px-2 py-0.5 rounded w-fit">
+                  #C48B69
                 </div>
-              </div>
-
-              {/* Token 4: Warm Off-White / Beige */}
-              <div className="p-4 rounded-2xl border border-slate-200 bg-amber-50/30 space-y-2 shadow-xs">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-slate-800">السطح الحيادي (Surface)</span>
-                  <div className="w-5 h-5 rounded-full bg-[#f8f6f0] border border-amber-300 shadow-xs"></div>
-                </div>
-                <div className="font-bold text-slate-900 text-sm">أوف وايت / بيج ناعم</div>
-                <div className="text-[11px] font-mono text-slate-600">Warm Off-White / Beige</div>
                 <p className="text-[11px] text-slate-600 leading-relaxed border-t border-amber-200/60 pt-2">
-                  <strong>الاستخدام:</strong> سطح بطاقة الهوية الرقمية وملمس البطاقة التقنية النظيفة الخالية من النتوءات القديمة.
+                  <strong>التعيين الشامل:</strong> العناصر التفاعلية (الزر الأساسي «إدارة الفصول»، مفاتيح التبديل)، وبرعم النمو في الشعار، وحلقات التمييز.
                 </p>
-                <div className="text-[10px] text-amber-900 font-bold flex items-center gap-1">
+                <div className="text-[10px] text-[#C48B69] font-bold flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3" />
-                  <span>يرمز للحداثة التقنية والنقاء البصري</span>
+                  <span>يرمز للأصالة العمانية والتفاعل الحيوي</span>
+                </div>
+              </div>
+
+              {/* Token 4: Warm Off-White / Beige (#F9F8F6) */}
+              <div className="p-4 rounded-2xl border border-slate-200 bg-[#F9F8F6] space-y-2.5 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-800">السطح (Clean Tech)</span>
+                  <div className="w-6 h-6 rounded-full bg-[#F9F8F6] border-2 border-slate-300 shadow-xs"></div>
+                </div>
+                <div className="font-bold text-slate-900 text-sm">Warm Off-White / Beige</div>
+                <div className="text-xs font-mono font-bold text-slate-700 bg-slate-200/80 px-2 py-0.5 rounded w-fit">
+                  #F9F8F6
+                </div>
+                <p className="text-[11px] text-slate-600 leading-relaxed border-t border-slate-200 pt-2">
+                  <strong>التعيين الشامل:</strong> الخلفية الكاملة لشاشة الهاتف والتطبيق، مسطحات البطاقات الهادئة، وخلفيات حقول الإدخال.
+                </p>
+                <div className="text-[10px] text-slate-700 font-bold flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 text-[#135D43]" />
+                  <span>يرمز للنقاء الرقمي وسهولة القراءة</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Architectural Elements Kept Intact */}
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-700 space-y-2">
+          {/* UI Screen Components Breakdown */}
+          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-700 space-y-3">
             <div className="font-bold text-slate-900 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>العناصر الهيكلية والتركيبية المحفوظة بالكامل (Identity Preserved):</span>
+              <CheckCircle2 className="w-4 h-4 text-[#135D43]" />
+              <span>التفكيك الهيكلي لواجهة الشاشة (UI Breakdown Single Source of Truth):</span>
             </div>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] text-slate-600 list-disc list-inside">
-              <li>البطاقة المربعة المستوية على اليسار بدقة ماكرو سينمائية مع إضاءة النهار الناعمة.</li>
-              <li>الرمز الأيقوني المعماري المدمج بين القوس العماني وقاعدة الكتاب المفتوح.</li>
-              <li>الخط العربي الانسيابي لكلمة "صَرْح" مع التشكيل الدقيق والخط الإنجليزي الحديث SARH PLATFORM.</li>
-              <li>النصوص والشعارات الفرعية: "منصة ذكية وآمنة للمدارس العُمانية" و"بوابتكم للتحول الرقمي".</li>
-              <li>حاسوب اللابتوب النحيف المموّه بالخلفية الذي يعرض واجهة صَرْح الرقمية بنفس الألوان المعتمدة مع هاتف ذكي في الخلفية على مكتب خشب البلوط.</li>
-            </ul>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px]">
+              <div className="p-3 bg-white rounded-xl border border-slate-200 space-y-1">
+                <strong className="text-[#1B2A4A] block">1. الشريط العلوي (Top Bar):</strong>
+                <span>خلفية أزرق كحلي ملكي عميق (#1B2A4A) مدمج بها شعار صَرْح الأيقوني بالذهب الوردي والأزرق، مع أيقونة جرس التنبيهات.</span>
+              </div>
+              <div className="p-3 bg-white rounded-xl border border-slate-200 space-y-1">
+                <strong className="text-[#1B2A4A] block">2. القسم البارز (Hero Section):</strong>
+                <span>مسطح بيج ناعم دافئ (#F9F8F6) يعرض الشعارين الرئيسيين: «منصة ذكية وآمنة للمدارس العُمانية» و«بوابتكم للتحول الرقمي».</span>
+              </div>
+              <div className="p-3 bg-white rounded-xl border border-slate-200 space-y-1">
+                <strong className="text-[#135D43] block">3. شبكة لوحة التحكم (Dashboard Grid):</strong>
+                <span>بطاقات منظمة للطلاب، الدرجات، والحضور والغياب، محاطة بإطارات خضراء زمردية (#135D43) وتفاصيل بالذهب الوردي.</span>
+              </div>
+              <div className="p-3 bg-white rounded-xl border border-slate-200 space-y-1">
+                <strong className="text-[#C48B69] block">4. الزر التفاعلي الأساسي (Primary CTA):</strong>
+                <span>زر دائري الحواف عريض يحمل عبارة «إدارة الفصول» بلون الذهب الوردي العماني الناعم (#C48B69) مع خط أبيض واضح وبارز.</span>
+              </div>
+            </div>
+            <div className="p-2.5 bg-white rounded-xl border border-slate-200 text-[11px] text-slate-600 flex items-center justify-between">
+              <div>
+                <strong className="text-slate-900">5. شريط التبويبات السفلي (Bottom Navigation):</strong> سطح أبيض ناصع بأيقونات كحلية (الرئيسية، التقارير، الإعدادات) مع تمييز التبويب النشط بالأخضر الزمردي الفاخر (#135D43).
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Modal Footer */}
         <div className="px-6 py-4 bg-slate-50 rounded-b-3xl border-t border-slate-200 flex items-center justify-between text-xs">
           <span className="text-slate-500 font-medium">
-            نظام الهوية البصرية الرقمية المعتمد • مدرسة موسى بن نصير
+            المرجع الأوحد لنظام التصميم • منصة صَرْح التعليمية المعتمدة
           </span>
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold transition-colors shadow-sm"
+            className="px-5 py-2 rounded-xl bg-[#1B2A4A] hover:bg-[#132038] text-white font-bold transition-colors shadow-sm"
           >
-            إغلاق الدليل
+            إغلاق المرجع
           </button>
         </div>
       </div>

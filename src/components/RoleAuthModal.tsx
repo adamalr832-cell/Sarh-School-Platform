@@ -14,6 +14,7 @@ import {
 import { UserRole } from '../types';
 import { ROLE_CONFIGS, AUTH_ERROR_MESSAGE } from '../config/authConfig';
 import { loginWithGoogle, FirebaseUser } from '../lib/firebase';
+import { SarhLogo } from './SarhLogo';
 
 interface RoleAuthModalProps {
   isOpen: boolean;
@@ -88,22 +89,22 @@ export const RoleAuthModal: React.FC<RoleAuthModalProps> = ({
   const getRoleIcon = () => {
     switch (role) {
       case 'admin':
-        return <Building2 className="w-5 h-5 text-emerald-700" />;
+        return <Building2 className="w-5 h-5 text-[#135D43]" />;
       case 'teacher':
-        return <GraduationCap className="w-5 h-5 text-teal-700" />;
+        return <GraduationCap className="w-5 h-5 text-[#1B2A4A]" />;
       case 'student':
-        return <Users className="w-5 h-5 text-blue-700" />;
+        return <Users className="w-5 h-5 text-[#C48B69]" />;
     }
   };
 
   const getRoleBadgeClasses = () => {
     switch (role) {
       case 'admin':
-        return 'bg-emerald-100 text-emerald-800 border-emerald-300';
+        return 'bg-[#135D43]/15 text-[#135D43] border-[#135D43]/30';
       case 'teacher':
-        return 'bg-teal-100 text-teal-800 border-teal-300';
+        return 'bg-[#1B2A4A]/10 text-[#1B2A4A] border-[#1B2A4A]/20';
       case 'student':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+        return 'bg-[#C48B69]/15 text-[#9a6444] border-[#C48B69]/30';
     }
   };
 
@@ -126,20 +127,25 @@ export const RoleAuthModal: React.FC<RoleAuthModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        {/* Modal Header */}
-        <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-          <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
+        {/* Platform Official Branding Emblem */}
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+          <SarhLogo size="sm" showText={true} subtext="بوابة الدخول الآمن والتحقق" />
+        </div>
+
+        {/* Modal Role Header */}
+        <div className="flex items-center gap-3 pb-2">
+          <div className="w-11 h-11 rounded-xl bg-[#F9F8F6] flex items-center justify-center shrink-0 border border-slate-200">
             {getRoleIcon()}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-slate-900 text-sm">{config.title}</h3>
+              <h3 className="font-bold text-[#1B2A4A] text-sm">{config.title}</h3>
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${getRoleBadgeClasses()}`}>
                 {config.badgeText}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              لتفعيل الرمز التوثيقي: <span className="font-mono font-bold text-emerald-700">{config.token}</span>
+              لتفعيل الرمز التوثيقي: <span className="font-mono font-bold text-[#135D43]">{config.token}</span>
             </p>
           </div>
         </div>
@@ -149,15 +155,15 @@ export const RoleAuthModal: React.FC<RoleAuthModalProps> = ({
         </p>
 
         {/* Google Cloud Account Connection Option */}
-        <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2.5">
+        <div className="p-3.5 rounded-xl bg-[#F9F8F6] border border-slate-200 text-xs space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Cloud className="w-4 h-4 text-emerald-600" />
+              <Cloud className="w-4 h-4 text-[#135D43]" />
               <span className="font-bold text-slate-800">الربط السحابي (Google / Firebase):</span>
             </div>
             {currentUser && (
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 flex items-center gap-1">
-                <Check className="w-3 h-3 text-emerald-600" />
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#135D43]/15 text-[#135D43] font-bold border border-[#135D43]/30 flex items-center gap-1">
+                <Check className="w-3 h-3 text-[#135D43]" />
                 متصل
               </span>
             )}
@@ -166,7 +172,7 @@ export const RoleAuthModal: React.FC<RoleAuthModalProps> = ({
           {currentUser ? (
             <div className="text-[11px] text-slate-600 space-y-0.5">
               <div>الحساب السحابي المتصل: <strong className="text-slate-900 font-mono">{currentUser.email}</strong></div>
-              <div className="text-[10px] text-emerald-700 font-medium">بياناتك (السجلات، الغياب، المخالفات) محفوظة سحابياً في مخزنك المعزول.</div>
+              <div className="text-[10px] text-[#135D43] font-medium">بياناتك (السجلات، الغياب، المخالفات) محفوظة سحابياً في مخزنك المعزول.</div>
             </div>
           ) : (
             <div>
@@ -233,7 +239,7 @@ export const RoleAuthModal: React.FC<RoleAuthModalProps> = ({
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
                 placeholder={config.defaultPin}
-                className="w-full px-3 py-2.5 rounded-xl border border-slate-300 font-mono text-center text-lg font-bold tracking-widest text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                className="w-full px-3 py-2.5 rounded-xl border border-slate-300 font-mono text-center text-lg font-bold tracking-widest text-[#1B2A4A] focus:ring-2 focus:ring-[#135D43] focus:outline-none"
               />
               <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-slate-400">
                 <Lock className="w-4 h-4" />
@@ -242,9 +248,9 @@ export const RoleAuthModal: React.FC<RoleAuthModalProps> = ({
           </div>
 
           {/* Preset reference tip */}
-          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] text-slate-600 space-y-1">
-            <div className="flex items-center gap-1.5 font-bold text-slate-800">
-              <KeyRound className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="bg-[#F9F8F6] p-3 rounded-xl border border-slate-200 text-[11px] text-slate-600 space-y-1">
+            <div className="flex items-center gap-1.5 font-bold text-[#1B2A4A]">
+              <KeyRound className="w-3.5 h-3.5 text-[#C48B69]" />
               <span>الرموز السرّية الافتراضية لمنصة صَرْح:</span>
             </div>
             <div className="grid grid-cols-3 gap-1.5 text-center font-mono text-xs mt-1">
@@ -252,7 +258,7 @@ export const RoleAuthModal: React.FC<RoleAuthModalProps> = ({
                 onClick={() => role === 'admin' && setPin('1010')}
                 className={`p-1.5 rounded border cursor-pointer ${
                   role === 'admin'
-                    ? 'bg-emerald-50 border-emerald-300 text-emerald-900 font-bold'
+                    ? 'bg-[#135D43]/15 border-[#135D43]/40 text-[#135D43] font-bold'
                     : 'bg-white border-slate-200 text-slate-600'
                 }`}
               >
@@ -263,7 +269,7 @@ export const RoleAuthModal: React.FC<RoleAuthModalProps> = ({
                 onClick={() => role === 'teacher' && setPin('2020')}
                 className={`p-1.5 rounded border cursor-pointer ${
                   role === 'teacher'
-                    ? 'bg-teal-50 border-teal-300 text-teal-900 font-bold'
+                    ? 'bg-[#1B2A4A]/10 border-[#1B2A4A]/30 text-[#1B2A4A] font-bold'
                     : 'bg-white border-slate-200 text-slate-600'
                 }`}
               >
@@ -274,7 +280,7 @@ export const RoleAuthModal: React.FC<RoleAuthModalProps> = ({
                 onClick={() => role === 'student' && setPin('3030')}
                 className={`p-1.5 rounded border cursor-pointer ${
                   role === 'student'
-                    ? 'bg-blue-50 border-blue-300 text-blue-900 font-bold'
+                    ? 'bg-[#C48B69]/15 border-[#C48B69]/40 text-[#9a6444] font-bold'
                     : 'bg-white border-slate-200 text-slate-600'
                 }`}
               >
@@ -289,9 +295,9 @@ export const RoleAuthModal: React.FC<RoleAuthModalProps> = ({
               id="role-auth-submit-btn"
               type="submit"
               disabled={isVerifying}
-              className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-md"
+              className="flex-1 py-2.5 px-4 rounded-xl bg-[#1B2A4A] hover:bg-[#14233f] text-[#C48B69] border border-[#C48B69]/40 font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
-              <ShieldCheck className="w-4 h-4" />
+              <ShieldCheck className="w-4 h-4 text-[#C48B69]" />
               <span>{isVerifying ? 'جارِ التحقق...' : 'تأكيد الرمز وفتح البوابة'}</span>
             </button>
             <button

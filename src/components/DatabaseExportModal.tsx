@@ -37,6 +37,7 @@ import {
 } from '../types';
 import { getPrecisionTimestamp, getPrecisionTimeData } from '../utils/timestamp';
 import { MinistryLogoSVG } from './MinistryLogoSVG';
+import { SarhLogo } from './SarhLogo';
 
 interface DatabaseExportModalProps {
   isOpen: boolean;
@@ -239,30 +240,29 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
         className="bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-5xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header with Ministerial Branding */}
-        <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 p-5 border-b border-slate-800 flex items-center justify-between text-white">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shadow-inner shrink-0">
-              <MinistryLogoSVG size={38} />
-            </div>
+        {/* Header with Official Sarh Branding */}
+        <div className="bg-[#1B2A4A] p-5 border-b border-[#132038] flex items-center justify-between text-white">
+          <div className="flex items-center gap-4">
+            <SarhLogo size="md" variant="dark" showText={false} className="shrink-0" />
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-lg font-bold text-slate-100">
-                  مركز تصدير التقارير الرسمية وقاعدة البيانات (PDF & DB Export)
+                <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+                  <span>مركز تصدير التقارير الرسمية وقاعدة البيانات</span>
+                  <span className="text-xs font-mono font-bold text-[#C48B69]">(PDF & DB Export)</span>
                 </h2>
-                <span className="bg-emerald-500/20 text-emerald-300 text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  شعار الوزارة والتوقيع الإلكتروني المعتمد
+                <span className="bg-[#135D43]/40 text-[#C48B69] text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-[#C48B69]/40 flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#C48B69]" />
+                  شعار صَرْح الرسمي والتوثيق المعتمد
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">
-                مدرسة موسى بن نصير للتعليم ما بعد الأساسي (10-12) • سلطنة عُمان • متوافق مع القرار الوزاري 234/2017
+              <p className="text-xs text-slate-300 mt-0.5">
+                منصة صَرْح المدرسية الذكية • مدرسة موسى بن نصير للتعليم ما بعد الأساسي (10-12) • سلطنة عُمان
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800/80 transition-colors"
+            className="text-slate-300 hover:text-white p-2 rounded-xl hover:bg-white/10 transition-colors"
             title="إغلاق النافذة"
           >
             <X className="w-5 h-5" />
@@ -270,19 +270,19 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
         </div>
 
         {/* Action Bar / Navigation Tabs */}
-        <div className="p-4 bg-slate-950/80 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
+        <div className="p-4 bg-[#132038] border-b border-[#1B2A4A] flex flex-wrap items-center justify-between gap-3">
           {/* Main Navigation Tabs */}
-          <div className="flex items-center gap-1.5 bg-slate-900 p-1.5 rounded-2xl border border-slate-800 flex-wrap">
+          <div className="flex items-center gap-1.5 bg-[#1B2A4A] p-1.5 rounded-2xl border border-slate-700/60 flex-wrap">
             <button
               id="export-tab-pdf-reports"
               onClick={() => setActiveTab('pdf_reports')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                 activeTab === 'pdf_reports'
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-950/50'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                  ? 'bg-[#135D43] text-white shadow-md border border-[#135D43]'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
-              <FileText className="w-4 h-4 text-emerald-300" />
+              <FileText className="w-4 h-4 text-[#C48B69]" />
               <span>تقارير PDF الرسمية المعتمدة</span>
             </button>
 
@@ -291,8 +291,8 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
               onClick={() => setActiveTab('overview')}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 activeTab === 'overview'
-                  ? 'bg-emerald-700 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                  ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -304,8 +304,8 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
               onClick={() => setActiveTab('json')}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 activeTab === 'json'
-                  ? 'bg-emerald-700 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                  ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
               <FileJson className="w-3.5 h-3.5" />
@@ -317,8 +317,8 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
               onClick={() => setActiveTab('sql')}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 activeTab === 'sql'
-                  ? 'bg-emerald-700 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                  ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
               <FileCode className="w-3.5 h-3.5" />
@@ -485,28 +485,52 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
                   <div
                     ref={printReportRef}
                     id="sarh-official-printable-report"
-                    className="bg-white text-slate-900 p-8 rounded-xl shadow-2xl mx-auto w-full max-w-[800px] text-right font-sans"
+                    className="relative bg-white text-slate-900 p-8 rounded-xl shadow-2xl mx-auto w-full max-w-[800px] text-right font-sans overflow-hidden"
                     dir="rtl"
                     style={{ minHeight: '850px' }}
                   >
-                    {/* 1. Official Header (وزارة التربية والتعليم) */}
-                    <div className="border-b-2 border-emerald-800 pb-5 mb-6">
-                      <div className="flex items-start justify-between">
-                        {/* Right: Sultanate & Ministry Hierarchy */}
-                        <div className="text-right">
-                          <h4 className="text-sm font-bold text-emerald-950 leading-tight">سلطنة عُمان</h4>
-                          <h3 className="text-base font-extrabold text-emerald-900 leading-tight">وزارة التربية والتعليم</h3>
-                          <p className="text-xs text-slate-700 font-medium">المديرية العامة للتربية والتعليم بمحافظة مسقط</p>
-                          <p className="text-xs text-slate-800 font-bold mt-0.5">
-                            مدرسة موسى بن نصير للتعليم ما بعد الأساسي (10-12)
-                          </p>
-                        </div>
+                    {/* Official Background Watermark of Sarh Platform Logo */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.035] select-none z-0">
+                      <img
+                        src="/sarh_main_logo.jpg"
+                        alt=""
+                        className="w-96 h-96 object-contain grayscale"
+                        crossOrigin="anonymous"
+                      />
+                    </div>
 
-                        {/* Center: Ministry Official Emblem */}
-                        <div className="flex flex-col items-center justify-center">
-                          <MinistryLogoSVG size={58} className="w-14 h-14" />
-                          <span className="text-[10px] font-bold text-emerald-900 mt-1">منظومة صَرْح المدرسية</span>
-                        </div>
+                    <div className="relative z-10">
+                      {/* 1. Official Header (سلطنة عُمان - منصة صَرْح - وزارة التربية والتعليم) */}
+                      <div className="border-b-2 border-emerald-800 pb-5 mb-6">
+                        <div className="flex items-start justify-between">
+                          {/* Right: Sultanate & Ministry Hierarchy */}
+                          <div className="text-right">
+                            <h4 className="text-sm font-bold text-emerald-950 leading-tight">سلطنة عُمان</h4>
+                            <h3 className="text-base font-extrabold text-emerald-900 leading-tight">وزارة التربية والتعليم</h3>
+                            <p className="text-xs text-slate-700 font-medium">المديرية العامة للتربية والتعليم بمحافظة مسقط</p>
+                            <p className="text-xs text-slate-800 font-bold mt-0.5">
+                              مدرسة موسى بن نصير للتعليم ما بعد الأساسي (10-12)
+                            </p>
+                          </div>
+
+                          {/* Center: Official Sarh Platform Logo as the Primary Visual Identity */}
+                          <div className="flex flex-col items-center justify-center text-center">
+                            <div className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#C48B69] shadow-sm bg-[#F9F8F6] p-0.5 flex items-center justify-center">
+                              <img
+                                src="/sarh_main_logo.jpg"
+                                alt="شعار صَرْح الرسمي المعتمد"
+                                className="w-full h-full object-contain rounded-xl"
+                                crossOrigin="anonymous"
+                              />
+                            </div>
+                            <div className="flex items-center gap-1.5 mt-1">
+                              <span className="text-xs font-black text-emerald-950 tracking-tight">منصة صَرْح الذكية</span>
+                              <span className="text-[9px] font-mono font-bold text-[#C48B69]">SARH</span>
+                            </div>
+                            <span className="text-[9px] font-semibold text-[#135D43] bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 mt-0.5">
+                              المنظومة الرقمية المعتمدة
+                            </span>
+                          </div>
 
                         {/* Left: Administrative Metadata & Precision Timestamp */}
                         <div className="text-left text-[11px] text-slate-700 space-y-1">
@@ -828,22 +852,37 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
                         </div>
 
                         {/* Signature 3: School Principal & Stamp */}
-                        <div className="space-y-8">
+                        <div className="space-y-3 flex flex-col items-center">
                           <div>
                             <div className="font-bold text-emerald-950">مدير المدرسة المعتمد</div>
                             <div className="text-[11px] text-slate-500 mt-0.5">مدرسة موسى بن نصير (10-12)</div>
                           </div>
-                          <div className="text-[11px] font-mono text-slate-400">
-                            [الختم الرسمي للمدرسة والتوقيع]
+                          {/* Official Seal Graphic featuring Sarh Platform Emblem */}
+                          <div className="w-16 h-16 rounded-2xl border-2 border-dashed border-[#C48B69] bg-[#F9F8F6] p-1 flex flex-col items-center justify-center shadow-xs">
+                            <img
+                              src="/sarh_main_logo.jpg"
+                              alt="ختم صَرْح المعتمد"
+                              className="w-8 h-8 object-contain rounded-lg"
+                              crossOrigin="anonymous"
+                            />
+                            <span className="text-[7px] font-black text-[#135D43] mt-0.5">اعتماد صَرْح</span>
+                          </div>
+                          <div className="text-[10px] font-mono text-slate-400">
+                            [التوقيع والختم الإلكتروني]
                           </div>
                         </div>
                       </div>
 
                       {/* Electronic Timestamp Verification Stamp */}
                       <div className="mt-8 pt-4 border-t border-dashed border-slate-300 flex items-center justify-between text-[10px] text-slate-500 font-mono">
-                        <div className="flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span>
-                          <span>توثيق رقمي صادر من منظومة "صَرْح" الإلكترونية المعتمدة بوزارة التربية والتعليم</span>
+                        <div className="flex items-center gap-2">
+                          <img
+                            src="/sarh_main_logo.jpg"
+                            alt="شعار صرح"
+                            className="w-5 h-5 rounded-md border border-[#C48B69] object-contain shrink-0"
+                            crossOrigin="anonymous"
+                          />
+                          <span>توثيق رقمي صادر ومعتمد من منصة "صَرْح" المدرسية الذكية • سلطنة عُمان</span>
                         </div>
                         <div>
                           <span>رمز التحقق: SHA256-</span>
@@ -853,6 +892,7 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
                     </div>
                   </div>
                 </div>
+                </div>
               </div>
             </div>
           )}
@@ -860,6 +900,19 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
           {/* TAB 2: Database Overview and Tables */}
           {activeTab === 'overview' && (
             <div className="space-y-4">
+              {/* Official Brand Header */}
+              <div className="bg-[#1B2A4A]/70 border border-[#135D43]/40 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <SarhLogo
+                  size="sm"
+                  variant="dark"
+                  showText={true}
+                  subtext="مستودع البيانات الشامل والربط اللحظي للجداول • سلطنة عُمان"
+                />
+                <span className="bg-[#135D43]/40 text-[#C48B69] text-xs px-3 py-1 rounded-full border border-[#C48B69]/30 font-semibold self-start sm:self-auto">
+                  قاعدة بيانات موثقة ومعتمدة
+                </span>
+              </div>
+
               {/* Stats Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="bg-slate-800/70 border border-slate-700/80 rounded-2xl p-3.5">

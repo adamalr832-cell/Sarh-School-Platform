@@ -36,6 +36,18 @@ import {
   AdministrativeSanction,
 } from '../types';
 import { StudentAffairsReview } from './StudentAffairsReview';
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Legend,
+  AreaChart,
+  Area,
+} from 'recharts';
 
 interface AdminModeProps {
   isAdminAuthenticated?: boolean;
@@ -168,23 +180,32 @@ export const AdminMode: React.FC<AdminModeProps> = ({
     );
   }
 
+  // Weekly attendance data for recharts analytics
+  const weeklyAttendanceData = [
+    { day: 'الأحد', presentTeachers: 24, absentTeachers: 1, studentAttendanceRate: 97.4 },
+    { day: 'الإثنين', presentTeachers: 23, absentTeachers: 2, studentAttendanceRate: 96.1 },
+    { day: 'الثلاثاء', presentTeachers: 25, absentTeachers: 0, studentAttendanceRate: 98.2 },
+    { day: 'الأربعاء', presentTeachers: 22, absentTeachers: 3, studentAttendanceRate: 95.0 },
+    { day: 'الخميس (اليوم)', presentTeachers: presentTeachers, absentTeachers: absentTeachers, studentAttendanceRate: 96.8 },
+  ];
+
   return (
     <div className="space-y-6" dir="rtl">
       {/* Top Banner */}
-      <div className="bg-gradient-to-l from-slate-900 via-slate-800 to-emerald-950 rounded-3xl p-6 text-white shadow-md border border-slate-700/60 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-l from-[#1B2A4A] via-[#14233f] to-[#0d172a] rounded-3xl p-6 text-white shadow-md border border-[#135D43]/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-xl bg-emerald-600/30 border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-[#135D43]/30 border border-[#C48B69]/50 flex items-center justify-center text-[#C48B69] shrink-0">
             <Building2 className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h2 className="text-lg font-bold">بوابة الهيئة الإدارية (Admin Portal)</h2>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1 font-mono">
-                <ShieldCheck className="w-3 h-3 text-emerald-400" />
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#135D43]/30 text-[#C48B69] border border-[#C48B69]/40 flex items-center gap-1 font-mono">
+                <ShieldCheck className="w-3 h-3 text-[#135D43]" />
                 [ADMIN_AUTH_VALIDATED]
               </span>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 flex items-center gap-1 font-mono">
-                <Clock className="w-3 h-3 text-blue-400" />
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#C48B69]/20 text-[#C48B69] border border-[#C48B69]/40 flex items-center gap-1 font-mono">
+                <Clock className="w-3 h-3 text-[#C48B69]" />
                 تأريخ دقيق بالثانية
               </span>
             </div>
@@ -195,14 +216,14 @@ export const AdminMode: React.FC<AdminModeProps> = ({
         </div>
 
         {/* Tab Selection */}
-        <div className="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700 self-start md:self-auto flex-wrap gap-1">
+        <div className="flex items-center bg-[#132038] p-1.5 rounded-xl border border-[#1B2A4A] self-start md:self-auto flex-wrap gap-1">
           <button
             id="admin-tab-attendance"
             onClick={() => setActiveTab('attendance')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'attendance'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'text-slate-300 hover:text-white'
+                ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
+                : 'text-slate-300 hover:text-white hover:bg-white/5'
             }`}
           >
             <UserCheck className="w-3.5 h-3.5" />
@@ -214,8 +235,8 @@ export const AdminMode: React.FC<AdminModeProps> = ({
             onClick={() => setActiveTab('substitutes')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'substitutes'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'text-slate-300 hover:text-white'
+                ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
+                : 'text-slate-300 hover:text-white hover:bg-white/5'
             }`}
           >
             <ArrowRightLeft className="w-3.5 h-3.5" />
@@ -227,8 +248,8 @@ export const AdminMode: React.FC<AdminModeProps> = ({
             onClick={() => setActiveTab('honors')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'honors'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'text-slate-300 hover:text-white'
+                ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
+                : 'text-slate-300 hover:text-white hover:bg-white/5'
             }`}
           >
             <Award className="w-3.5 h-3.5" />
@@ -240,14 +261,14 @@ export const AdminMode: React.FC<AdminModeProps> = ({
             onClick={() => setActiveTab('student_affairs')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'student_affairs'
-                ? 'bg-amber-600 text-white shadow-sm'
-                : 'text-amber-200 hover:text-white hover:bg-amber-950/40'
+                ? 'bg-[#C48B69] text-white shadow-sm'
+                : 'text-[#C48B69]/90 hover:text-white hover:bg-white/5'
             }`}
           >
-            <Scale className="w-3.5 h-3.5 text-amber-300" />
+            <Scale className="w-3.5 h-3.5 text-[#C48B69]" />
             <span>لجنة شؤون الطلاب (قرار 234)</span>
             {infractions.filter((i) => !i.status || i.status === 'pending_review').length > 0 && (
-              <span className="w-5 h-5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black flex items-center justify-center">
+              <span className="w-5 h-5 rounded-full bg-[#C48B69] text-white text-[10px] font-black flex items-center justify-center">
                 {infractions.filter((i) => !i.status || i.status === 'pending_review').length}
               </span>
             )}
@@ -258,8 +279,8 @@ export const AdminMode: React.FC<AdminModeProps> = ({
             onClick={() => setActiveTab('audit')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'audit'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'text-slate-300 hover:text-white'
+                ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
+                : 'text-slate-300 hover:text-white hover:bg-white/5'
             }`}
           >
             <History className="w-3.5 h-3.5" />
@@ -270,10 +291,10 @@ export const AdminMode: React.FC<AdminModeProps> = ({
             <button
               id="admin-tab-database"
               onClick={onOpenDatabase}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-indigo-300 hover:text-white hover:bg-indigo-900/40 border border-indigo-500/30"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-[#C48B69] hover:text-white hover:bg-[#C48B69]/20 border border-[#C48B69]/30"
               title="فتح لوحة قاعدة البيانات الشاملة"
             >
-              <Database className="w-3.5 h-3.5 text-indigo-400" />
+              <Database className="w-3.5 h-3.5 text-[#C48B69]" />
               <span>قاعدة البيانات المدرسية</span>
             </button>
           )}
@@ -285,28 +306,128 @@ export const AdminMode: React.FC<AdminModeProps> = ({
         <div className="space-y-6">
           {/* Summary KPIs */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+            <div className="bg-white rounded-2xl border border-[#135D43]/20 p-4 shadow-xs">
               <div className="text-xs text-slate-500 font-medium">إجمالي الهيئة التدريسية</div>
-              <div className="text-2xl font-black text-slate-900 mt-1">{totalTeachers} معلمين</div>
+              <div className="text-2xl font-black text-[#1B2A4A] mt-1">{totalTeachers} معلمين</div>
               <div className="text-[11px] text-slate-400 mt-1">كادر المدرسة المعتمد</div>
             </div>
 
-            <div className="bg-emerald-50 rounded-2xl border border-emerald-200 p-4 shadow-sm">
-              <div className="text-xs text-emerald-800 font-medium">الحضور اليومي</div>
-              <div className="text-2xl font-black text-emerald-700 mt-1">{presentTeachers} معلماً</div>
-              <div className="text-[11px] text-emerald-600 mt-1">على رأس عملهم اليوم</div>
+            <div className="bg-[#135D43]/10 rounded-2xl border border-[#135D43]/30 p-4 shadow-xs">
+              <div className="text-xs text-[#135D43] font-bold">الحضور اليومي</div>
+              <div className="text-2xl font-black text-[#135D43] mt-1">{presentTeachers} معلماً</div>
+              <div className="text-[11px] text-[#135D43]/80 mt-1">على رأس عملهم اليوم</div>
             </div>
 
-            <div className="bg-red-50 rounded-2xl border border-red-200 p-4 shadow-sm">
+            <div className="bg-red-50 rounded-2xl border border-red-200 p-4 shadow-xs">
               <div className="text-xs text-red-800 font-medium">الغياب والتأخر</div>
               <div className="text-2xl font-black text-red-700 mt-1">{absentTeachers} معلمين</div>
               <div className="text-[11px] text-red-600 mt-1">مؤرخ بالثانية في النظام</div>
             </div>
 
-            <div className="bg-blue-50 rounded-2xl border border-blue-200 p-4 shadow-sm">
-              <div className="text-xs text-blue-800 font-medium">المعلمون المنتدبون</div>
-              <div className="text-2xl font-black text-blue-700 mt-1">{delegatedTeachers} معلمين</div>
-              <div className="text-[11px] text-blue-600 mt-1">مهام وانتداب رسمي</div>
+            <div className="bg-[#1B2A4A]/10 rounded-2xl border border-[#1B2A4A]/25 p-4 shadow-xs">
+              <div className="text-xs text-[#1B2A4A] font-bold">المعلمون المنتدبون</div>
+              <div className="text-2xl font-black text-[#1B2A4A] mt-1">{delegatedTeachers} معلمين</div>
+              <div className="text-[11px] text-[#1B2A4A]/70 mt-1">مهام وانتداب رسمي</div>
+            </div>
+          </div>
+
+          {/* Interactive Charts: Weekly Trends & Student Attendance (Recharts) */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Chart 1: Teacher Attendance / Absence Bar Chart */}
+            <div className="bg-white rounded-2xl border border-[#135D43]/20 p-5 shadow-xs">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-[#1B2A4A] flex items-center gap-2">
+                    <UserCheck className="w-4 h-4 text-[#135D43]" />
+                    <span>توزيع حضور وغياب المعلمين خلال الأسبوع الحالي</span>
+                  </h4>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    مقارنة يومية فورية لعدد الحاضرين مقابل الغياب والانتداب
+                  </p>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#135D43]/15 text-[#135D43]">
+                  تحديث حي
+                </span>
+              </div>
+              <div className="h-60 mt-3" dir="ltr">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={weeklyAttendanceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#64748b' }} />
+                    <YAxis tick={{ fontSize: 11, fill: '#64748b' }} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#1B2A4A',
+                        color: '#fff',
+                        borderRadius: '12px',
+                        border: '1px solid #135D43',
+                        fontSize: '12px',
+                        textAlign: 'right',
+                        direction: 'rtl',
+                      }}
+                    />
+                    <Legend
+                      formatter={(value) => (value === 'presentTeachers' ? 'المعلمون الحاضرون' : 'الغياب والتأخر')}
+                      wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
+                    />
+                    <Bar dataKey="presentTeachers" fill="#135D43" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="absentTeachers" fill="#C48B69" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Chart 2: Student Attendance Rate Area Chart */}
+            <div className="bg-white rounded-2xl border border-[#135D43]/20 p-5 shadow-xs">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-[#1B2A4A] flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#C48B69]" />
+                    <span>مؤشر نسبة حضور الطلاب الأسبوعي (%)</span>
+                  </h4>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    متوسط نسبة الانضباط المدرسي للصفوف (10 - 12)
+                  </p>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#C48B69]/15 text-[#C48B69]">
+                  الهدف 95%+
+                </span>
+              </div>
+              <div className="h-60 mt-3" dir="ltr">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={weeklyAttendanceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="studentAttendanceGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#135D43" stopOpacity={0.4} />
+                        <stop offset="95%" stopColor="#135D43" stopOpacity={0.0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#64748b' }} />
+                    <YAxis domain={[90, 100]} tick={{ fontSize: 11, fill: '#64748b' }} />
+                    <Tooltip
+                      formatter={(val: any) => [`${val}%`, 'نسبة الحضور']}
+                      contentStyle={{
+                        backgroundColor: '#1B2A4A',
+                        color: '#fff',
+                        borderRadius: '12px',
+                        border: '1px solid #135D43',
+                        fontSize: '12px',
+                        textAlign: 'right',
+                        direction: 'rtl',
+                      }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="studentAttendanceRate"
+                      stroke="#135D43"
+                      strokeWidth={2.5}
+                      fillOpacity={1}
+                      fill="url(#studentAttendanceGrad)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
 
@@ -328,10 +449,10 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                   <button
                     id="admin-download-teachers-pdf-btn"
                     onClick={onOpenExportModal}
-                    className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-emerald-700/50 text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                    className="px-3.5 py-2 rounded-xl bg-[#1B2A4A] hover:bg-[#14233f] text-[#C48B69] border border-[#C48B69]/40 text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
                     title="تحميل كشف غياب المعلمين والانتداب بصيغة PDF رسمية"
                   >
-                    <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                    <FileText className="w-3.5 h-3.5 text-[#C48B69]" />
                     <span>تحميل كشف الغياب PDF</span>
                   </button>
                 )}
@@ -339,7 +460,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                 <button
                   id="open-record-absence-btn"
                   onClick={() => setIsAddAbsenceModalOpen(true)}
-                  className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow flex items-center gap-1.5"
+                  className="px-3.5 py-2 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>تسجيل غياب أو تأخر جديد بالثانية</span>
@@ -365,14 +486,14 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                             ? 'bg-red-100 text-red-700'
                             : isDelegated
                             ? 'bg-blue-100 text-blue-700'
-                            : 'bg-emerald-100 text-emerald-700'
+                            : 'bg-[#135D43]/15 text-[#135D43]'
                         }`}
                       >
                         {isAbsent ? <UserX className="w-4 h-4" /> : <UserCheck className="w-4 h-4" />}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs sm:text-sm font-bold text-slate-900">{teacher.name}</span>
+                          <span className="text-xs sm:text-sm font-bold text-[#1B2A4A]">{teacher.name}</span>
                           {/* Timestamp badge */}
                           {teacher.absenceRecordedAt && (
                             <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-red-50 text-red-700 border border-red-200">
@@ -380,7 +501,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                             </span>
                           )}
                           {teacher.lastStatusChangeTimestamp && !teacher.absenceRecordedAt && (
-                            <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+                            <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-[#F9F8F6] text-slate-600 border border-slate-200">
                               آخر تحديث: {teacher.lastStatusChangeTimestamp}
                             </span>
                           )}
@@ -388,7 +509,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                         <div className="text-[11px] text-slate-500 mt-0.5 flex items-center gap-2 flex-wrap">
                           <span>المادة: <strong className="text-slate-700">{teacher.subject}</strong></span>
                           <span>•</span>
-                          <span>النصاب: <strong className="font-mono text-emerald-700">{teacher.currentWeeklyLoad} / {teacher.maxWeeklyLoad} حصة</strong></span>
+                          <span>النصاب: <strong className="font-mono text-[#135D43]">{teacher.currentWeeklyLoad} / {teacher.maxWeeklyLoad} حصة</strong></span>
                           {teacher.notes && (
                             <>
                               <span>•</span>
@@ -405,8 +526,8 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                         onClick={() => onUpdateTeacherStatus(teacher.id, 'available')}
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
                           isAvailable
-                            ? 'bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-300'
-                            : 'bg-slate-100 text-slate-600 hover:bg-emerald-50'
+                            ? 'bg-[#135D43] text-white shadow-sm ring-2 ring-[#135D43]/30'
+                            : 'bg-[#F9F8F6] text-slate-600 hover:bg-[#135D43]/10'
                         }`}
                       >
                         <Check className="w-3.5 h-3.5" />
@@ -418,7 +539,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
                           isAbsent
                             ? 'bg-red-600 text-white shadow-sm ring-2 ring-red-300'
-                            : 'bg-slate-100 text-slate-600 hover:bg-red-50'
+                            : 'bg-[#F9F8F6] text-slate-600 hover:bg-red-50'
                         }`}
                       >
                         <UserX className="w-3.5 h-3.5" />
@@ -429,8 +550,8 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                         onClick={() => onUpdateTeacherStatus(teacher.id, 'delegated')}
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
                           isDelegated
-                            ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-300'
-                            : 'bg-slate-100 text-slate-600 hover:bg-blue-50'
+                            ? 'bg-[#1B2A4A] text-white shadow-sm ring-2 ring-[#1B2A4A]/30'
+                            : 'bg-[#F9F8F6] text-slate-600 hover:bg-blue-50'
                         }`}
                       >
                         <ArrowRightLeft className="w-3.5 h-3.5" />
@@ -443,9 +564,9 @@ export const AdminMode: React.FC<AdminModeProps> = ({
             </div>
 
             {/* AI Assistant Quick Trigger */}
-            <div className="p-4 bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            <div className="p-4 bg-[#1B2A4A] text-white flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                <Sparkles className="w-4 h-4 text-[#C48B69] shrink-0" />
                 <span className="text-slate-300">
                   إرسال كشف حضور وغياب المعلمين المؤرخ بالثانية إلى نواة صَرْح
                 </span>
@@ -457,7 +578,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                   )
                 }
                 disabled={isLoadingAi}
-                className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-colors shadow shrink-0"
+                className="px-3.5 py-1.5 rounded-lg bg-[#C48B69] hover:bg-[#b07857] text-white font-bold transition-colors shadow shrink-0"
               >
                 {isLoadingAi ? 'جارِ التحليل...' : 'توليد تقرير الغياب الرسمي المؤرخ'}
               </button>
@@ -473,7 +594,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
               <div>
                 <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+                  <FileSpreadsheet className="w-4 h-4 text-[#135D43]" />
                   <span>الانتداب والاحتياط (تاريخ التكليف + وقت إسناد الحصة بالثانية)</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -486,19 +607,19 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                   <button
                     id="admin-download-substitutes-pdf-btn"
                     onClick={onOpenExportModal}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-emerald-700/50 text-xs font-bold shadow-sm transition-all"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1B2A4A] hover:bg-[#14233f] text-[#C48B69] border border-[#C48B69]/40 text-xs font-bold shadow-xs transition-all"
                     title="تحميل جدول غياب وانتداب المعلمين PDF"
                   >
-                    <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                    <FileText className="w-3.5 h-3.5 text-[#C48B69]" />
                     <span>تحميل جدول الانتداب PDF</span>
                   </button>
                 )}
                 <button
                   id="auto-distribute-substitutes-btn"
                   onClick={onAutoDistributeSubstitutes}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white text-xs font-bold shadow-sm transition-all"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white text-xs font-bold shadow-md transition-all"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-200" />
+                  <Sparkles className="w-3.5 h-3.5 text-white" />
                   <span>توزيع عادل ذكي للحصص</span>
                 </button>
               </div>
@@ -628,7 +749,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                   )
                 }
                 disabled={isLoadingAi}
-                className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-colors shadow shrink-0"
+                className="px-3.5 py-1.5 rounded-lg bg-[#C48B69] hover:bg-[#b07857] text-white font-bold transition-colors shadow shrink-0"
               >
                 {isLoadingAi ? 'جارِ التحليل...' : 'توليد تقرير الاحتياط المؤرخ بالثانية'}
               </button>
@@ -643,7 +764,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
           <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Award className="w-4 h-4 text-emerald-600" />
+                <Award className="w-4 h-4 text-[#135D43]" />
                 <span>تكريم المعلمين (تاريخ التكريم + وقت تسجيل نقطة/شهادة التميّز بالثانية + المناسبة)</span>
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -653,7 +774,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
 
             <button
               onClick={() => setIsHonorModalOpen(true)}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow flex items-center gap-1.5 self-start sm:self-auto"
+              className="px-4 py-2 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 self-start sm:self-auto"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>تسجيل تكريم جديد بالثانية</span>
@@ -868,7 +989,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow transition-all"
+                  className="px-4 py-2 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white font-bold shadow transition-all"
                 >
                   تسجيل وفتح الاحتياط
                 </button>
@@ -884,7 +1005,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
           <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-slate-200 space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Award className="w-4 h-4 text-emerald-600" />
+                <Award className="w-4 h-4 text-[#135D43]" />
                 <span>تسجيل تكريم معلم (مؤرخ بالثانية)</span>
               </h3>
               <button
@@ -946,7 +1067,7 @@ export const AdminMode: React.FC<AdminModeProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow transition-all"
+                  className="px-4 py-2 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white font-bold shadow transition-all"
                 >
                   اعتماد التكريم بالثانية
                 </button>

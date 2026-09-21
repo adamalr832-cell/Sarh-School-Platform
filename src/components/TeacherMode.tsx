@@ -165,10 +165,10 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
   if (!isTeacherAuthenticated) {
     return (
       <div className="max-w-md mx-auto my-12 p-8 bg-white rounded-3xl border border-slate-200 text-center shadow-lg" dir="rtl">
-        <div className="w-16 h-16 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-teal-100 shadow-sm">
+        <div className="w-16 h-16 bg-[#135D43]/10 text-[#135D43] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-[#135D43]/20 shadow-xs">
           <Lock className="w-8 h-8" />
         </div>
-        <h2 className="text-xl font-bold text-slate-900 mb-2">بوابة الهيئة التدريسية مقفلة</h2>
+        <h2 className="text-xl font-bold text-[#1B2A4A] mb-2">بوابة الهيئة التدريسية مقفلة</h2>
         <p className="text-xs text-slate-500 leading-relaxed mb-6">
           هذه البوابة مخصصة للمعلمين وتتطلب إدخال رمز الدخول السري المعتمد للمعلم (الرمز الافتراضي: 2020) لتسجيل الحضور بالثانية، ومنح النقاط، رصد الملاحظات، واعتماد طلبات الاستبدال.
         </p>
@@ -176,7 +176,7 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
           <button
             id="teacher-unlock-gateway-btn"
             onClick={onOpenAuthModal}
-            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-700 hover:from-teal-700 hover:to-emerald-800 text-white text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2"
+            className="w-full py-3 px-4 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2"
           >
             <KeyRound className="w-4 h-4" />
             <span>إدخال رمز المعلم (2020) وتوثيق البوابة</span>
@@ -189,20 +189,20 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
   return (
     <div className="space-y-6" dir="rtl">
       {/* Top Banner */}
-      <div className="bg-gradient-to-l from-slate-900 via-slate-800 to-teal-950 rounded-3xl p-6 text-white shadow-md border border-slate-700/60 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-l from-[#1B2A4A] via-[#14233f] to-[#0d172a] rounded-3xl p-6 text-white shadow-md border border-[#135D43]/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-xl bg-teal-600/30 border border-teal-400/40 flex items-center justify-center text-teal-300 shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-[#135D43]/30 border border-[#C48B69]/50 flex items-center justify-center text-[#C48B69] shrink-0">
             <GraduationCap className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h2 className="text-lg font-bold">بوابة الهيئة التدريسية (Teacher Portal)</h2>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-400/30 flex items-center gap-1 font-mono">
-                <ShieldCheck className="w-3 h-3 text-teal-400" />
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#135D43]/30 text-[#C48B69] border border-[#C48B69]/40 flex items-center gap-1 font-mono">
+                <ShieldCheck className="w-3 h-3 text-[#C48B69]" />
                 [TEACHER_AUTH_VALIDATED]
               </span>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 flex items-center gap-1 font-mono">
-                <Clock className="w-3 h-3 text-blue-400" />
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#1B2A4A] text-slate-200 border border-[#C48B69]/30 flex items-center gap-1 font-mono">
+                <Clock className="w-3 h-3 text-[#C48B69]" />
                 معيار التوثيق الزمني بالثانية
               </span>
             </div>
@@ -213,13 +213,13 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
         </div>
 
         {/* Tab Selection */}
-        <div className="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700 self-start md:self-auto flex-wrap gap-1">
+        <div className="flex items-center bg-[#132038] p-1.5 rounded-xl border border-[#1B2A4A] self-start md:self-auto flex-wrap gap-1">
           <button
             id="teacher-tab-attendance"
             onClick={() => setActiveTab('attendance')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'attendance'
-                ? 'bg-teal-600 text-white shadow-sm'
+                ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
@@ -232,7 +232,7 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
             onClick={() => setActiveTab('coins')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'coins'
-                ? 'bg-teal-600 text-white shadow-sm'
+                ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
@@ -245,7 +245,7 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
             onClick={() => setActiveTab('infractions')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'infractions'
-                ? 'bg-teal-600 text-white shadow-sm'
+                ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
@@ -258,14 +258,14 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
             onClick={() => setActiveTab('requests')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all relative ${
               activeTab === 'requests'
-                ? 'bg-teal-600 text-white shadow-sm'
+                ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
                 : 'text-slate-300 hover:text-white'
             }`}
           >
             <Inbox className="w-3.5 h-3.5" />
             <span>طلبات الاستبدال</span>
             {pendingRequestsCount > 0 && (
-              <span className="w-5 h-5 rounded-full bg-amber-500 text-white text-[10px] font-black flex items-center justify-center">
+              <span className="w-5 h-5 rounded-full bg-[#C48B69] text-white text-[10px] font-black flex items-center justify-center">
                 {pendingRequestsCount}
               </span>
             )}
@@ -347,10 +347,10 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                   <button
                     id="teacher-download-attendance-pdf-btn"
                     onClick={onOpenExportModal}
-                    className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-emerald-700/50 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+                    className="px-3.5 py-2 rounded-xl bg-[#1B2A4A] hover:bg-[#14233f] text-[#C48B69] border border-[#C48B69]/40 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-xs"
                     title="تحميل كشف حضور وغياب الطلاب بصيغة PDF الرسمية"
                   >
-                    <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                    <FileText className="w-3.5 h-3.5 text-[#C48B69]" />
                     <span>تحميل كشف الحضور PDF</span>
                   </button>
                 )}
@@ -358,16 +358,16 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                 <button
                   id="mark-all-present-btn"
                   onClick={() => onMarkAllPresent(selectedClass, selectedPeriod)}
-                  className="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200 transition-colors flex items-center gap-1.5"
+                  className="px-3.5 py-2 rounded-xl bg-[#135D43]/15 hover:bg-[#135D43]/25 text-[#135D43] text-xs font-bold border border-[#135D43]/30 transition-colors flex items-center gap-1.5"
                 >
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <Check className="w-3.5 h-3.5 text-[#135D43]" />
                   <span>تسجيل الجميع كحاضر بالثانية</span>
                 </button>
 
                 <button
                   id="save-attendance-btn"
                   onClick={handleSaveAttendance}
-                  className="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-sm transition-colors flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white text-xs font-bold shadow-md transition-colors flex items-center gap-1.5"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>حفظ واعتماد الكشف</span>
@@ -376,32 +376,32 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+              <div className="bg-[#F9F8F6] p-3 rounded-xl border border-slate-200 text-center">
                 <div className="text-xs text-slate-500 font-medium">إجمالي الطلاب</div>
-                <div className="text-xl font-bold text-slate-900 mt-0.5">{classStudents.length}</div>
+                <div className="text-xl font-bold text-[#1B2A4A] mt-0.5">{classStudents.length}</div>
               </div>
-              <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-center">
-                <div className="text-xs text-emerald-700 font-medium">الحضور الفعلي</div>
-                <div className="text-xl font-bold text-emerald-700 mt-0.5">{presentCount}</div>
+              <div className="bg-[#135D43]/10 p-3 rounded-xl border border-[#135D43]/20 text-center">
+                <div className="text-xs text-[#135D43] font-medium">الحضور الفعلي</div>
+                <div className="text-xl font-bold text-[#135D43] mt-0.5">{presentCount}</div>
               </div>
               <div className="bg-red-50 p-3 rounded-xl border border-red-200 text-center">
                 <div className="text-xs text-red-700 font-medium">الغياب</div>
                 <div className="text-xl font-bold text-red-700 mt-0.5">{absentCount}</div>
               </div>
-              <div className="bg-amber-50 p-3 rounded-xl border border-amber-200 text-center">
-                <div className="text-xs text-amber-800 font-medium">التأخر الصفي</div>
-                <div className="text-xl font-bold text-amber-700 mt-0.5">{lateCount}</div>
+              <div className="bg-[#C48B69]/15 p-3 rounded-xl border border-[#C48B69]/30 text-center">
+                <div className="text-xs text-[#9a6444] font-medium">التأخر الصفي</div>
+                <div className="text-xl font-bold text-[#9a6444] mt-0.5">{lateCount}</div>
               </div>
             </div>
           </div>
 
           <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-            <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-              <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Users className="w-4 h-4 text-teal-600" />
+            <div className="p-4 bg-[#F9F8F6] border-b border-slate-200 flex items-center justify-between">
+              <h3 className="text-xs sm:text-sm font-bold text-[#1B2A4A] flex items-center gap-2">
+                <Users className="w-4 h-4 text-[#135D43]" />
                 <span>كشف الحضور والغياب (تاريخ اليوم + وقت التسجيل بالثانية + رقم الحصة)</span>
               </h3>
-              <span className="text-[11px] font-mono text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
+              <span className="text-[11px] font-mono text-[#1B2A4A] bg-white px-2.5 py-0.5 rounded border border-[#C48B69]/30">
                 الحصة الحالية: {selectedPeriod}
               </span>
             </div>
@@ -413,24 +413,24 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                   className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/80 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center shrink-0 font-mono">
+                    <span className="w-7 h-7 rounded-lg bg-[#F9F8F6] text-[#1B2A4A] border border-slate-200 font-bold text-xs flex items-center justify-center shrink-0 font-mono">
                       {student.seatNumber || idx + 1}
                     </span>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs sm:text-sm font-bold text-slate-900">{student.name}</span>
+                        <span className="text-xs sm:text-sm font-bold text-[#1B2A4A]">{student.name}</span>
                         {/* Timestamp + Period Badge */}
                         {student.attendanceTimestamp && (
-                          <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-teal-600" />
+                          <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-[#F9F8F6] text-slate-700 border border-slate-200 flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-[#135D43]" />
                             {student.attendanceTimestamp} (الحصة {student.attendancePeriod || selectedPeriod})
                           </span>
                         )}
                       </div>
                       <div className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-2">
-                        <span>الرصيد: <strong className="text-amber-600 font-bold">{student.points} نقطة</strong></span>
+                        <span>الرصيد: <strong className="text-[#C48B69] font-bold">{student.points} نقطة</strong></span>
                         <span>•</span>
-                        <span>الحالة: <strong className={student.attendanceStatus === 'present' ? 'text-emerald-700' : student.attendanceStatus === 'absent' ? 'text-red-700' : 'text-amber-700'}>
+                        <span>الحالة: <strong className={student.attendanceStatus === 'present' ? 'text-[#135D43]' : student.attendanceStatus === 'absent' ? 'text-red-700' : 'text-[#C48B69]'}>
                           {student.attendanceStatus === 'present' ? 'حاضر' : student.attendanceStatus === 'absent' ? 'غائب' : 'متأخر'}
                         </strong></span>
                       </div>
@@ -442,8 +442,8 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                       onClick={() => onUpdateStudentAttendance(student.id, 'present', selectedPeriod)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
                         student.attendanceStatus === 'present'
-                          ? 'bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-300'
-                          : 'bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-700'
+                          ? 'bg-[#135D43] text-white shadow-sm ring-2 ring-[#135D43]/30'
+                          : 'bg-[#F9F8F6] text-slate-600 hover:bg-[#135D43]/10 hover:text-[#135D43]'
                       }`}
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
@@ -455,7 +455,7 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
                         student.attendanceStatus === 'absent'
                           ? 'bg-red-600 text-white shadow-sm ring-2 ring-red-300'
-                          : 'bg-slate-100 text-slate-600 hover:bg-red-50 hover:text-red-700'
+                          : 'bg-[#F9F8F6] text-slate-600 hover:bg-red-50 hover:text-red-700'
                       }`}
                     >
                       <XCircle className="w-3.5 h-3.5" />
@@ -466,8 +466,8 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                       onClick={() => onUpdateStudentAttendance(student.id, 'late', selectedPeriod)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
                         student.attendanceStatus === 'late'
-                          ? 'bg-amber-500 text-white shadow-sm ring-2 ring-amber-300'
-                          : 'bg-slate-100 text-slate-600 hover:bg-amber-50 hover:text-amber-700'
+                          ? 'bg-[#C48B69] text-white shadow-sm ring-2 ring-[#C48B69]/30'
+                          : 'bg-[#F9F8F6] text-slate-600 hover:bg-[#C48B69]/10 hover:text-[#9a6444]'
                       }`}
                     >
                       <Clock className="w-3.5 h-3.5" />
@@ -595,9 +595,9 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
               <button
                 type="submit"
                 id="submit-award-points-btn"
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-700 hover:from-teal-700 hover:to-emerald-800 text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2"
               >
-                <Sparkles className="w-4 h-4 text-amber-300" />
+                <Sparkles className="w-4 h-4 text-white" />
                 <span>اعتماد التكريم ومنح النقاط مؤرخة بالثانية</span>
               </button>
             </form>
@@ -606,8 +606,8 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
           {/* Recent Awards Log with Precision Timestamps */}
           <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
-                <History className="w-4 h-4 text-teal-600" />
+              <h3 className="text-xs sm:text-sm font-bold text-[#1B2A4A] flex items-center gap-2">
+                <History className="w-4 h-4 text-[#135D43]" />
                 <span>سجل تكريم الطلاب المؤرخ</span>
               </h3>
               <span className="text-[11px] text-slate-400 font-mono">{awardLogs.length} تكريم</span>
@@ -618,8 +618,8 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                 <div key={log.id} className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-slate-900">{log.studentName}</span>
-                    <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-bold font-mono text-[11px] flex items-center gap-1">
-                      <Coins className="w-3 h-3 text-amber-600" />
+                    <span className="px-2 py-0.5 rounded-full bg-[#C48B69]/20 text-[#9a6444] font-bold font-mono text-[11px] flex items-center gap-1">
+                      <Coins className="w-3 h-3 text-[#C48B69]" />
                       +{log.points}
                     </span>
                   </div>
@@ -640,8 +640,8 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
         <div className="space-y-6">
           <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-600" />
+              <h3 className="text-sm font-bold text-[#1B2A4A] flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-[#C48B69]" />
                 <span>سجل المخالفات والملاحظات (تاريخ رصد المخالفة + وقت التسجيل بالثانية + الراصد)</span>
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -654,17 +654,17 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                 <button
                   id="teacher-download-infractions-pdf-btn"
                   onClick={onOpenExportModal}
-                  className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-700/50 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+                  className="px-3.5 py-2 rounded-xl bg-[#1B2A4A] hover:bg-[#14233f] text-[#C48B69] border border-[#C48B69]/40 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-xs"
                   title="تحميل كشف المخالفات السلوكية الطلابي PDF"
                 >
-                  <FileText className="w-3.5 h-3.5 text-amber-400" />
+                  <FileText className="w-3.5 h-3.5 text-[#C48B69]" />
                   <span>تحميل كشف المخالفات PDF</span>
                 </button>
               )}
 
               <button
                 onClick={() => setIsInfractionModalOpen(true)}
-                className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-all shadow flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>رصد مخالفة / ملاحظة جديدة</span>
@@ -805,7 +805,7 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                                 <button
                                   id={`approve-grades-btn-${req.id}`}
                                   onClick={() => handleApproveGrades(req.id)}
-                                  className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1"
+                                  className="px-3 py-1.5 rounded-lg bg-[#135D43] hover:bg-[#0e4834] text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1"
                                 >
                                   <Check className="w-3.5 h-3.5" />
                                   <span>اعتماد الدرجات</span>
@@ -817,23 +817,23 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                               <button
                                 id={`approve-honor-btn-${req.id}`}
                                 onClick={() => handleApproveHonor(req.id)}
-                                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                                className="px-4 py-2 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
                               >
-                                <Award className="w-4 h-4 text-emerald-200" />
+                                <Award className="w-4 h-4 text-white" />
                                 <span>قبول واعتماد التكريم</span>
                               </button>
                             )}
                           </>
                         ) : (
-                          <div className="px-3.5 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center gap-1.5 border border-emerald-200">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                          <div className="px-3.5 py-1.5 rounded-xl bg-[#135D43]/15 text-[#135D43] text-xs font-bold flex items-center gap-1.5 border border-[#135D43]/30">
+                            <CheckCircle2 className="w-4 h-4 text-[#135D43]" />
                             <span>
                               {isGrades
                                 ? `تم الاعتماد (+${req.awardedGrades} درجات) بواسطة ${req.teacherName}`
                                 : `تم اعتماد التكريم بواسطة ${req.teacherName}`}
                             </span>
                             {req.teacherActionAt && (
-                              <span className="font-mono text-[10px] text-emerald-700 mr-1">
+                              <span className="font-mono text-[10px] text-[#135D43] mr-1">
                                 [{req.teacherActionAt}]
                               </span>
                             )}
@@ -855,7 +855,7 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
           <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-slate-200 space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-600" />
+                <AlertTriangle className="w-4 h-4 text-[#C48B69]" />
                 <span>رصد مخالفة أو ملاحظة سلوكية (مؤرخة بالثانية)</span>
               </h3>
               <button
@@ -932,7 +932,7 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold shadow transition-all"
+                  className="px-4 py-2 rounded-xl bg-[#C48B69] hover:bg-[#b07857] text-white font-bold shadow-md transition-all"
                 >
                   توثيق المخالفة بالثانية
                 </button>

@@ -1,1 +1,87 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --sarh-navy: #1B2A4A;
+    --sarh-emerald: #135D43;
+    --sarh-rosegold: #C48B69;
+    --sarh-surface: #F9F8F6;
+  }
+
+  body {
+    background-color: #F9F8F6;
+    color: #1B2A4A;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+}
+
+/* Sarh Design System Utility Classes */
+.bg-sarh-navy {
+  background-color: #1B2A4A !important;
+}
+
+.bg-sarh-emerald {
+  background-color: #135D43 !important;
+}
+
+.bg-sarh-rosegold {
+  background-color: #C48B69 !important;
+}
+
+.bg-sarh-surface {
+  background-color: #F9F8F6 !important;
+}
+
+.text-sarh-navy {
+  color: #1B2A4A !important;
+}
+
+.text-sarh-emerald {
+  color: #135D43 !important;
+}
+
+.text-sarh-rosegold {
+  color: #C48B69 !important;
+}
+
+.border-sarh-navy {
+  border-color: #1B2A4A !important;
+}
+
+.border-sarh-emerald {
+  border-color: #135D43 !important;
+}
+
+.border-sarh-rosegold {
+  border-color: #C48B69 !important;
+}
+
+.btn-sarh-primary {
+  background-color: #C48B69 !important;
+  color: #ffffff !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-sarh-primary:hover {
+  background-color: #b07857 !important;
+}
+
+.btn-sarh-navy {
+  background-color: #1B2A4A !important;
+  color: #ffffff !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-sarh-navy:hover {
+  background-color: #132038 !important;
+}
+
+.btn-sarh-emerald {
+  background-color: #135D43 !important;
+  color: #ffffff !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-sarh-emerald:hover {
+  background-color: #0e4532 !important;
+}
