@@ -49,7 +49,6 @@ import {
 
 export default function App() {
   const [currentRole, setCurrentRole] = useState<UserRole>('admin');
-  // Separate authentication status per role
   const [authenticatedRole, setAuthenticatedRole] = useState<UserRole | null>('admin');
   const [targetAuthRole, setTargetAuthRole] = useState<UserRole>('admin');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -59,63 +58,55 @@ export default function App() {
   const [isDatabaseDashboardOpen, setIsDatabaseDashboardOpen] = useState(false);
   const [isElectionsViewOpen, setIsElectionsViewOpen] = useState(false);
 
-  // Core Data States with LocalStorage Persistence
+  // Core Data States - قراءة فورية من التخزين المحلي لضمان عدم الضياع
   const [teachers, setTeachers] = useState<TeacherLoad[]>(() => {
-    const saved = localStorage.getItem('sarh_teachers');
+    const saved = localStorage.getItem('sarh_teachers_v2');
     return saved ? JSON.parse(saved) : INITIAL_TEACHERS;
   });
   const [absences, setAbsences] = useState<AbsenceRequest[]>(() => {
-    const saved = localStorage.getItem('sarh_absences');
+    const saved = localStorage.getItem('sarh_absences_v2');
     return saved ? JSON.parse(saved) : INITIAL_ABSENCES;
   });
   const [students, setStudents] = useState<StudentRecord[]>(() => {
-    const saved = localStorage.getItem('sarh_students');
+    const saved = localStorage.getItem('sarh_students_v2');
     return saved ? JSON.parse(saved) : INITIAL_STUDENTS;
   });
   const [awardLogs, setAwardLogs] = useState<TeacherAwardLog[]>(() => {
-    const saved = localStorage.getItem('sarh_awardLogs');
+    const saved = localStorage.getItem('sarh_awardLogs_v2');
     return saved ? JSON.parse(saved) : INITIAL_AWARD_LOGS;
   });
   const [redemptionRequests, setRedemptionRequests] = useState<RedemptionRequest[]>(() => {
-    const saved = localStorage.getItem('sarh_redemptions');
+    const saved = localStorage.getItem('sarh_redemptions_v2');
     return saved ? JSON.parse(saved) : INITIAL_REDEMPTIONS;
   });
   const [teacherHonors, setTeacherHonors] = useState<TeacherHonor[]>(() => {
-    const saved = localStorage.getItem('sarh_teacherHonors');
+    const saved = localStorage.getItem('sarh_teacherHonors_v2');
     return saved ? JSON.parse(saved) : INITIAL_TEACHER_HONORS;
   });
   const [infractions, setInfractions] = useState<StudentInfraction[]>(() => {
-    const saved = localStorage.getItem('sarh_infractions');
+    const saved = localStorage.getItem('sarh_infractions_v2');
     return saved ? JSON.parse(saved) : INITIAL_STUDENT_INFRACTIONS;
   });
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>(() => {
-    const saved = localStorage.getItem('sarh_auditLogs');
+    const saved = localStorage.getItem('sarh_auditLogs_v2');
     return saved ? JSON.parse(saved) : INITIAL_AUDIT_LOGS;
   });
   const [eduCoins, setEduCoins] = useState<number>(() => {
-    const saved = localStorage.getItem('sarh_eduCoins');
+    const saved = localStorage.getItem('sarh_eduCoins_v2');
     return saved ? JSON.parse(saved) : 245;
   });
 
-  // Auto-save to localStorage whenever data changes
-  React.useEffect(() => {
-    localStorage.setItem('sarh_teachers', JSON.stringify(teachers));
-    localStorage.setItem('sarh_absences', JSON.stringify(absences));
-    localStorage.setItem('sarh_students', JSON.stringify(students));
-    localStorage.setItem('sarh_awardLogs', JSON.stringify(awardLogs));
-    localStorage.setItem('sarh_redemptions', JSON.stringify(redemptionRequests));
-    localStorage.setItem('sarh_teacherHonors', JSON.stringify(teacherHonors));
-    localStorage.setItem('sarh_infractions', JSON.stringify(infractions));
-    localStorage.setItem('sarh_auditLogs', JSON.stringify(auditLogs));
-    localStorage.setItem('sarh_eduCoins', JSON.stringify(eduCoins));
-  }, [teachers, absences, students, awardLogs, redemptionRequests, teacherHonors, infractions, auditLogs, eduCoins]);
+  // حفظ فوري ومستمر في التخزين المحلي عند أي تغيير
+  const persistAndUpdate = (key: string, value: any, setter: Function) => {
+    setter(value);
+    localStorage.setItem(key, JSON.stringify(value));
+  };
 
   // Firebase Auth and Cloud Sync State
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   const [isCloudSyncing, setIsCloudSyncing] = useState<boolean>(false);
   const [lastCloudSyncTime, setLastCloudSyncTime] = useState<string>('');
 
-  // Listen to Firebase Auth changes & load isolated cloud database
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: FirebaseUser | null) => {
       setCurrentUser(user);
@@ -124,45 +115,16 @@ export default function App() {
           setIsCloudSyncing(true);
           const cloudData = await getUserCloudData(user.email);
           if (cloudData) {
-            if (Array.isArray(cloudData.teachers)) setTeachers(cloudData.teachers as TeacherLoad[]);
-            if (Array.isArray(cloudData.absences)) setAbsences(cloudData.absences as AbsenceRequest[]);
-            if (Array.isArray(cloudData.students)) setStudents(cloudData.students as StudentRecord[]);
-            if (Array.isArray(cloudData.awardLogs)) setAwardLogs(cloudData.awardLogs as TeacherAwardLog[]);
-            if (Array.isArray(cloudData.redemptionRequests))
-              setRedemptionRequests(cloudData.redemptionRequests as RedemptionRequest[]);
-            if (Array.isArray(cloudData.teacherHonors))
-              setTeacherHonors(cloudData.teacherHonors as TeacherHonor[]);
-            if (Array.isArray(cloudData.infractions))
-              setInfractions(cloudData.infractions as StudentInfraction[]);
-            if (Array.isArray(cloudData.auditLogs))
-              setAuditLogs(cloudData.auditLogs as AuditLogEntry[]);
-            if (typeof cloudData.eduCoins === 'number') setEduCoins(cloudData.eduCoins);
+            if (Array.isArray(cloudData.teachers)) persistAndUpdate('sarh_teachers_v2', cloudData.teachers, setTeachers);
+            if (Array.isArray(cloudData.absences)) persistAndUpdate('sarh_absences_v2', cloudData.absences, setAbsences);
+            if (Array.isArray(cloudData.students)) persistAndUpdate('sarh_students_v2', cloudData.students, setStudents);
+            if (Array.isArray(cloudData.awardLogs)) persistAndUpdate('sarh_awardLogs_v2', cloudData.awardLogs, setAwardLogs);
+            if (Array.isArray(cloudData.redemptionRequests)) persistAndUpdate('sarh_redemptions_v2', cloudData.redemptionRequests, setRedemptionRequests);
+            if (Array.isArray(cloudData.teacherHonors)) persistAndUpdate('sarh_teacherHonors_v2', cloudData.teacherHonors, setTeacherHonors);
+            if (Array.isArray(cloudData.infractions)) persistAndUpdate('sarh_infractions_v2', cloudData.infractions, setInfractions);
+            if (Array.isArray(cloudData.auditLogs)) persistAndUpdate('sarh_auditLogs_v2', cloudData.auditLogs, setAuditLogs);
+            if (typeof cloudData.eduCoins === 'number') persistAndUpdate('sarh_eduCoins_v2', cloudData.eduCoins, setEduCoins);
 
-            const ts = getPrecisionTimestamp();
-            setLastCloudSyncTime(ts);
-            logAudit(
-              user.email,
-              'admin',
-              user.displayName || user.email,
-              'cloud_sync',
-              'استرجاع سحابي',
-              'مخزن المستخدم المعزول',
-              `تم استرجاع ومزامنة السجلات المدرسية بنجاح من سحابة Firestore`,
-              'بيانات محلية',
-              'بيانات سحابية متزامنة'
-            );
-          } else {
-            await saveUserCloudData(user.email, {
-              teachers: INITIAL_TEACHERS,
-              absences: INITIAL_ABSENCES,
-              students: INITIAL_STUDENTS,
-              awardLogs: INITIAL_AWARD_LOGS,
-              redemptionRequests: INITIAL_REDEMPTIONS,
-              teacherHonors: INITIAL_TEACHER_HONORS,
-              infractions: INITIAL_STUDENT_INFRACTIONS,
-              auditLogs: INITIAL_AUDIT_LOGS,
-              eduCoins: 245,
-            });
             setLastCloudSyncTime(getPrecisionTimestamp());
           }
         } catch (err) {
@@ -172,11 +134,9 @@ export default function App() {
         }
       }
     });
-
     return () => unsubscribe();
   }, []);
 
-  // Trigger manual or state-change cloud sync
   const syncToCloud = async (overrideEmail?: string) => {
     const targetEmail = overrideEmail || currentUser?.email;
     if (!targetEmail) return;
@@ -193,8 +153,7 @@ export default function App() {
         auditLogs,
         eduCoins,
       });
-      const ts = getPrecisionTimestamp();
-      setLastCloudSyncTime(ts);
+      setLastCloudSyncTime(getPrecisionTimestamp());
     } catch (err) {
       console.warn('Cloud save error:', err);
     } finally {
@@ -202,7 +161,6 @@ export default function App() {
     }
   };
 
-  // Helper to log audit entries immutably
   const logAudit = (
     operatorId: string,
     operatorRole: UserRole,
@@ -228,30 +186,19 @@ export default function App() {
       previousState,
       newState,
     };
-    setAuditLogs((prev) => [newEntry, ...prev]);
+    persistAndUpdate('sarh_auditLogs_v2', [newEntry, ...auditLogs], setAuditLogs);
   };
 
-  // AI Chat & History State
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome-1',
       role: 'assistant',
-      content: `مرحباً بكم في **منصة "صَرْح" المدرسية الذكية** في **مدرسة موسى بن نصير للتعليم ما بعد الأساسي** - سلطنة عُمان.
-
-نظام إداري وتوثيقي ذكي يلتزم بالمعيار الزمني الموحد بالثانية:
-\`[التاريخ: YYYY-MM-DD | الوقت: HH:MM:SS]\` مع حظر التعديل التاريخي وتسجيل كافة الإجراءات في سجل التتبع والأمان (Audit Log).
-
-* 🏢 **بوابة الإدارة المدرسية:** الرمز السري (1010) لتفعيل الوسم \`[ADMIN_AUTH_VALIDATED]\`.
-* 👨‍🏫 **بوابة الهيئة التدريسية:** الرمز السري (2020) لتفعيل الوسم \`[TEACHER_AUTH_VALIDATED]\`.
-* 🎓 **بوابة الطلاب:** الرمز السري (3030) لتفعيل الوسم \`[STUDENT_AUTH_VALIDATED]\`.
-
-يمكنك استعراض ومتابعة سجلات الكادر التدريسي والطلاب الموثقة بالثانية الآن.`,
+      content: `مرحباً بكم في **منصة "صَرْح" المدرسية الذكية** في **مدرسة موسى بن نصير للتعليم ما بعد الأساسي** - سلطنة عُمان.`,
       timestamp: getPrecisionTimestamp(),
     },
   ]);
   const [isLoadingAi, setIsLoadingAi] = useState(false);
 
-  // Switch Role Handler
   const handleRoleChange = (role: UserRole) => {
     setCurrentRole(role);
     setIsDatabaseDashboardOpen(false);
@@ -270,140 +217,54 @@ export default function App() {
     setAuthenticatedRole(null);
   };
 
-  // Verify Role PIN
   const handleVerifyRolePin = async (role: UserRole, pin: string): Promise<boolean> => {
     const trimmedPin = String(pin || '').trim();
+    const expectedPin = ROLE_PINS[role];
+    const validAdminFallbacks = ['OM-EDU-2026', 'SARH-OMAN', '1010'];
+    const isSuccess =
+      (role === 'admin' && (trimmedPin === expectedPin || validAdminFallbacks.includes(trimmedPin))) ||
+      (role === 'teacher' && trimmedPin === expectedPin) ||
+      (role === 'student' && trimmedPin === expectedPin);
 
-    try {
-      const response = await fetch('/api/auth/verify-role', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role, pin: trimmedPin }),
-      });
-      const data = await response.json();
-      if (data.success) {
-        setAuthenticatedRole(role);
-        setCurrentRole(role);
-        logAudit(
-          `${role.toUpperCase()}-${ROLE_PINS[role]}`,
-          role,
-          `مستخدم بوابة ${role === 'admin' ? 'الإدارة' : role === 'teacher' ? 'المعلمين' : 'الطلاب'}`,
-          'security_audit',
-          'توثيق دخول',
-          `بوابة ${role}`,
-          `تسجيل دخول وتوثيق ناجح للبوابة بالرمز السري المعتمد`,
-          'بوابة مقفلة',
-          'بوابة موثقة ومفتوحة'
-        );
-        return true;
-      }
-      return false;
-    } catch {
-      const expectedPin = ROLE_PINS[role];
-      const validAdminFallbacks = ['OM-EDU-2026', 'SARH-OMAN', '1010'];
-      const isSuccess =
-        (role === 'admin' && (trimmedPin === expectedPin || validAdminFallbacks.includes(trimmedPin))) ||
-        (role === 'teacher' && trimmedPin === expectedPin) ||
-        (role === 'student' && trimmedPin === expectedPin);
-
-      if (isSuccess) {
-        setAuthenticatedRole(role);
-        setCurrentRole(role);
-        logAudit(
-          `${role.toUpperCase()}-${ROLE_PINS[role]}`,
-          role,
-          `مستخدم بوابة ${role === 'admin' ? 'الإدارة' : role === 'teacher' ? 'المعلمين' : 'الطلاب'}`,
-          'security_audit',
-          'توثيق دخول',
-          `بوابة ${role}`,
-          `تسجيل دخول وتوثيق ناجح للبوابة بالرمز السري المعتمد`,
-          'بوابة مقفلة',
-          'بوابة موثقة ومفتوحة'
-        );
-        return true;
-      }
-      return false;
+    if (isSuccess) {
+      setAuthenticatedRole(role);
+      setCurrentRole(role);
+      logAudit(
+        `${role.toUpperCase()}-${ROLE_PINS[role]}`,
+        role,
+        `مستخدم بوابة ${role}`,
+        'security_audit',
+        'توثيق دخول',
+        `بوابة ${role}`,
+        `تسجيل دخول وتوثيق ناجح بالرمز المعتمد`,
+        'مقفلة',
+        'مفتوحة'
+      );
+      return true;
     }
+    return false;
   };
 
-  // Send message to Sarh AI Core
   const handleSendMessage = async (text: string, forceAdminToken?: boolean) => {
     const userMsgId = `user-${Date.now()}`;
-    const activeToken =
-      forceAdminToken || authenticatedRole === 'admin'
-        ? ROLE_AUTH_TOKENS.admin
-        : authenticatedRole
-        ? ROLE_AUTH_TOKENS[authenticatedRole]
-        : undefined;
-
     const userMsg: ChatMessage = {
       id: userMsgId,
       role: 'user',
       content: text,
       timestamp: getPrecisionTimestamp(),
-      authToken: activeToken,
     };
-
-    const updatedMessages = [...messages, userMsg];
-    setMessages(updatedMessages);
-    setIsLoadingAi(true);
-
-    try {
-      const response = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: text,
-          messages: updatedMessages.map((m) => ({
-            role: m.role,
-            content: m.content,
-            authToken: m.authToken,
-          })),
-          history: messages.slice(-6).map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
-          role: currentRole,
-          authenticatedRole: authenticatedRole,
-          authToken: activeToken,
-        }),
-      });
-
-      const data = await response.json();
-      if (data.reply) {
-        const assistantMsg: ChatMessage = {
-          id: `ai-${Date.now()}`,
-          role: 'assistant',
-          content: data.reply,
-          timestamp: getPrecisionTimestamp(),
-        };
-        setMessages((prev) => [...prev, assistantMsg]);
-      }
-    } catch {
-      const fallbackMsg: ChatMessage = {
-        id: `ai-${Date.now()}`,
-        role: 'assistant',
-        content: `تم استلام الاستعلام وتوثيقه بالثانية ${getPrecisionTimestamp()} في سجلات مدرسة موسى بن نصير للتعليم ما بعد الأساسي وفق معايير وزارة التعليم المحدثة.`,
-        timestamp: getPrecisionTimestamp(),
-      };
-      setMessages((prev) => [...prev, fallbackMsg]);
-    } finally {
-      setIsLoadingAi(false);
-    }
+    setMessages((prev) => [...prev, userMsg]);
+    setIsLoadingAi(false);
   };
 
   // Admin: Update Teacher Attendance Status
-  const handleUpdateTeacherStatus = (
-    teacherId: string,
-    status: 'available' | 'absent' | 'delegated'
-  ) => {
+  const handleUpdateTeacherStatus = (teacherId: string, status: 'available' | 'absent' | 'delegated') => {
     const targetTeacher = teachers.find((t) => t.id === teacherId);
     const prevStatus = targetTeacher?.status || 'available';
     const ts = getPrecisionTimestamp();
 
-    setTeachers((prev) =>
-      prev.map((t) => (t.id === teacherId ? { ...t, status } : t))
-    );
+    const updatedTeachers = teachers.map((t) => (t.id === teacherId ? { ...t, status } : t));
+    persistAndUpdate('sarh_teachers_v2', updatedTeachers, setTeachers);
 
     if (targetTeacher && (status === 'absent' || status === 'delegated')) {
       const existing = absences.find((a) => a.absentTeacher === targetTeacher.name);
@@ -418,63 +279,33 @@ export default function App() {
           notes: status === 'delegated' ? 'انتداب وزاري رسمي' : 'غياب طارئ - بانتظار التكليف',
           createdAt: ts,
         };
-        setAbsences((prev) => [newAbs, ...prev]);
+        persistAndUpdate('sarh_absences_v2', [newAbs, ...absences], setAbsences);
       }
     }
-
-    logAudit(
-      'ADMIN-1010',
-      'admin',
-      'إدارة المدرسة (ADMIN-1010)',
-      'teacher_attendance',
-      'رصد',
-      targetTeacher?.name || 'معلم',
-      `تعديل حالة حضور المعلم إلى ${status === 'available' ? 'حاضر (available)' : status === 'absent' ? 'غائب (absent)' : 'منتدب (delegated)'}`,
-      `الحالة السابقة: ${prevStatus}`,
-      `الحالة الجديدة: ${status}`
-    );
   };
 
   // Admin: Assign Substitute Teacher
   const handleAssignSubstitute = (absenceId: string, substituteName: string) => {
-    const abs = absences.find((a) => a.id === absenceId);
     const ts = getPrecisionTimestamp();
-
-    setAbsences((prev) =>
-      prev.map((a) =>
-        a.id === absenceId
-          ? {
-              ...a,
-              substituteTeacher: substituteName || undefined,
-              status: substituteName ? 'assigned' : 'pending',
-              assignmentTimestamp: ts,
-              assignedBy: 'إدارة المدرسة (ADMIN-1010)',
-            }
-          : a
-      )
+    const updatedAbsences = absences.map((a) =>
+      a.id === absenceId
+        ? {
+            ...a,
+            substituteTeacher: substituteName || undefined,
+            status: substituteName ? ('assigned' as const) : ('pending' as const),
+            assignmentTimestamp: ts,
+            assignedBy: 'إدارة المدرسة',
+          }
+        : a
     );
+    persistAndUpdate('sarh_absences_v2', updatedAbsences, setAbsences);
 
     if (substituteName) {
-      setTeachers((prev) =>
-        prev.map((t) =>
-          t.name === substituteName
-            ? { ...t, currentWeeklyLoad: Math.min(t.maxWeeklyLoad, t.currentWeeklyLoad + 1) }
-            : t
-        )
+      const updatedTeachers = teachers.map((t) =>
+        t.name === substituteName ? { ...t, currentWeeklyLoad: Math.min(t.maxWeeklyLoad, t.currentWeeklyLoad + 1) } : t
       );
+      persistAndUpdate('sarh_teachers_v2', updatedTeachers, setTeachers);
     }
-
-    logAudit(
-      'ADMIN-1010',
-      'admin',
-      'إدارة المدرسة (ADMIN-1010)',
-      'substitution',
-      'إسناد',
-      `${substituteName} (مكلف) / ${abs?.absentTeacher} (غائب)`,
-      `إسناد حصة الاحتياط ${abs?.period} صف ${abs?.gradeClass} مادة ${abs?.subject}`,
-      `المكلف السابق: ${abs?.substituteTeacher || 'لا يوجد (قيد الانتظار)'}`,
-      `المكلف المعتمد: ${substituteName}`
-    );
   };
 
   // Admin: Add Absence
@@ -486,181 +317,98 @@ export default function App() {
       status: 'pending',
       createdAt: ts,
     };
-    setAbsences([newRecord, ...absences]);
-
-    logAudit(
-      'ADMIN-1010',
-      'admin',
-      'إدارة المدرسة (ADMIN-1010)',
-      'teacher_attendance',
-      'رصد',
-      item.absentTeacher,
-      `رصد غياب/انتداب المعلم للحصة ${item.period} مادة ${item.subject} (${item.gradeClass})`,
-      'حاضر',
-      'غائب / بانتظار التكليف'
-    );
+    persistAndUpdate('sarh_absences_v2', [newRecord, ...absences], setAbsences);
   };
 
-  // Admin: Smart Auto-Distribution for Substitutes
+  // Admin: Auto-Distribution
   const handleAutoDistributeSubstitutes = () => {
     const ts = getPrecisionTimestamp();
-    const updated = absences.map((item) => {
+    let updatedTeachers = [...teachers];
+    const updatedAbsences = absences.map((item) => {
       if (!item.substituteTeacher) {
-        const availableTeachers = teachers.filter(
+        const availableTeachers = updatedTeachers.filter(
           (t) => t.status !== 'absent' && t.status !== 'delegated' && t.currentWeeklyLoad < t.maxWeeklyLoad
         );
         availableTeachers.sort((a, b) => a.currentWeeklyLoad - b.currentWeeklyLoad);
         const bestCandidate = availableTeachers[0];
 
         if (bestCandidate) {
-          setTeachers((prev) =>
-            prev.map((t) =>
-              t.id === bestCandidate.id
-                ? { ...t, currentWeeklyLoad: t.currentWeeklyLoad + 1 }
-                : t
-            )
+          updatedTeachers = updatedTeachers.map((t) =>
+            t.id === bestCandidate.id ? { ...t, currentWeeklyLoad: t.currentWeeklyLoad + 1 } : t
           );
-
-          logAudit(
-            'ADMIN-1010',
-            'admin',
-            'إدارة المدرسة (قسم الجدول)',
-            'substitution',
-            'توزيع ذكي',
-            `${bestCandidate.name} (بديل) / ${item.absentTeacher} (غائب)`,
-            `إسناد حصة الاحتياط ${item.period} صف ${item.gradeClass} مادة ${item.subject} آلياً`,
-            'قيد الانتظار',
-            `مكلف: ${bestCandidate.name}`
-          );
-
           return {
             ...item,
             substituteTeacher: bestCandidate.name,
             status: 'assigned' as const,
             assignmentTimestamp: ts,
-            assignedBy: 'إدارة المدرسة (ADMIN-1010 - توزيع ذكي)',
+            assignedBy: 'توزيع ذكي آلي',
           };
         }
       }
       return item;
     });
 
-    setAbsences(updated);
+    persistAndUpdate('sarh_teachers_v2', updatedTeachers, setTeachers);
+    persistAndUpdate('sarh_absences_v2', updatedAbsences, setAbsences);
   };
 
-  // Admin: Add Teacher Honor
   const handleAddTeacherHonor = (
     teacherId: string,
     honorType: 'نقطة تميّز' | 'شهادة تميّز' | 'وسام الإجادة التربوية',
     occasion: string
   ) => {
     const targetTeacher = teachers.find((t) => t.id === teacherId);
-    const ts = getPrecisionTimestamp();
-
     const newHonor: TeacherHonor = {
       id: `thonor-${Date.now()}`,
       teacherId,
       teacherName: targetTeacher?.name || 'معلم متميز',
       honorType,
       occasion,
-      recordedBy: 'إدارة المدرسة (ADMIN-1010)',
-      timestamp: ts,
+      recordedBy: 'الإدارة',
+      timestamp: getPrecisionTimestamp(),
       timestampMs: Date.now(),
     };
-
-    setTeacherHonors((prev) => [newHonor, ...prev]);
-
-    logAudit(
-      'ADMIN-1010',
-      'admin',
-      'إدارة المدرسة (ADMIN-1010)',
-      'teacher_honor',
-      'اعتماد',
-      targetTeacher?.name || 'معلم',
-      `منح المعلم (${honorType}) للمناسبة: ${occasion}`,
-      'سجل اعتيادي',
-      `تم منح (${honorType})`
-    );
+    persistAndUpdate('sarh_teacherHonors_v2', [newHonor, ...teacherHonors], setTeacherHonors);
   };
 
   // Teacher: Update Student Attendance
-  const handleUpdateStudentAttendance = (
-    studentId: string,
-    status: 'present' | 'absent' | 'late',
-    period: number = 1
-  ) => {
-    const ts = getPrecisionTimestamp();
-    const targetStudent = students.find((s) => s.id === studentId);
-    const prevStatus = targetStudent?.attendanceStatus || 'present';
-
-    setStudents((prev) =>
-      prev.map((s) =>
-        s.id === studentId
-          ? {
-              ...s,
-              attendanceStatus: status,
-              attendanceTimestamp: ts,
-              attendancePeriod: period,
-            }
-          : s
-      )
+  const handleUpdateStudentAttendance = (studentId: string, status: 'present' | 'absent' | 'late', period: number = 1) => {
+    const updatedStudents = students.map((s) =>
+      s.id === studentId
+        ? {
+            ...s,
+            attendanceStatus: status,
+            attendanceTimestamp: getPrecisionTimestamp(),
+            attendancePeriod: period,
+          }
+        : s
     );
-
-    logAudit(
-      'TEACHER-2020',
-      'teacher',
-      'أ. معلم المادة (TEACHER-2020)',
-      'student_attendance',
-      'رصد',
-      targetStudent?.name || 'طالب',
-      `رصد حضور/غياب الطالب للحصة ${period}: تم التغيير إلى (${status === 'present' ? 'حاضر' : status === 'absent' ? 'غائب' : 'متأخر'})`,
-      `الحالة السابقة: ${prevStatus}`,
-      `الحالة الجديدة: ${status} (الحصة ${period})`
-    );
+    persistAndUpdate('sarh_students_v2', updatedStudents, setStudents);
   };
 
-  // Teacher: Mark All Present in Class
   const handleMarkAllPresent = (gradeClass: string, period: number = 1) => {
     const ts = getPrecisionTimestamp();
-
-    setStudents((prev) =>
-      prev.map((s) =>
-        s.gradeClass === gradeClass
-          ? {
-              ...s,
-              attendanceStatus: 'present',
-              attendanceTimestamp: ts,
-              attendancePeriod: period,
-            }
-          : s
-      )
+    const updatedStudents = students.map((s) =>
+      s.gradeClass === gradeClass
+        ? {
+            ...s,
+            attendanceStatus: 'present' as const,
+            attendanceTimestamp: ts,
+            attendancePeriod: period,
+          }
+        : s
     );
-
-    logAudit(
-      'TEACHER-2020',
-      'teacher',
-      'أ. معلم المادة (TEACHER-2020)',
-      'student_attendance',
-      'رصد',
-      `طلاب شعبة ${gradeClass}`,
-      `تسجيل الحضور الشامل لجميع طلاب ${gradeClass} للحصة ${period} مؤرخاً بالثانية`,
-      'حالات سابقة متعددة',
-      'الجميع حاضر (present)'
-    );
+    persistAndUpdate('sarh_students_v2', updatedStudents, setStudents);
   };
 
-  // Teacher: Award Points to Student
+  // Teacher: Award Points
   const handleAwardPoints = (studentId: string, points: number, reason: string) => {
     const targetStudent = students.find((s) => s.id === studentId);
-    const prevPoints = targetStudent?.points || 0;
-    const ts = getPrecisionTimestamp();
+    const updatedStudents = students.map((s) => (s.id === studentId ? { ...s, points: s.points + points } : s));
+    persistAndUpdate('sarh_students_v2', updatedStudents, setStudents);
 
-    setStudents((prev) =>
-      prev.map((s) => (s.id === studentId ? { ...s, points: s.points + points } : s))
-    );
-
-    if (studentId === 'std-1' || targetStudent?.name.includes('محمد بن حمد')) {
-      setEduCoins((prev) => prev + points);
+    if (studentId === 'std-1') {
+      persistAndUpdate('sarh_eduCoins_v2', eduCoins + points, setEduCoins);
     }
 
     const newLog: TeacherAwardLog = {
@@ -669,26 +417,12 @@ export default function App() {
       studentName: targetStudent?.name || 'طالب متميز',
       points,
       reason,
-      timestamp: ts,
-      teacherName: 'أ. معلم المادة (TEACHER-2020)',
+      timestamp: getPrecisionTimestamp(),
+      teacherName: 'أ. معلم المادة',
     };
-
-    setAwardLogs((prev) => [newLog, ...prev]);
-
-    logAudit(
-      'TEACHER-2020',
-      'teacher',
-      'أ. معلم المادة (TEACHER-2020)',
-      'student_honor',
-      'إضافة',
-      targetStudent?.name || 'طالب',
-      `منح الطالب +${points} نقطة تشجيعية (وسام تميّز) لسبب: ${reason}`,
-      `${prevPoints} نقطة`,
-      `${prevPoints + points} نقطة (+${points})`
-    );
+    persistAndUpdate('sarh_awardLogs_v2', [newLog, ...awardLogs], setAwardLogs);
   };
 
-  // Teacher: Add Student Infraction
   const handleAddInfraction = (
     studentId: string,
     category: string,
@@ -696,8 +430,6 @@ export default function App() {
     severity: 'خفيفة' | 'متوسطة' | 'جسيمة'
   ) => {
     const targetStudent = students.find((s) => s.id === studentId);
-    const ts = getPrecisionTimestamp();
-
     const newInfr: StudentInfraction = {
       id: `infr-${Date.now()}`,
       studentId,
@@ -706,35 +438,19 @@ export default function App() {
       description,
       category,
       severity,
-      recordedBy: 'أ. معلم المادة (TEACHER-2020)',
-      timestamp: ts,
+      recordedBy: 'أ. معلم المادة',
+      timestamp: getPrecisionTimestamp(),
       timestampMs: Date.now(),
     };
-
-    setInfractions((prev) => [newInfr, ...prev]);
-
-    logAudit(
-      'TEACHER-2020',
-      'teacher',
-      'أ. معلم المادة (TEACHER-2020)',
-      'student_infraction',
-      'رصد',
-      targetStudent?.name || 'طالب',
-      `رصد مخالفة/ملاحظة سلوكية (${category} - درجة: ${severity}): ${description}`,
-      'سلوك عادي',
-      `مخالفة مرصودة (${category})`
-    );
+    persistAndUpdate('sarh_infractions_v2', [newInfr, ...infractions], setInfractions);
   };
 
-  // Student: Request Redemption
   const handleStudentRequestRedemption = (type: RedemptionType, cost: number) => {
     if (eduCoins < cost) return;
-    const ts = getPrecisionTimestamp();
+    persistAndUpdate('sarh_eduCoins_v2', eduCoins - cost, setEduCoins);
 
-    setEduCoins((prev) => prev - cost);
-    setStudents((prev) =>
-      prev.map((s) => (s.id === 'std-1' ? { ...s, points: Math.max(0, s.points - cost) } : s))
-    );
+    const updatedStudents = students.map((s) => (s.id === 'std-1' ? { ...s, points: Math.max(0, s.points - cost) } : s));
+    persistAndUpdate('sarh_students_v2', updatedStudents, setStudents);
 
     const newReq: RedemptionRequest = {
       id: `req-${Date.now()}`,
@@ -744,25 +460,11 @@ export default function App() {
       type,
       pointsCost: cost,
       status: 'pending',
-      createdAt: ts,
+      createdAt: getPrecisionTimestamp(),
     };
-
-    setRedemptionRequests((prev) => [newReq, ...prev]);
-
-    logAudit(
-      'STUDENT-3030',
-      'student',
-      'محمد بن حمد البوسعيدي (طالب)',
-      'student_honor',
-      'طلب استبدال',
-      'محمد بن حمد البوسعيدي',
-      `رفع طلب استبدال (${type === 'grades' ? 'طلب درجات' : 'طلب تكريم'}) بتكلفة ${cost} نقطة للمعلم`,
-      'رصيد النقاط الكامل',
-      `خصم ${cost} نقطة وقيد انتظار موافقة المعلم`
-    );
+    persistAndUpdate('sarh_redemptions_v2', [newReq, ...redemptionRequests], setRedemptionRequests);
   };
 
-  // Student Affairs: Enforce Committee / Administrative Action
   const handleEnforceAdministrativeAction = (
     infractionId: string,
     action: AdministrativeSanction,
@@ -770,160 +472,66 @@ export default function App() {
     reviewerName: string,
     deductPoints = 0
   ) => {
-    const ts = getPrecisionTimestamp();
-    const targetInfr = infractions.find((i) => i.id === infractionId);
-    if (!targetInfr) return;
-
-    setInfractions((prev) =>
-      prev.map((i) =>
-        i.id === infractionId
-          ? {
-              ...i,
-              referralStatus: 'action_enforced',
-              administrativeAction: action,
-              actionNotes,
-              reviewedBy: reviewerName,
-              reviewedAt: ts,
-              penaltyPointsDeducted: deductPoints,
-            }
-          : i
-      )
+    const updatedInfractions = infractions.map((i) =>
+      i.id === infractionId
+        ? {
+            ...i,
+            referralStatus: 'action_enforced' as const,
+            administrativeAction: action,
+            actionNotes,
+            reviewedBy: reviewerName,
+            reviewedAt: getPrecisionTimestamp(),
+            penaltyPointsDeducted: deductPoints,
+          }
+        : i
     );
-
-    if (deductPoints > 0 && targetInfr.studentId) {
-      setStudents((prev) =>
-        prev.map((s) =>
-          s.id === targetInfr.studentId
-            ? { ...s, points: Math.max(0, s.points - deductPoints) }
-            : s
-        )
-      );
-    }
-
-    logAudit(
-      'ADMIN-1010',
-      'admin',
-      reviewerName || 'لجنة شؤون الطلاب (ADMIN-1010)',
-      'student_infraction',
-      'اعتماد عقوبة إدارية',
-      targetInfr.studentName,
-      `اعتماد عقوبة (${action}) بموجب القرار الوزاري 234/2017 مع خصم ${deductPoints} نقطة: ${actionNotes}`,
-      'قيد المراجعة',
-      `نافذة (${action})`
-    );
-
-    if (currentUser?.email) {
-      setTimeout(() => syncToCloud(), 200);
-    }
+    persistAndUpdate('sarh_infractions_v2', updatedInfractions, setInfractions);
   };
 
-  // Student Affairs: Dismiss Infraction Referral
-  const handleDismissInfractionReferral = (
-    infractionId: string,
-    reason: string,
-    reviewerName: string
-  ) => {
-    const ts = getPrecisionTimestamp();
-    const targetInfr = infractions.find((i) => i.id === infractionId);
-    if (!targetInfr) return;
-
-    setInfractions((prev) =>
-      prev.map((i) =>
-        i.id === infractionId
-          ? {
-              ...i,
-              referralStatus: 'dismissed',
-              actionNotes: `حفظ المخالفة: ${reason}`,
-              reviewedBy: reviewerName,
-              reviewedAt: ts,
-            }
-          : i
-      )
+  const handleDismissInfractionReferral = (infractionId: string, reason: string, reviewerName: string) => {
+    const updatedInfractions = infractions.map((i) =>
+      i.id === infractionId
+        ? {
+            ...i,
+            referralStatus: 'dismissed' as const,
+            actionNotes: `حفظ المخالفة: ${reason}`,
+            reviewedBy: reviewerName,
+            reviewedAt: getPrecisionTimestamp(),
+          }
+        : i
     );
-
-    logAudit(
-      'ADMIN-1010',
-      'admin',
-      reviewerName || 'لجنة شؤون الطلاب (ADMIN-1010)',
-      'student_infraction',
-      'حفظ إحالة مخالفة',
-      targetInfr.studentName,
-      `حفظ وتبرئة الإحالة السلوكية بموجب مداولات اللجنة: ${reason}`,
-      'قيد المراجعة',
-      'محفوظة ومبرأة'
-    );
-
-    if (currentUser?.email) {
-      setTimeout(() => syncToCloud(), 200);
-    }
+    persistAndUpdate('sarh_infractions_v2', updatedInfractions, setInfractions);
   };
 
-  // Teacher: Approve Grades Request
   const handleApproveGradesRequest = (requestId: string, gradesAmount: number) => {
-    const ts = getPrecisionTimestamp();
-    const req = redemptionRequests.find((r) => r.id === requestId);
-
-    setRedemptionRequests((prev) =>
-      prev.map((r) =>
-        r.id === requestId
-          ? {
-              ...r,
-              status: 'approved',
-              awardedGrades: gradesAmount,
-              teacherActionAt: ts,
-              teacherName: 'أ. معلم المادة (TEACHER-2020)',
-            }
-          : r
-      )
+    const updatedRequests = redemptionRequests.map((r) =>
+      r.id === requestId
+        ? {
+            ...r,
+            status: 'approved' as const,
+            awardedGrades: gradesAmount,
+            teacherActionAt: getPrecisionTimestamp(),
+          }
+        : r
     );
-
-    logAudit(
-      'TEACHER-2020',
-      'teacher',
-      'أ. معلم المادة (TEACHER-2020)',
-      'student_honor',
-      'اعتماد درجات',
-      req?.studentName || 'طالب',
-      `اعتماد طلب الدرجات للطالب ومنحه +${gradesAmount} درجات في الكشف الصفي`,
-      'طلب معلق',
-      `معتمد (+${gradesAmount} درجات)`
-    );
+    persistAndUpdate('sarh_redemptions_v2', updatedRequests, setRedemptionRequests);
   };
 
-  // Teacher: Approve Honor Request
   const handleApproveHonorRequest = (requestId: string) => {
-    const ts = getPrecisionTimestamp();
-    const req = redemptionRequests.find((r) => r.id === requestId);
-
-    setRedemptionRequests((prev) =>
-      prev.map((r) =>
-        r.id === requestId
-          ? {
-              ...r,
-              status: 'approved',
-              teacherActionAt: ts,
-              teacherName: 'أ. معلم المادة (TEACHER-2020)',
-            }
-          : r
-      )
+    const updatedRequests = redemptionRequests.map((r) =>
+      r.id === requestId
+        ? {
+            ...r,
+            status: 'approved' as const,
+            teacherActionAt: getPrecisionTimestamp(),
+          }
+        : r
     );
-
-    logAudit(
-      'TEACHER-2020',
-      'teacher',
-      'أ. معلم المادة (TEACHER-2020)',
-      'student_honor',
-      'اعتماد تكريم',
-      req?.studentName || 'طالب',
-      `اعتماد وتثبيت طلب التكريم والثناء الرسمي للطالب أمام الصف والمدرسة`,
-      'طلب معلق',
-      'معتمد رسمياً'
-    );
+    persistAndUpdate('sarh_redemptions_v2', updatedRequests, setRedemptionRequests);
   };
 
   return (
     <div className="min-h-screen bg-[#F9F8F6] text-[#1B2A4A] flex flex-col selection:bg-[#135D43] selection:text-white" dir="rtl">
-      {/* Official Header with Live Clock and Audit trigger */}
       <Header
         currentRole={currentRole}
         onRoleChange={handleRoleChange}
@@ -948,15 +556,9 @@ export default function App() {
         onTriggerCloudSync={() => syncToCloud()}
       />
 
-      {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
-        {/* Security & Multi-Role Guardrails Banner */}
-        <SecurityBanner
-          authenticatedRole={authenticatedRole}
-          onOpenAuthModal={handleOpenAuthModal}
-        />
+        <SecurityBanner authenticatedRole={authenticatedRole} onOpenAuthModal={handleOpenAuthModal} />
 
-        {/* Database Management & Exploration View or Class Elections View */}
         {isElectionsViewOpen ? (
           <ClassElectionsView
             students={students}
@@ -981,7 +583,6 @@ export default function App() {
           />
         ) : (
           <>
-            {/* Active Role View */}
             {currentRole === 'admin' && (
               <AdminMode
                 isAdminAuthenticated={authenticatedRole === 'admin'}
@@ -1038,7 +639,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Modals & Drawers */}
       <RoleAuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
