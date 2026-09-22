@@ -8,7 +8,7 @@ import { createServer as createViteServer } from 'vite';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 app.use(express.json());
 app.use(express.static(path.join(process.cwd(), 'public')));
@@ -111,52 +111,7 @@ app.get('/api/database/export', (req, res) => {
   res.status(404).json({ error: 'Database export file not found' });
 });
 
-// Primary Endpoint for Role Verification (/api/verify-role)
-app.post('/api/verify-role', (req, res) => {
-  const { role, pin, idToken, requiredRole } = req.body;
-  const targetRole = role || requiredRole;
-  const trimmedPin = String(pin || idToken || '').trim();
-
-  if (targetRole === 'admin') {
-    if (trimmedPin === ADMIN_PIN || trimmedPin === 'OM-EDU-2026' || trimmedPin === 'SARH-OMAN') {
-      return res.json({
-        success: true,
-        verified: true,
-        role: 'admin',
-        token: ROLE_TOKENS.admin,
-        message: 'تم توثيق صلاحيات الإدارة المدرسية بنجاح',
-      });
-    }
-  } else if (targetRole === 'teacher') {
-    if (trimmedPin === TEACHER_PIN || trimmedPin === '2020') {
-      return res.json({
-        success: true,
-        verified: true,
-        role: 'teacher',
-        token: ROLE_TOKENS.teacher,
-        message: 'تم توثيق صلاحيات الهيئة التدريسية بنجاح',
-      });
-    }
-  } else if (targetRole === 'student') {
-    if (trimmedPin === STUDENT_PIN || trimmedPin === '3030') {
-      return res.json({
-        success: true,
-        verified: true,
-        role: 'student',
-        token: ROLE_TOKENS.student,
-        message: 'تم توثيق بوابة الطالب بنجاح',
-      });
-    }
-  }
-
-  return res.status(401).json({
-    success: false,
-    verified: false,
-    message: 'الرمز أو البيانات غير صحيحة، يرجى المراجعة',
-  });
-});
-
-// Alias Auth Endpoint for backward compatibility (/api/auth/verify-role)
+// Multi-role validation verification endpoint (PIN Code / Password)
 app.post('/api/auth/verify-role', (req, res) => {
   const { role, pin } = req.body;
   const trimmedPin = String(pin || '').trim();
@@ -244,6 +199,13 @@ app.post('/api/ai/chat', async (req, res) => {
     // Determine active role & token
     const effectiveRole = authenticatedRole || role || 'admin';
     const effectiveToken = authToken || '';
+    const isRoleAdmin =
+      effectiveRole === 'admin' &&
+      (isAdminAuthenticated ||
+        effectiveToken.includes(ROLE_TOKENS.admin) ||
+        message.includes(ROLE_TOKENS.admin));
+    const isRoleTeacher = effectiveRole === 'teacher';
+    const isRoleStudent = effectiveRole === 'student';
 
     // Guardrail Check 1: Anti-Prompt Leaking detection
     const leakTriggers = [
@@ -333,17 +295,17 @@ app.post('/api/ai/chat', async (req, res) => {
     if (effectiveRole === 'admin' && (isAdminAuthenticated || message.includes(ROLE_TOKENS.admin))) {
       attachedToken = ROLE_TOKENS.admin;
       if (!finalPrompt.includes(ROLE_TOKENS.admin)) {
-        finalPrompt = `${ROLE_TOKENS.admin}${finalPrompt}`;
+        finalPrompt = `${ROLE_TOKENS.admin} ${finalPrompt}`;
       }
     } else if (effectiveRole === 'teacher') {
       attachedToken = ROLE_TOKENS.teacher;
       if (!finalPrompt.includes(ROLE_TOKENS.teacher)) {
-        finalPrompt = `${ROLE_TOKENS.teacher}${finalPrompt}`;
+        finalPrompt = `${ROLE_TOKENS.teacher} ${finalPrompt}`;
       }
     } else if (effectiveRole === 'student') {
       attachedToken = ROLE_TOKENS.student;
       if (!finalPrompt.includes(ROLE_TOKENS.student)) {
-        finalPrompt = `${ROLE_TOKENS.student}${finalPrompt}`;
+        finalPrompt = `${ROLE_TOKENS.student} ${finalPrompt}`;
       }
     }
 
@@ -398,7 +360,7 @@ app.post('/api/ai/chat', async (req, res) => {
     if (hasAdminToken || effectiveRole === 'admin') {
       const now = new Date();
       const pad = (n: number) => String(n).padStart(2, '0');
-      const timeStampStr = `[التاريخ: ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} \vert{} الوقت: ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}]`;
+      const timeStampStr = `[التاريخ: ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} | الوقت: ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}]`;
 
       if (message.includes('احتياط') || message.includes('تغطية')) {
         fallbackReply = `### جدول توزيع حصص الاحتياط المعتمد - مدرسة موسى بن نصير للتعليم ما بعد الأساسي
@@ -438,7 +400,7 @@ app.post('/api/ai/chat', async (req, res) => {
 * **رصد غياب الكادر التدريسي:** 2 معلمين (مُسجل ومُغطى بالكامل عبر جدول الاحتياط).
 * **سجل التتبع والأمان:** 100% من الإجراءات والعمليات مؤرخة بصيغة \`[التاريخ: YYYY-MM-DD | الوقت: HH:MM:SS]\` ومحمية ضد التعديل التاريخي.`;
       }
-    } else if (effectiveRole === 'teacher') {
+    } else if (role === 'teacher') {
       if (message.includes('درس') || message.includes('تحضير') || message.includes('كامبريدج')) {
         fallbackReply = `### خطة درس مقترحة وفق سلاسل كامبريدج (وزارة التعليم)
 
