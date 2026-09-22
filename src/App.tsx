@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from './config/firebase';
 import { Header } from './components/Header';
 import { SecurityBanner } from './components/SecurityBanner';
 import { AdminMode } from './components/AdminMode';
@@ -971,87 +973,63 @@ export default function App() {
                 onAssignSubstitute={handleAssignSubstitute}
                 onAutoDistributeSubstitutes={handleAutoDistributeSubstitutes}
                 onAddTeacherHonor={handleAddTeacherHonor}
-                onGenerateAiReport={(prompt) => {
-                  setIsAiChatOpen(true);
-                  handleSendMessage(prompt);
-                }}
-                isLoadingAi={isLoadingAi}
               />
             )}
-
             {currentRole === 'teacher' && (
               <TeacherMode
                 isTeacherAuthenticated={authenticatedRole === 'teacher'}
                 onOpenAuthModal={() => handleOpenAuthModal('teacher')}
-                onOpenExportModal={() => setIsDatabaseExportModalOpen(true)}
                 students={students}
                 awardLogs={awardLogs}
-                infractions={infractions}
                 redemptionRequests={redemptionRequests}
+                infractions={infractions}
                 onUpdateStudentAttendance={handleUpdateStudentAttendance}
                 onMarkAllPresent={handleMarkAllPresent}
                 onAwardPoints={handleAwardPoints}
                 onAddInfraction={handleAddInfraction}
                 onApproveGradesRequest={handleApproveGradesRequest}
                 onApproveHonorRequest={handleApproveHonorRequest}
-                onGenerateAiResponse={(prompt) => {
-                  setIsAiChatOpen(true);
-                  handleSendMessage(prompt);
-                }}
-                isLoadingAi={isLoadingAi}
               />
             )}
-
             {currentRole === 'student' && (
               <StudentMode
                 isStudentAuthenticated={authenticatedRole === 'student'}
                 onOpenAuthModal={() => handleOpenAuthModal('student')}
+                students={students}
                 eduCoins={eduCoins}
-                studentRequests={redemptionRequests.filter((r) => r.studentId === 'std-1')}
+                redemptionRequests={redemptionRequests}
                 onRequestRedemption={handleStudentRequestRedemption}
-                studentName="محمد بن حمد البوسعيدي"
-                studentClass="الصف العاشر / 1"
               />
             )}
           </>
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-[#1B2A4A] border-t border-[#132038] text-slate-300 py-6 text-xs text-center">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <SarhLogo
-            size="sm"
-            variant="dark"
-            showText={true}
-            subtext="سلطنة عُمان • وزارة التربية والتعليم"
-          />
-          <div className="text-[11px] text-slate-400 font-mono">
-            نظام التوثيق الزمني الدقيق بالثانية [YYYY-MM-DD | HH:MM:SS] • مدرسة موسى بن نصير للتعليم ما بعد الأساسي
-          </div>
-        </div>
-      </footer>
-
-      {/* Role Auth Modal (PIN Code / Password) */}
+      {/* Modals & Drawers */}
       <RoleAuthModal
         isOpen={isAuthModalOpen}
-        role={targetAuthRole}
         onClose={() => setIsAuthModalOpen(false)}
-        onVerify={handleVerifyRolePin}
+        targetRole={targetAuthRole}
+        onVerifyPin={handleVerifyRolePin}
         currentUser={currentUser}
-        onGoogleSignInSuccess={(user) => {
-          setCurrentUser(user);
-        }}
+        onLoginGoogle={loginWithGoogle}
+        onLogoutFirebase={logoutFirebase}
       />
 
-      {/* Audit Log Modal */}
+      <SarhAiChatDrawer
+        isOpen={isAiChatOpen}
+        onClose={() => setIsAiChatOpen(false)}
+        messages={messages}
+        onSendMessage={handleSendMessage}
+        isLoading={isLoadingAi}
+      />
+
       <AuditLogModal
         isOpen={isAuditLogModalOpen}
         onClose={() => setIsAuditLogModalOpen(false)}
         auditLogs={auditLogs}
       />
 
-      {/* Database Export Modal */}
       <DatabaseExportModal
         isOpen={isDatabaseExportModalOpen}
         onClose={() => setIsDatabaseExportModalOpen(false)}
@@ -1064,19 +1042,6 @@ export default function App() {
         infractions={infractions}
         auditLogs={auditLogs}
         eduCoins={eduCoins}
-      />
-
-      {/* Sarh AI Core Assistant Drawer */}
-      <SarhAiChatDrawer
-        isOpen={isAiChatOpen}
-        onClose={() => setIsAiChatOpen(false)}
-        messages={messages}
-        onSendMessage={handleSendMessage}
-        isLoading={isLoadingAi}
-        currentRole={currentRole}
-        authenticatedRole={authenticatedRole}
-        onOpenAuthModal={handleOpenAuthModal}
-        onClearHistory={() => setMessages([])}
       />
     </div>
   );
