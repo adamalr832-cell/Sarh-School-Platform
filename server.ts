@@ -4,6 +4,7 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 import { GoogleGenAI } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
+import admin from 'firebase-admin'; // [تمت الإضافة] مكتبة قاعدة البيانات السحابية
 
 dotenv.config();
 
@@ -12,6 +13,22 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(express.static(path.join(process.cwd(), 'public')));
+
+// [تمت الإضافة] تهيئة قاعدة بيانات Firebase Firestore السحابية لضمان حفظ واسترجاع الأسماء والبيانات من أي هاتف
+if (!admin.apps.length) {
+  try {
+    const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT;
+    if (serviceAccountJson) {
+      admin.initializeApp({
+        credential: admin.credential.cert(JSON.parse(serviceAccountJson))
+      });
+    }
+  } catch (e) {
+    console.error('Firebase initialization warning:', e);
+  }
+}
+
+const db = admin.apps.length ? admin.firestore() : null;
 
 // Role PIN Configurations (PIN Code / Password)
 const ADMIN_PIN = '1010';
@@ -52,7 +69,7 @@ const SYSTEM_PROMPT = `# SYSTEM PROMPT: منصة "صَرْح" المدرسية �
 
 ### [3. سجل التتبع والأمان (Audit Log - غير القابل للتعديل)]
 - أي عملية إجراء، إضافة، تعديل، أو إلغاء في النظام يتم حظر تعديلها تاريخياً، وتُسجل آلياً بـ:
-  \`[التاريخ: YYYY-MM-DD | الوقت: HH:MM:SS]\` + هُوية/آيدي المستخدم الذي قام بالتعديل (مثل ADMIN-1010، TEACHER-2020) + التفاصيل قبل وبعد التعديل.
+  \`[التاريخ: YYYY-MM-DD | الوقت: HH:MM:SS]\` + هُوية/آيدي المستخدم الذي قام التعديل (مثل ADMIN-1010، TEACHER-2020) + التفاصيل قبل وبعد التعديل.
 
 ---
 
@@ -84,7 +101,42 @@ app.get('/api/health', (_req, res) => {
     status: 'ok',
     platform: 'صَرْح - المساعد المدرسي الذكي (سلطنة عُمان)',
     hasApiKey: !!process.env.GEMINI_API_KEY,
+    hasDatabase: !!db,
   });
+});
+
+// [تمت الإضافة] مسارات حفظ وجلب البيانات سحابياً لتعمل على أي هاتف وجهاز
+app.post('/api/data/add', async (req, res) => {
+  try {
+    if (!db) {
+      return res.status(500).json({ error: 'قاعدة البيانات غير متصلة (لم يتم ضبط متغيرات Firebase)' });
+    }
+    const { name, userId, extraData } = req.body;
+    const docRef = await db.collection('users_data').add({
+      userId: userId || 'anonymous',
+      name: name || '',
+      extraData: extraData || {},
+      createdAt: new Date().toISOString()
+    });
+    return res.json({ success: true, id: docRef.id, message: 'تم حفظ البيانات بنجاح' });
+  } catch (error: any) {
+    console.error('Error saving data:', error);
+    return res.status(500).json({ error: 'فشل في حفظ البيانات' });
+  }
+});
+
+app.get('/api/data/list', async (_req, res) => {
+  try {
+    if (!db) {
+      return res.status(500).json({ error: 'قاعدة البيانات غير متصلة' });
+    }
+    const snapshot = await db.collection('users_data').orderBy('createdAt', 'desc').get();
+    const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return res.json({ success: true, data: items });
+  } catch (error: any) {
+    console.error('Error fetching data:', error);
+    return res.status(500).json({ error: 'فشل في جلب البيانات' });
+  }
 });
 
 // Database Export Endpoint (JSON or SQL)
@@ -295,17 +347,17 @@ app.post('/api/ai/chat', async (req, res) => {
     if (effectiveRole === 'admin' && (isAdminAuthenticated || message.includes(ROLE_TOKENS.admin))) {
       attachedToken = ROLE_TOKENS.admin;
       if (!finalPrompt.includes(ROLE_TOKENS.admin)) {
-        finalPrompt = `${ROLE_TOKENS.admin} ${finalPrompt}`;
+        finalPrompt = `${ROLE_TOKENS.admin}${finalPrompt}`;
       }
     } else if (effectiveRole === 'teacher') {
       attachedToken = ROLE_TOKENS.teacher;
       if (!finalPrompt.includes(ROLE_TOKENS.teacher)) {
-        finalPrompt = `${ROLE_TOKENS.teacher} ${finalPrompt}`;
+        finalPrompt = `${ROLE_TOKENS.teacher}${finalPrompt}`;
       }
     } else if (effectiveRole === 'student') {
       attachedToken = ROLE_TOKENS.student;
       if (!finalPrompt.includes(ROLE_TOKENS.student)) {
-        finalPrompt = `${ROLE_TOKENS.student} ${finalPrompt}`;
+        finalPrompt = `${ROLE_TOKENS.student}${finalPrompt}`;
       }
     }
 
@@ -360,7 +412,7 @@ app.post('/api/ai/chat', async (req, res) => {
     if (hasAdminToken || effectiveRole === 'admin') {
       const now = new Date();
       const pad = (n: number) => String(n).padStart(2, '0');
-      const timeStampStr = `[التاريخ: ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} | الوقت: ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}]`;
+      const timeStampStr = `[التاريخ: ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} \vert{} الوقت: ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}]`;
 
       if (message.includes('احتياط') || message.includes('تغطية')) {
         fallbackReply = `### جدول توزيع حصص الاحتياط المعتمد - مدرسة موسى بن نصير للتعليم ما بعد الأساسي
