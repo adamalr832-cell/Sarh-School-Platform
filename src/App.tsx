@@ -59,16 +59,56 @@ export default function App() {
   const [isDatabaseDashboardOpen, setIsDatabaseDashboardOpen] = useState(false);
   const [isElectionsViewOpen, setIsElectionsViewOpen] = useState(false);
 
-  // Core Data States
-  const [teachers, setTeachers] = useState<TeacherLoad[]>(INITIAL_TEACHERS);
-  const [absences, setAbsences] = useState<AbsenceRequest[]>(INITIAL_ABSENCES);
-  const [students, setStudents] = useState<StudentRecord[]>(INITIAL_STUDENTS);
-  const [awardLogs, setAwardLogs] = useState<TeacherAwardLog[]>(INITIAL_AWARD_LOGS);
-  const [redemptionRequests, setRedemptionRequests] = useState<RedemptionRequest[]>(INITIAL_REDEMPTIONS);
-  const [teacherHonors, setTeacherHonors] = useState<TeacherHonor[]>(INITIAL_TEACHER_HONORS);
-  const [infractions, setInfractions] = useState<StudentInfraction[]>(INITIAL_STUDENT_INFRACTIONS);
-  const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>(INITIAL_AUDIT_LOGS);
-  const [eduCoins, setEduCoins] = useState<number>(245);
+  // Core Data States with LocalStorage Persistence
+  const [teachers, setTeachers] = useState<TeacherLoad[]>(() => {
+    const saved = localStorage.getItem('sarh_teachers');
+    return saved ? JSON.parse(saved) : INITIAL_TEACHERS;
+  });
+  const [absences, setAbsences] = useState<AbsenceRequest[]>(() => {
+    const saved = localStorage.getItem('sarh_absences');
+    return saved ? JSON.parse(saved) : INITIAL_ABSENCES;
+  });
+  const [students, setStudents] = useState<StudentRecord[]>(() => {
+    const saved = localStorage.getItem('sarh_students');
+    return saved ? JSON.parse(saved) : INITIAL_STUDENTS;
+  });
+  const [awardLogs, setAwardLogs] = useState<TeacherAwardLog[]>(() => {
+    const saved = localStorage.getItem('sarh_awardLogs');
+    return saved ? JSON.parse(saved) : INITIAL_AWARD_LOGS;
+  });
+  const [redemptionRequests, setRedemptionRequests] = useState<RedemptionRequest[]>(() => {
+    const saved = localStorage.getItem('sarh_redemptions');
+    return saved ? JSON.parse(saved) : INITIAL_REDEMPTIONS;
+  });
+  const [teacherHonors, setTeacherHonors] = useState<TeacherHonor[]>(() => {
+    const saved = localStorage.getItem('sarh_teacherHonors');
+    return saved ? JSON.parse(saved) : INITIAL_TEACHER_HONORS;
+  });
+  const [infractions, setInfractions] = useState<StudentInfraction[]>(() => {
+    const saved = localStorage.getItem('sarh_infractions');
+    return saved ? JSON.parse(saved) : INITIAL_STUDENT_INFRACTIONS;
+  });
+  const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>(() => {
+    const saved = localStorage.getItem('sarh_auditLogs');
+    return saved ? JSON.parse(saved) : INITIAL_AUDIT_LOGS;
+  });
+  const [eduCoins, setEduCoins] = useState<number>(() => {
+    const saved = localStorage.getItem('sarh_eduCoins');
+    return saved ? JSON.parse(saved) : 245;
+  });
+
+  // Auto-save to localStorage whenever data changes
+  React.useEffect(() => {
+    localStorage.setItem('sarh_teachers', JSON.stringify(teachers));
+    localStorage.setItem('sarh_absences', JSON.stringify(absences));
+    localStorage.setItem('sarh_students', JSON.stringify(students));
+    localStorage.setItem('sarh_awardLogs', JSON.stringify(awardLogs));
+    localStorage.setItem('sarh_redemptions', JSON.stringify(redemptionRequests));
+    localStorage.setItem('sarh_teacherHonors', JSON.stringify(teacherHonors));
+    localStorage.setItem('sarh_infractions', JSON.stringify(infractions));
+    localStorage.setItem('sarh_auditLogs', JSON.stringify(auditLogs));
+    localStorage.setItem('sarh_eduCoins', JSON.stringify(eduCoins));
+  }, [teachers, absences, students, awardLogs, redemptionRequests, teacherHonors, infractions, auditLogs, eduCoins]);
 
   // Firebase Auth and Cloud Sync State
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
@@ -112,7 +152,6 @@ export default function App() {
               'بيانات سحابية متزامنة'
             );
           } else {
-            // First time user: save the initial schema to their cloud store
             await saveUserCloudData(user.email, {
               teachers: INITIAL_TEACHERS,
               absences: INITIAL_ABSENCES,
@@ -212,7 +251,7 @@ export default function App() {
   ]);
   const [isLoadingAi, setIsLoadingAi] = useState(false);
 
-  // Switch Role Handler: If the user selects a role that is not authenticated, prompt for PIN
+  // Switch Role Handler
   const handleRoleChange = (role: UserRole) => {
     setCurrentRole(role);
     setIsDatabaseDashboardOpen(false);
@@ -222,18 +261,16 @@ export default function App() {
     }
   };
 
-  // Open modal explicitly for any role
   const handleOpenAuthModal = (role?: UserRole) => {
     setTargetAuthRole(role || currentRole);
     setIsAuthModalOpen(true);
   };
 
-  // Logout Handler: Resets authenticated role and clears session
   const handleLogout = () => {
     setAuthenticatedRole(null);
   };
 
-  // Verify Role PIN with backend or fallback
+  // Verify Role PIN
   const handleVerifyRolePin = async (role: UserRole, pin: string): Promise<boolean> => {
     const trimmedPin = String(pin || '').trim();
 
@@ -262,7 +299,6 @@ export default function App() {
       }
       return false;
     } catch {
-      // Local fallback in case of connection latency
       const expectedPin = ROLE_PINS[role];
       const validAdminFallbacks = ['OM-EDU-2026', 'SARH-OMAN', '1010'];
       const isSuccess =
@@ -290,7 +326,7 @@ export default function App() {
     }
   };
 
-  // Send message to Sarh AI Core via Express backend
+  // Send message to Sarh AI Core
   const handleSendMessage = async (text: string, forceAdminToken?: boolean) => {
     const userMsgId = `user-${Date.now()}`;
     const activeToken =
@@ -465,7 +501,7 @@ export default function App() {
     );
   };
 
-  // Admin: Smart Auto-Distribution for Substitutes (تم إكمال الدالة بنجاح)
+  // Admin: Smart Auto-Distribution for Substitutes
   const handleAutoDistributeSubstitutes = () => {
     const ts = getPrecisionTimestamp();
     const updated = absences.map((item) => {
@@ -547,7 +583,7 @@ export default function App() {
     );
   };
 
-  // Teacher: Update Student Attendance with precision timestamp
+  // Teacher: Update Student Attendance
   const handleUpdateStudentAttendance = (
     studentId: string,
     status: 'present' | 'absent' | 'late',
