@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from './config/firebase';
+import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { SecurityBanner } from './components/SecurityBanner';
 import { AdminMode } from './components/AdminMode';
@@ -467,7 +465,7 @@ export default function App() {
     );
   };
 
-  // Admin: Smart Auto-Distribution for Substitutes
+  // Admin: Smart Auto-Distribution for Substitutes (تم إكمال الدالة بنجاح)
   const handleAutoDistributeSubstitutes = () => {
     const ts = getPrecisionTimestamp();
     const updated = absences.map((item) => {
@@ -625,7 +623,6 @@ export default function App() {
       prev.map((s) => (s.id === studentId ? { ...s, points: s.points + points } : s))
     );
 
-    // Sync with student portal active demo balance if it's the current student
     if (studentId === 'std-1' || targetStudent?.name.includes('محمد بن حمد')) {
       setEduCoins((prev) => prev + points);
     }
@@ -693,12 +690,11 @@ export default function App() {
     );
   };
 
-  // Student: Request Redemption (Strictly Grades or Honor)
+  // Student: Request Redemption
   const handleStudentRequestRedemption = (type: RedemptionType, cost: number) => {
     if (eduCoins < cost) return;
     const ts = getPrecisionTimestamp();
 
-    // Deduct points from student balance
     setEduCoins((prev) => prev - cost);
     setStudents((prev) =>
       prev.map((s) => (s.id === 'std-1' ? { ...s, points: Math.max(0, s.points - cost) } : s))
@@ -730,7 +726,7 @@ export default function App() {
     );
   };
 
-  // Student Affairs: Enforce Committee / Administrative Action (Decision 234/2017)
+  // Student Affairs: Enforce Committee / Administrative Action
   const handleEnforceAdministrativeAction = (
     infractionId: string,
     action: AdministrativeSanction,
@@ -742,7 +738,6 @@ export default function App() {
     const targetInfr = infractions.find((i) => i.id === infractionId);
     if (!targetInfr) return;
 
-    // Update infraction referral record
     setInfractions((prev) =>
       prev.map((i) =>
         i.id === infractionId
@@ -759,7 +754,6 @@ export default function App() {
       )
     );
 
-    // If points deduction applies, update student points
     if (deductPoints > 0 && targetInfr.studentId) {
       setStudents((prev) =>
         prev.map((s) =>
@@ -782,7 +776,6 @@ export default function App() {
       `نافذة (${action})`
     );
 
-    // Auto sync to cloud if user connected
     if (currentUser?.email) {
       setTimeout(() => syncToCloud(), 200);
     }
@@ -824,7 +817,6 @@ export default function App() {
       'محفوظة ومبرأة'
     );
 
-    // Auto sync to cloud if user connected
     if (currentUser?.email) {
       setTimeout(() => syncToCloud(), 200);
     }
@@ -975,15 +967,17 @@ export default function App() {
                 onAddTeacherHonor={handleAddTeacherHonor}
               />
             )}
+
             {currentRole === 'teacher' && (
               <TeacherMode
                 isTeacherAuthenticated={authenticatedRole === 'teacher'}
                 onOpenAuthModal={() => handleOpenAuthModal('teacher')}
+                teachers={teachers}
                 students={students}
                 awardLogs={awardLogs}
                 redemptionRequests={redemptionRequests}
                 infractions={infractions}
-                onUpdateStudentAttendance={handleUpdateStudentAttendance}
+                onUpdateAttendance={handleUpdateStudentAttendance}
                 onMarkAllPresent={handleMarkAllPresent}
                 onAwardPoints={handleAwardPoints}
                 onAddInfraction={handleAddInfraction}
@@ -991,14 +985,17 @@ export default function App() {
                 onApproveHonorRequest={handleApproveHonorRequest}
               />
             )}
+
             {currentRole === 'student' && (
               <StudentMode
                 isStudentAuthenticated={authenticatedRole === 'student'}
                 onOpenAuthModal={() => handleOpenAuthModal('student')}
                 students={students}
-                eduCoins={eduCoins}
+                awardLogs={awardLogs}
                 redemptionRequests={redemptionRequests}
+                eduCoins={eduCoins}
                 onRequestRedemption={handleStudentRequestRedemption}
+                onOpenElections={() => setIsElectionsViewOpen(true)}
               />
             )}
           </>
@@ -1012,7 +1009,7 @@ export default function App() {
         targetRole={targetAuthRole}
         onVerifyPin={handleVerifyRolePin}
         currentUser={currentUser}
-        onLoginGoogle={loginWithGoogle}
+        onGoogleLogin={loginWithGoogle}
         onLogoutFirebase={logoutFirebase}
       />
 
@@ -1041,7 +1038,6 @@ export default function App() {
         teacherHonors={teacherHonors}
         infractions={infractions}
         auditLogs={auditLogs}
-        eduCoins={eduCoins}
       />
     </div>
   );
