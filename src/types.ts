@@ -202,3 +202,40 @@ export interface RoleAuthConfig {
   badgeText: string;
   sampleName: string;
 }
+
+export interface ElectionCandidate {
+  id: string;
+  name: string;
+  votes: number;
+  percentage?: number;
+}
+
+export type ElectionRoleKey = 'president' | 'vicePresident' | 'secretary';
+
+export interface ElectionRoleData {
+  roleKey: ElectionRoleKey;
+  roleTitle: string; // رئيس الصف / نائب رئيس الصف / أمين سر الصف
+  roleDescription: string;
+  candidates: ElectionCandidate[];
+  totalVotes: number;
+  winnerId: string | null;
+  winnerName: string | null;
+  isTie: boolean;
+}
+
+export interface ClassElection {
+  id: string;
+  gradeClass: string;
+  totalClassStudents: number;
+  academicYear: string;
+  roles: {
+    president: ElectionRoleData;
+    vicePresident: ElectionRoleData;
+    secretary: ElectionRoleData;
+  };
+  status: 'draft' | 'completed';
+  certified: boolean;
+  savedAt: string;
+  teacherName: string;
+  timestampStr: string;
+}

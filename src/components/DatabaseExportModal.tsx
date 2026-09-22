@@ -489,18 +489,24 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
                     dir="rtl"
                     style={{ minHeight: '850px' }}
                   >
-                    {/* Official Background Watermark of Sarh Platform Logo */}
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.035] select-none z-0">
+                    {/* Official Background Watermark: Sarh Platform Logo + Mousa Bin Nusair School Logo */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.035] select-none z-0 gap-10">
                       <img
                         src="/sarh_main_logo.jpg"
                         alt=""
-                        className="w-96 h-96 object-contain grayscale"
+                        className="w-80 h-80 object-contain grayscale"
+                        crossOrigin="anonymous"
+                      />
+                      <img
+                        src="/mousa_school_logo.svg"
+                        alt=""
+                        className="w-80 h-80 object-contain grayscale"
                         crossOrigin="anonymous"
                       />
                     </div>
 
                     <div className="relative z-10">
-                      {/* 1. Official Header (سلطنة عُمان - منصة صَرْح - وزارة التربية والتعليم) */}
+                      {/* 1. Official Header (سلطنة عُمان - منصة صَرْح - مدرسة موسى بن نصير) */}
                       <div className="border-b-2 border-emerald-800 pb-5 mb-6">
                         <div className="flex items-start justify-between">
                           {/* Right: Sultanate & Ministry Hierarchy */}
@@ -513,22 +519,34 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
                             </p>
                           </div>
 
-                          {/* Center: Official Sarh Platform Logo as the Primary Visual Identity */}
+                          {/* Center: Both Official Emblems Side-by-Side (Sarh + Mousa Bin Nusair) */}
                           <div className="flex flex-col items-center justify-center text-center">
-                            <div className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#C48B69] shadow-sm bg-[#F9F8F6] p-0.5 flex items-center justify-center">
-                              <img
-                                src="/sarh_main_logo.jpg"
-                                alt="شعار صَرْح الرسمي المعتمد"
-                                className="w-full h-full object-contain rounded-xl"
-                                crossOrigin="anonymous"
-                              />
+                            <div className="flex items-center gap-2">
+                              {/* Sarh Platform Logo */}
+                              <div className="relative w-14 h-14 rounded-2xl overflow-hidden border-2 border-[#C48B69] shadow-sm bg-[#F9F8F6] p-0.5 flex items-center justify-center">
+                                <img
+                                  src="/sarh_main_logo.jpg"
+                                  alt="شعار صَرْح الرسمي المعتمد"
+                                  className="w-full h-full object-contain rounded-xl"
+                                  crossOrigin="anonymous"
+                                />
+                              </div>
+                              {/* Mousa Bin Nusair School Logo */}
+                              <div className="relative w-14 h-14 rounded-2xl overflow-hidden border-2 border-[#8B1E1E] shadow-sm bg-white p-0.5 flex items-center justify-center">
+                                <img
+                                  src="/mousa_school_logo.svg"
+                                  alt="شعار مدرسة موسى بن نصير (9-12)"
+                                  className="w-full h-full object-contain rounded-xl"
+                                  crossOrigin="anonymous"
+                                />
+                              </div>
                             </div>
-                            <div className="flex items-center gap-1.5 mt-1">
+                            <div className="flex items-center gap-1.5 mt-1.5">
                               <span className="text-xs font-black text-emerald-950 tracking-tight">منصة صَرْح الذكية</span>
                               <span className="text-[9px] font-mono font-bold text-[#C48B69]">SARH</span>
                             </div>
                             <span className="text-[9px] font-semibold text-[#135D43] bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 mt-0.5">
-                              المنظومة الرقمية المعتمدة
+                              مدرسة موسى بن نصير (10-12) • الاعتماد الرسمي
                             </span>
                           </div>
 
@@ -857,18 +875,29 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
                             <div className="font-bold text-emerald-950">مدير المدرسة المعتمد</div>
                             <div className="text-[11px] text-slate-500 mt-0.5">مدرسة موسى بن نصير (10-12)</div>
                           </div>
-                          {/* Official Seal Graphic featuring Sarh Platform Emblem */}
-                          <div className="w-16 h-16 rounded-2xl border-2 border-dashed border-[#C48B69] bg-[#F9F8F6] p-1 flex flex-col items-center justify-center shadow-xs">
-                            <img
-                              src="/sarh_main_logo.jpg"
-                              alt="ختم صَرْح المعتمد"
-                              className="w-8 h-8 object-contain rounded-lg"
-                              crossOrigin="anonymous"
-                            />
-                            <span className="text-[7px] font-black text-[#135D43] mt-0.5">اعتماد صَرْح</span>
+                          {/* Official Dual Seal Graphic featuring Sarh Platform Emblem + Mousa Bin Nusair Emblem */}
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-14 h-14 rounded-2xl border-2 border-dashed border-[#C48B69] bg-[#F9F8F6] p-1 flex flex-col items-center justify-center shadow-xs">
+                              <img
+                                src="/sarh_main_logo.jpg"
+                                alt="ختم صَرْح المعتمد"
+                                className="w-7 h-7 object-contain rounded-lg"
+                                crossOrigin="anonymous"
+                              />
+                              <span className="text-[6.5px] font-black text-[#135D43] mt-0.5">اعتماد صَرْح</span>
+                            </div>
+                            <div className="w-14 h-14 rounded-2xl border-2 border-dashed border-[#8B1E1E] bg-white p-1 flex flex-col items-center justify-center shadow-xs">
+                              <img
+                                src="/mousa_school_logo.svg"
+                                alt="ختم مدرسة موسى بن نصير"
+                                className="w-7 h-7 object-contain rounded-lg"
+                                crossOrigin="anonymous"
+                              />
+                              <span className="text-[6.5px] font-black text-[#8B1E1E] mt-0.5">موسى بن نصير</span>
+                            </div>
                           </div>
                           <div className="text-[10px] font-mono text-slate-400">
-                            [التوقيع والختم الإلكتروني]
+                            [التوقيع والختم الإلكتروني المزدوج]
                           </div>
                         </div>
                       </div>
@@ -876,13 +905,21 @@ export const DatabaseExportModal: React.FC<DatabaseExportModalProps> = ({
                       {/* Electronic Timestamp Verification Stamp */}
                       <div className="mt-8 pt-4 border-t border-dashed border-slate-300 flex items-center justify-between text-[10px] text-slate-500 font-mono">
                         <div className="flex items-center gap-2">
-                          <img
-                            src="/sarh_main_logo.jpg"
-                            alt="شعار صرح"
-                            className="w-5 h-5 rounded-md border border-[#C48B69] object-contain shrink-0"
-                            crossOrigin="anonymous"
-                          />
-                          <span>توثيق رقمي صادر ومعتمد من منصة "صَرْح" المدرسية الذكية • سلطنة عُمان</span>
+                          <div className="flex items-center gap-1">
+                            <img
+                              src="/sarh_main_logo.jpg"
+                              alt="شعار صرح"
+                              className="w-5 h-5 rounded-md border border-[#C48B69] object-contain shrink-0"
+                              crossOrigin="anonymous"
+                            />
+                            <img
+                              src="/mousa_school_logo.svg"
+                              alt="شعار موسى بن نصير"
+                              className="w-5 h-5 rounded-md border border-[#8B1E1E] object-contain shrink-0"
+                              crossOrigin="anonymous"
+                            />
+                          </div>
+                          <span>توثيق رقمي صادر ومعتمد من منصة "صَرْح" المدرسية ومدرسة موسى بن نصير (9-12)</span>
                         </div>
                         <div>
                           <span>رمز التحقق: SHA256-</span>

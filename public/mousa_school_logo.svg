@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 800" width="100%" height="100%">
+  <defs>
+    <!-- Filter for subtle crisp shadow if needed -->
+    <filter id="crisp-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#881A1D" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <g id="mousa-bin-nusair-school-official-emblem" text-rendering="geometricPrecision" shape-rendering="geometricPrecision">
+    <!-- 1. Top Word: مدرسة -->
+    <text x="450" y="195" 
+          font-family="'Cairo', 'Tajawal', 'KacstDecorative', 'Arial', sans-serif" 
+          font-weight="900" 
+          font-size="68" 
+          fill="#881A1D" 
+          text-anchor="middle"
+          letter-spacing="2">مدرسة</text>
+
+    <!-- 2. The Open Book Emblem -->
+    <g id="book-graphic">
+      <!-- Gold Open Pages -->
+      <!-- Left Page -->
+      <path d="M 235 340 
+               Q 330 310 435 320 
+               L 435 555 
+               Q 330 545 235 570 
+               Z" 
+            fill="#C5A566" />
+      
+      <!-- Right Page -->
+      <path d="M 465 320 
+               Q 570 310 665 340 
+               L 665 570 
+               Q 570 545 465 555 
+               Z" 
+            fill="#C5A566" />
+
+      <!-- Inner page spine highlights / shade line -->
+      <path d="M 435 320 L 435 555" stroke="#B39252" stroke-width="2" />
+      <path d="M 465 320 L 465 555" stroke="#B39252" stroke-width="2" />
+
+      <!-- Deep Maroon Outer Silhouette Book Frame -->
+      <!-- Left side bar and bottom wing flare -->
+      <path d="M 195 400 
+               L 225 400 
+               L 225 565 
+               Q 330 540 440 550 
+               L 440 585 
+               Q 320 575 195 625 
+               Q 205 575 195 400 Z" 
+            fill="#881A1D" />
+
+      <!-- Right side bar and bottom wing flare -->
+      <path d="M 705 400 
+               L 675 400 
+               L 675 565 
+               Q 570 540 460 550 
+               L 460 585 
+               Q 580 575 705 625 
+               Q 695 575 705 400 Z" 
+            fill="#881A1D" />
+
+      <!-- Outer Bottom Spine connecting wing curve -->
+      <path d="M 195 625 
+               Q 320 575 450 588 
+               Q 580 575 705 625 
+               Q 580 560 450 572 
+               Q 320 560 195 625 Z" 
+            fill="#881A1D" />
+    </g>
+
+    <!-- 3. Artistic Calligraphy: موسى بن نصير across the open book -->
+    <g id="calligraphy-text" fill="#881A1D">
+      <!-- Calligraphic Flourish: Alif Maqsura (ى) sweeping flourish across the center -->
+      <path d="M 370 475 
+               Q 440 520 620 480 
+               Q 640 475 660 460 
+               Q 620 495 440 495 
+               Q 360 495 370 475 Z" 
+            fill="#881A1D" />
+
+      <!-- Left Raa (ر) flourish of نصير sweeping down and to the left -->
+      <path d="M 230 460 
+               Q 210 470 170 465 
+               Q 160 463 150 455 
+               Q 175 480 230 475 
+               Q 275 470 295 440 
+               Q 270 450 230 460 Z" 
+            fill="#881A1D" />
+
+      <!-- The Main Calligraphic Text with vowel marks and dots -->
+      <text x="450" y="445" 
+            font-family="'KacstQurn', 'KacstDecorative', 'Cairo', 'Amiri', serif" 
+            font-weight="900" 
+            font-size="115" 
+            fill="#881A1D" 
+            text-anchor="middle"
+            filter="url(#crisp-shadow)"
+            letter-spacing="2">مُوسَى بْن نَصِير</text>
+    </g>
+
+    <!-- 4. Bottom Line: للتعليم الأساسي للبنين (9-12) -->
+    <text x="450" y="695" 
+          font-family="'Cairo', 'Tajawal', 'Arial', sans-serif" 
+          font-weight="800" 
+          font-size="44" 
+          fill="#881A1D" 
+          text-anchor="middle"
+          letter-spacing="1">للتعليم الأساسي للبنين (١٢-٩)</text>
+  </g>
+</svg>

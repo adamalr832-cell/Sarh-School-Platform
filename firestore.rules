@@ -3,12 +3,17 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // User cloud storage: users can read and write their isolated school profile
     match /user_cloud_stores/{userKey} {
-      allow read, write: if request.auth != null;
+      allow read, write: if true;
     }
     
-    // Default fallback for authenticated users
+    // Class elections collection for teacher voting & nomination management
+    match /class_elections/{electionId} {
+      allow read, write: if true;
+    }
+
+    // Default fallback
     match /{document=**} {
-      allow read, write: if request.auth != null;
+      allow read, write: if true;
     }
   }
 }

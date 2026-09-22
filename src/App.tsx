@@ -9,6 +9,7 @@ import { SarhAiChatDrawer } from './components/SarhAiChatDrawer';
 import { AuditLogModal } from './components/AuditLogModal';
 import { DatabaseExportModal } from './components/DatabaseExportModal';
 import { DatabaseDashboardView } from './components/DatabaseDashboardView';
+import { ClassElectionsView } from './components/ClassElectionsView';
 import { SarhLogo } from './components/SarhLogo';
 import {
   INITIAL_TEACHERS,
@@ -56,6 +57,7 @@ export default function App() {
   const [isAuditLogModalOpen, setIsAuditLogModalOpen] = useState(false);
   const [isDatabaseExportModalOpen, setIsDatabaseExportModalOpen] = useState(false);
   const [isDatabaseDashboardOpen, setIsDatabaseDashboardOpen] = useState(false);
+  const [isElectionsViewOpen, setIsElectionsViewOpen] = useState(false);
 
   // Core Data States
   const [teachers, setTeachers] = useState<TeacherLoad[]>(INITIAL_TEACHERS);
@@ -901,8 +903,16 @@ export default function App() {
         onOpenAiChat={() => setIsAiChatOpen(true)}
         onOpenAuditLog={() => setIsAuditLogModalOpen(true)}
         onOpenDatabaseExport={() => setIsDatabaseExportModalOpen(true)}
-        onOpenDatabaseDashboard={() => setIsDatabaseDashboardOpen(!isDatabaseDashboardOpen)}
+        onOpenDatabaseDashboard={() => {
+          setIsDatabaseDashboardOpen(!isDatabaseDashboardOpen);
+          if (isElectionsViewOpen) setIsElectionsViewOpen(false);
+        }}
         isDatabaseDashboardOpen={isDatabaseDashboardOpen}
+        onOpenElections={() => {
+          setIsElectionsViewOpen(!isElectionsViewOpen);
+          if (isDatabaseDashboardOpen) setIsDatabaseDashboardOpen(false);
+        }}
+        isElectionsOpen={isElectionsViewOpen}
         currentUser={currentUser}
         isCloudSyncing={isCloudSyncing}
         onTriggerCloudSync={() => syncToCloud()}
@@ -916,8 +926,16 @@ export default function App() {
           onOpenAuthModal={handleOpenAuthModal}
         />
 
-        {/* Database Management & Exploration View */}
-        {isDatabaseDashboardOpen ? (
+        {/* Database Management & Exploration View or Class Elections View */}
+        {isElectionsViewOpen ? (
+          <ClassElectionsView
+            students={students}
+            teacherName="أ. سعيد بن راشد الحارثي (رائد الفصل)"
+            isTeacherAuthenticated={authenticatedRole === 'teacher'}
+            onOpenAuthModal={() => handleOpenAuthModal('teacher')}
+            onClose={() => setIsElectionsViewOpen(false)}
+          />
+        ) : isDatabaseDashboardOpen ? (
           <DatabaseDashboardView
             teachers={teachers}
             absences={absences}

@@ -22,8 +22,10 @@ import {
   AlertTriangle,
   Plus,
   FileText,
+  Vote,
 } from 'lucide-react';
 import { StudentRecord, TeacherAwardLog, RedemptionRequest, StudentInfraction } from '../types';
+import { ClassElectionsView } from './ClassElectionsView';
 
 interface TeacherModeProps {
   isTeacherAuthenticated?: boolean;
@@ -60,7 +62,7 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
   onGenerateAiResponse,
   isLoadingAi,
 }) => {
-  const [activeTab, setActiveTab] = useState<'attendance' | 'coins' | 'infractions' | 'requests'>('attendance');
+  const [activeTab, setActiveTab] = useState<'attendance' | 'coins' | 'infractions' | 'requests' | 'elections'>('attendance');
 
   // Attendance Controls State
   const [selectedClass, setSelectedClass] = useState<string>('الصف العاشر / 1');
@@ -269,6 +271,22 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
                 {pendingRequestsCount}
               </span>
             )}
+          </button>
+
+          <button
+            id="teacher-tab-elections"
+            onClick={() => setActiveTab('elections')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all relative ${
+              activeTab === 'elections'
+                ? 'bg-[#135D43] text-white shadow-sm border border-[#135D43]'
+                : 'text-slate-300 hover:text-white'
+            }`}
+          >
+            <Vote className="w-3.5 h-3.5 text-[#C48B69]" />
+            <span>انتخابات مجالس الصفوف</span>
+            <span className="px-1.5 py-0.2 rounded-full bg-amber-400 text-slate-900 text-[9px] font-black shadow-xs">
+              جديد
+            </span>
           </button>
         </div>
       </div>
@@ -847,6 +865,16 @@ export const TeacherMode: React.FC<TeacherModeProps> = ({
             )}
           </div>
         </div>
+      )}
+
+      {/* 5. انتخابات مجالس الصفوف (رئيس الصف، نائب رئيس الصف، أمين سر الصف) */}
+      {activeTab === 'elections' && (
+        <ClassElectionsView
+          students={students}
+          teacherName="أ. سعيد بن راشد الحارثي (رائد الفصل)"
+          isTeacherAuthenticated={isTeacherAuthenticated}
+          onOpenAuthModal={onOpenAuthModal}
+        />
       )}
 
       {/* Modal: رصد مخالفة أو ملاحظة سلوكية */}

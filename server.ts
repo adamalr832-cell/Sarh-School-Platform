@@ -11,6 +11,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 // Role PIN Configurations (PIN Code / Password)
 const ADMIN_PIN = '1010';

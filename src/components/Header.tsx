@@ -17,6 +17,7 @@ import {
   FileText,
   Cloud,
   Check,
+  Vote,
 } from 'lucide-react';
 import { UserRole } from '../types';
 import { ROLE_CONFIGS } from '../config/authConfig';
@@ -35,6 +36,8 @@ interface HeaderProps {
   onOpenDatabaseExport?: () => void;
   onOpenDatabaseDashboard?: () => void;
   isDatabaseDashboardOpen?: boolean;
+  onOpenElections?: () => void;
+  isElectionsOpen?: boolean;
   currentUser?: FirebaseUser | null;
   isCloudSyncing?: boolean;
   onTriggerCloudSync?: () => void;
@@ -51,6 +54,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenDatabaseExport,
   onOpenDatabaseDashboard,
   isDatabaseDashboardOpen = false,
+  onOpenElections,
+  isElectionsOpen = false,
   currentUser,
   isCloudSyncing = false,
   onTriggerCloudSync,
@@ -122,6 +127,23 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <FileText className="w-3 h-3 text-[#C48B69]" />
               <span>تقارير PDF / قاعدة البيانات</span>
+            </button>
+          )}
+
+          {onOpenElections && (
+            <button
+              id="header-open-elections-btn"
+              onClick={onOpenElections}
+              className={`flex items-center gap-1.5 text-[11px] font-semibold border px-2.5 py-0.5 rounded-lg transition-colors shadow-sm ${
+                isElectionsOpen
+                  ? 'bg-[#C48B69] text-white border-[#C48B69]'
+                  : 'bg-[#135D43]/40 hover:bg-[#135D43]/70 text-emerald-100 border-[#135D43]'
+              }`}
+              title="صفحة تصويت وترشيح مجالس الصفوف للمعلمين"
+            >
+              <Vote className="w-3 h-3 text-[#C48B69]" />
+              <span>انتخابات الصفوف</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
             </button>
           )}
 
