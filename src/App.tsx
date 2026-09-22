@@ -47,6 +47,9 @@ import {
   FirebaseUser,
 } from './lib/firebase';
 
+// معرف عام وثابت لكي يشارك الجميع نفس قاعدة البيانات السحابية
+const SHARED_CLOUD_ID = 'sarh_public_school_database_2026';
+
 export default function App() {
   const [currentRole, setCurrentRole] = useState<UserRole>('admin');
   const [authenticatedRole, setAuthenticatedRole] = useState<UserRole | null>('admin');
@@ -58,48 +61,78 @@ export default function App() {
   const [isDatabaseDashboardOpen, setIsDatabaseDashboardOpen] = useState(false);
   const [isElectionsViewOpen, setIsElectionsViewOpen] = useState(false);
 
-  // Core Data States - قراءة فورية من التخزين المحلي لضمان عدم الضياع
+  // Core Data States - قراءة فورية من التخزين المحلي كقاعدة أولية
   const [teachers, setTeachers] = useState<TeacherLoad[]>(() => {
-    const saved = localStorage.getItem('sarh_teachers_v2');
+    const saved = localStorage.getItem('sarh_teachers_v3');
     return saved ? JSON.parse(saved) : INITIAL_TEACHERS;
   });
   const [absences, setAbsences] = useState<AbsenceRequest[]>(() => {
-    const saved = localStorage.getItem('sarh_absences_v2');
+    const saved = localStorage.getItem('sarh_absences_v3');
     return saved ? JSON.parse(saved) : INITIAL_ABSENCES;
   });
   const [students, setStudents] = useState<StudentRecord[]>(() => {
-    const saved = localStorage.getItem('sarh_students_v2');
+    const saved = localStorage.getItem('sarh_students_v3');
     return saved ? JSON.parse(saved) : INITIAL_STUDENTS;
   });
   const [awardLogs, setAwardLogs] = useState<TeacherAwardLog[]>(() => {
-    const saved = localStorage.getItem('sarh_awardLogs_v2');
+    const saved = localStorage.getItem('sarh_awardLogs_v3');
     return saved ? JSON.parse(saved) : INITIAL_AWARD_LOGS;
   });
   const [redemptionRequests, setRedemptionRequests] = useState<RedemptionRequest[]>(() => {
-    const saved = localStorage.getItem('sarh_redemptions_v2');
+    const saved = localStorage.getItem('sarh_redemptions_v3');
     return saved ? JSON.parse(saved) : INITIAL_REDEMPTIONS;
   });
   const [teacherHonors, setTeacherHonors] = useState<TeacherHonor[]>(() => {
-    const saved = localStorage.getItem('sarh_teacherHonors_v2');
+    const saved = localStorage.getItem('sarh_teacherHonors_v3');
     return saved ? JSON.parse(saved) : INITIAL_TEACHER_HONORS;
   });
   const [infractions, setInfractions] = useState<StudentInfraction[]>(() => {
-    const saved = localStorage.getItem('sarh_infractions_v2');
+    const saved = localStorage.getItem('sarh_infractions_v3');
     return saved ? JSON.parse(saved) : INITIAL_STUDENT_INFRACTIONS;
   });
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>(() => {
-    const saved = localStorage.getItem('sarh_auditLogs_v2');
+    const saved = localStorage.getItem('sarh_auditLogs_v3');
     return saved ? JSON.parse(saved) : INITIAL_AUDIT_LOGS;
   });
   const [eduCoins, setEduCoins] = useState<number>(() => {
-    const saved = localStorage.getItem('sarh_eduCoins_v2');
+    const saved = localStorage.getItem('sarh_eduCoins_v3');
     return saved ? JSON.parse(saved) : 245;
   });
+  const [electionCandidates, setElectionCandidates] = useState<any[]>(() => {
+    const saved = localStorage.getItem('sarh_election_candidates_v3');
+    return saved ? JSON.parse(saved) : [
+      { id: 'cand-1', name: 'محمد بن حمد البوسعيدي', votes: 12, position: 'رئيس المجلس الطلابي' },
+      { id: 'cand-2', name: 'عمر بن أحمد العلوي', votes: 8, position: 'رئيس المجلس الطلابي' },
+      { id: 'cand-3', name: 'سالم بن علي المعمري', votes: 15, position: 'مسؤول الأنشطة والفعاليات' },
+    ];
+  });
 
-  // حفظ فوري ومستمر في التخزين المحلي عند أي تغيير
-  const persistAndUpdate = (key: string, value: any, setter: Function) => {
+  // مزامنة فورية محلية وعامة للسحابة
+  const persistAndSync = async (key: string, value: any, setter: Function) => {
     setter(value);
     localStorage.setItem(key, JSON.stringify(value));
+
+    // رفع التحديث مباشرة إلى المستند العام المشترك لكي يراه الجميع في كل الأجهزة
+    try {
+      setIsCloudSyncing(true);
+      await saveUserCloudData(SHARED_CLOUD_ID, {
+        teachers: key === 'sarh_teachers_v3' ? value : teachers,
+        absences: key === 'sarh_absences_v3' ? value : absences,
+        students: key === 'sarh_students_v3' ? value : students,
+        awardLogs: key === 'sarh_awardLogs_v3' ? value : awardLogs,
+        redemptionRequests: key === 'sarh_redemptions_v3' ? value : redemptionRequests,
+        teacherHonors: key === 'sarh_teacherHonors_v3' ? value : teacherHonors,
+        infractions: key === 'sarh_infractions_v3' ? value : infractions,
+        auditLogs: key === 'sarh_auditLogs_v3' ? value : auditLogs,
+        eduCoins: key === 'sarh_eduCoins_v3' ? value : eduCoins,
+        electionCandidates: key === 'sarh_election_candidates_v3' ? value : electionCandidates,
+      });
+      setLastCloudSyncTime(getPrecisionTimestamp());
+    } catch (err) {
+      console.warn('Cloud sync error:', err);
+    } finally {
+      setIsCloudSyncing(false);
+    }
   };
 
   // Firebase Auth and Cloud Sync State
@@ -107,58 +140,43 @@ export default function App() {
   const [isCloudSyncing, setIsCloudSyncing] = useState<boolean>(false);
   const [lastCloudSyncTime, setLastCloudSyncTime] = useState<string>('');
 
+  // جلب البيانات من المستند العام المشترك فور فتح التطبيق
   React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user: FirebaseUser | null) => {
-      setCurrentUser(user);
-      if (user && user.email) {
-        try {
-          setIsCloudSyncing(true);
-          const cloudData = await getUserCloudData(user.email);
-          if (cloudData) {
-            if (Array.isArray(cloudData.teachers)) persistAndUpdate('sarh_teachers_v2', cloudData.teachers, setTeachers);
-            if (Array.isArray(cloudData.absences)) persistAndUpdate('sarh_absences_v2', cloudData.absences, setAbsences);
-            if (Array.isArray(cloudData.students)) persistAndUpdate('sarh_students_v2', cloudData.students, setStudents);
-            if (Array.isArray(cloudData.awardLogs)) persistAndUpdate('sarh_awardLogs_v2', cloudData.awardLogs, setAwardLogs);
-            if (Array.isArray(cloudData.redemptionRequests)) persistAndUpdate('sarh_redemptions_v2', cloudData.redemptionRequests, setRedemptionRequests);
-            if (Array.isArray(cloudData.teacherHonors)) persistAndUpdate('sarh_teacherHonors_v2', cloudData.teacherHonors, setTeacherHonors);
-            if (Array.isArray(cloudData.infractions)) persistAndUpdate('sarh_infractions_v2', cloudData.infractions, setInfractions);
-            if (Array.isArray(cloudData.auditLogs)) persistAndUpdate('sarh_auditLogs_v2', cloudData.auditLogs, setAuditLogs);
-            if (typeof cloudData.eduCoins === 'number') persistAndUpdate('sarh_eduCoins_v2', cloudData.eduCoins, setEduCoins);
-
-            setLastCloudSyncTime(getPrecisionTimestamp());
-          }
-        } catch (err) {
-          console.warn('Error loading user cloud store:', err);
-        } finally {
-          setIsCloudSyncing(false);
+    const fetchSharedCloudData = async () => {
+      try {
+        setIsCloudSyncing(true);
+        const cloudData = await getUserCloudData(SHARED_CLOUD_ID);
+        if (cloudData) {
+          if (Array.isArray(cloudData.teachers)) { setTeachers(cloudData.teachers); localStorage.setItem('sarh_teachers_v3', JSON.stringify(cloudData.teachers)); }
+          if (Array.isArray(cloudData.absences)) { setAbsences(cloudData.absences); localStorage.setItem('sarh_absences_v3', JSON.stringify(cloudData.absences)); }
+          if (Array.isArray(cloudData.students)) { setStudents(cloudData.students); localStorage.setItem('sarh_students_v3', JSON.stringify(cloudData.students)); }
+          if (Array.isArray(cloudData.awardLogs)) { setAwardLogs(cloudData.awardLogs); localStorage.setItem('sarh_awardLogs_v3', JSON.stringify(cloudData.awardLogs)); }
+          if (Array.isArray(cloudData.redemptionRequests)) { setRedemptionRequests(cloudData.redemptionRequests); localStorage.setItem('sarh_redemptions_v3', JSON.stringify(cloudData.redemptionRequests)); }
+          if (Array.isArray(cloudData.teacherHonors)) { setTeacherHonors(cloudData.teacherHonors); localStorage.setItem('sarh_teacherHonors_v3', JSON.stringify(cloudData.teacherHonors)); }
+          if (Array.isArray(cloudData.infractions)) { setInfractions(cloudData.infractions); localStorage.setItem('sarh_infractions_v3', JSON.stringify(cloudData.infractions)); }
+          if (Array.isArray(cloudData.auditLogs)) { setAuditLogs(cloudData.auditLogs); localStorage.setItem('sarh_auditLogs_v3', JSON.stringify(cloudData.auditLogs)); }
+          if (typeof cloudData.eduCoins === 'number') { setEduCoins(cloudData.eduCoins); localStorage.setItem('sarh_eduCoins_v3', JSON.stringify(cloudData.eduCoins)); }
+          if (Array.isArray(cloudData.electionCandidates)) { setElectionCandidates(cloudData.electionCandidates); localStorage.setItem('sarh_election_candidates_v3', JSON.stringify(cloudData.electionCandidates)); }
+          
+          setLastCloudSyncTime(getPrecisionTimestamp());
         }
+      } catch (err) {
+        console.warn('Error loading shared cloud store:', err);
+      } finally {
+        setIsCloudSyncing(false);
       }
+    };
+
+    fetchSharedCloudData();
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
     });
     return () => unsubscribe();
   }, []);
 
-  const syncToCloud = async (overrideEmail?: string) => {
-    const targetEmail = overrideEmail || currentUser?.email;
-    if (!targetEmail) return;
-    try {
-      setIsCloudSyncing(true);
-      await saveUserCloudData(targetEmail, {
-        teachers,
-        absences,
-        students,
-        awardLogs,
-        redemptionRequests,
-        teacherHonors,
-        infractions,
-        auditLogs,
-        eduCoins,
-      });
-      setLastCloudSyncTime(getPrecisionTimestamp());
-    } catch (err) {
-      console.warn('Cloud save error:', err);
-    } finally {
-      setIsCloudSyncing(false);
-    }
+  const syncToCloud = async () => {
+    await persistAndSync('sarh_teachers_v3', teachers, setTeachers);
   };
 
   const logAudit = (
@@ -186,7 +204,7 @@ export default function App() {
       previousState,
       newState,
     };
-    persistAndUpdate('sarh_auditLogs_v2', [newEntry, ...auditLogs], setAuditLogs);
+    persistAndSync('sarh_auditLogs_v3', [newEntry, ...auditLogs], setAuditLogs);
   };
 
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -264,7 +282,7 @@ export default function App() {
     const ts = getPrecisionTimestamp();
 
     const updatedTeachers = teachers.map((t) => (t.id === teacherId ? { ...t, status } : t));
-    persistAndUpdate('sarh_teachers_v2', updatedTeachers, setTeachers);
+    persistAndSync('sarh_teachers_v3', updatedTeachers, setTeachers);
 
     if (targetTeacher && (status === 'absent' || status === 'delegated')) {
       const existing = absences.find((a) => a.absentTeacher === targetTeacher.name);
@@ -279,7 +297,7 @@ export default function App() {
           notes: status === 'delegated' ? 'انتداب وزاري رسمي' : 'غياب طارئ - بانتظار التكليف',
           createdAt: ts,
         };
-        persistAndUpdate('sarh_absences_v2', [newAbs, ...absences], setAbsences);
+        persistAndSync('sarh_absences_v3', [newAbs, ...absences], setAbsences);
       }
     }
   };
@@ -298,13 +316,13 @@ export default function App() {
           }
         : a
     );
-    persistAndUpdate('sarh_absences_v2', updatedAbsences, setAbsences);
+    persistAndSync('sarh_absences_v3', updatedAbsences, setAbsences);
 
     if (substituteName) {
       const updatedTeachers = teachers.map((t) =>
         t.name === substituteName ? { ...t, currentWeeklyLoad: Math.min(t.maxWeeklyLoad, t.currentWeeklyLoad + 1) } : t
       );
-      persistAndUpdate('sarh_teachers_v2', updatedTeachers, setTeachers);
+      persistAndSync('sarh_teachers_v3', updatedTeachers, setTeachers);
     }
   };
 
@@ -317,7 +335,7 @@ export default function App() {
       status: 'pending',
       createdAt: ts,
     };
-    persistAndUpdate('sarh_absences_v2', [newRecord, ...absences], setAbsences);
+    persistAndSync('sarh_absences_v3', [newRecord, ...absences], setAbsences);
   };
 
   // Admin: Auto-Distribution
@@ -348,8 +366,11 @@ export default function App() {
       return item;
     });
 
-    persistAndUpdate('sarh_teachers_v2', updatedTeachers, setTeachers);
-    persistAndUpdate('sarh_absences_v2', updatedAbsences, setAbsences);
+    setTeachers(updatedTeachers);
+    setAbsences(updatedAbsences);
+    localStorage.setItem('sarh_teachers_v3', JSON.stringify(updatedTeachers));
+    localStorage.setItem('sarh_absences_v3', JSON.stringify(updatedAbsences));
+    syncToCloud();
   };
 
   const handleAddTeacherHonor = (
@@ -368,7 +389,7 @@ export default function App() {
       timestamp: getPrecisionTimestamp(),
       timestampMs: Date.now(),
     };
-    persistAndUpdate('sarh_teacherHonors_v2', [newHonor, ...teacherHonors], setTeacherHonors);
+    persistAndSync('sarh_teacherHonors_v3', [newHonor, ...teacherHonors], setTeacherHonors);
   };
 
   // Teacher: Update Student Attendance
@@ -383,7 +404,7 @@ export default function App() {
           }
         : s
     );
-    persistAndUpdate('sarh_students_v2', updatedStudents, setStudents);
+    persistAndSync('sarh_students_v3', updatedStudents, setStudents);
   };
 
   const handleMarkAllPresent = (gradeClass: string, period: number = 1) => {
@@ -398,17 +419,19 @@ export default function App() {
           }
         : s
     );
-    persistAndUpdate('sarh_students_v2', updatedStudents, setStudents);
+    persistAndSync('sarh_students_v3', updatedStudents, setStudents);
   };
 
   // Teacher: Award Points
   const handleAwardPoints = (studentId: string, points: number, reason: string) => {
     const targetStudent = students.find((s) => s.id === studentId);
     const updatedStudents = students.map((s) => (s.id === studentId ? { ...s, points: s.points + points } : s));
-    persistAndUpdate('sarh_students_v2', updatedStudents, setStudents);
+    setStudents(updatedStudents);
+    localStorage.setItem('sarh_students_v3', JSON.stringify(updatedStudents));
 
     if (studentId === 'std-1') {
-      persistAndUpdate('sarh_eduCoins_v2', eduCoins + points, setEduCoins);
+      setEduCoins(eduCoins + points);
+      localStorage.setItem('sarh_eduCoins_v3', JSON.stringify(eduCoins + points));
     }
 
     const newLog: TeacherAwardLog = {
@@ -420,7 +443,9 @@ export default function App() {
       timestamp: getPrecisionTimestamp(),
       teacherName: 'أ. معلم المادة',
     };
-    persistAndUpdate('sarh_awardLogs_v2', [newLog, ...awardLogs], setAwardLogs);
+    setAwardLogs([newLog, ...awardLogs]);
+    localStorage.setItem('sarh_awardLogs_v3', JSON.stringify([newLog, ...awardLogs]));
+    syncToCloud();
   };
 
   const handleAddInfraction = (
@@ -442,15 +467,17 @@ export default function App() {
       timestamp: getPrecisionTimestamp(),
       timestampMs: Date.now(),
     };
-    persistAndUpdate('sarh_infractions_v2', [newInfr, ...infractions], setInfractions);
+    persistAndSync('sarh_infractions_v3', [newInfr, ...infractions], setInfractions);
   };
 
   const handleStudentRequestRedemption = (type: RedemptionType, cost: number) => {
     if (eduCoins < cost) return;
-    persistAndUpdate('sarh_eduCoins_v2', eduCoins - cost, setEduCoins);
+    setEduCoins(eduCoins - cost);
+    localStorage.setItem('sarh_eduCoins_v3', JSON.stringify(eduCoins - cost));
 
     const updatedStudents = students.map((s) => (s.id === 'std-1' ? { ...s, points: Math.max(0, s.points - cost) } : s));
-    persistAndUpdate('sarh_students_v2', updatedStudents, setStudents);
+    setStudents(updatedStudents);
+    localStorage.setItem('sarh_students_v3', JSON.stringify(updatedStudents));
 
     const newReq: RedemptionRequest = {
       id: `req-${Date.now()}`,
@@ -462,7 +489,9 @@ export default function App() {
       status: 'pending',
       createdAt: getPrecisionTimestamp(),
     };
-    persistAndUpdate('sarh_redemptions_v2', [newReq, ...redemptionRequests], setRedemptionRequests);
+    setRedemptionRequests([newReq, ...redemptionRequests]);
+    localStorage.setItem('sarh_redemptions_v3', JSON.stringify([newReq, ...redemptionRequests]));
+    syncToCloud();
   };
 
   const handleEnforceAdministrativeAction = (
@@ -485,7 +514,7 @@ export default function App() {
           }
         : i
     );
-    persistAndUpdate('sarh_infractions_v2', updatedInfractions, setInfractions);
+    persistAndSync('sarh_infractions_v3', updatedInfractions, setInfractions);
   };
 
   const handleDismissInfractionReferral = (infractionId: string, reason: string, reviewerName: string) => {
@@ -500,7 +529,7 @@ export default function App() {
           }
         : i
     );
-    persistAndUpdate('sarh_infractions_v2', updatedInfractions, setInfractions);
+    persistAndSync('sarh_infractions_v3', updatedInfractions, setInfractions);
   };
 
   const handleApproveGradesRequest = (requestId: string, gradesAmount: number) => {
@@ -514,7 +543,7 @@ export default function App() {
           }
         : r
     );
-    persistAndUpdate('sarh_redemptions_v2', updatedRequests, setRedemptionRequests);
+    persistAndSync('sarh_redemptions_v3', updatedRequests, setRedemptionRequests);
   };
 
   const handleApproveHonorRequest = (requestId: string) => {
@@ -527,7 +556,7 @@ export default function App() {
           }
         : r
     );
-    persistAndUpdate('sarh_redemptions_v2', updatedRequests, setRedemptionRequests);
+    persistAndSync('sarh_redemptions_v3', updatedRequests, setRedemptionRequests);
   };
 
   return (
@@ -566,6 +595,8 @@ export default function App() {
             isTeacherAuthenticated={authenticatedRole === 'teacher'}
             onOpenAuthModal={() => handleOpenAuthModal('teacher')}
             onClose={() => setIsElectionsViewOpen(false)}
+            candidates={electionCandidates}
+            onUpdateCandidates={(newCandidates: any[]) => persistAndSync('sarh_election_candidates_v3', newCandidates, setElectionCandidates)}
           />
         ) : isDatabaseDashboardOpen ? (
           <DatabaseDashboardView
